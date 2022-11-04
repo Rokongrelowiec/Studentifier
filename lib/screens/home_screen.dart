@@ -12,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -25,7 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             iconTheme: Theme.of(context).iconTheme,
           ),
-          body: FirstTab(),
+          body: SingleChildScrollView(
+            child: FirstTab(),
+          ),
           drawer: SideDrawer(),
           bottomNavigationBar: BottomNavBar()),
     );
