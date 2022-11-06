@@ -1,34 +1,37 @@
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/side_drawer.dart';
 import './first_tab.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) => Platform.isIOS
+      ? GenerateHomeScreen()
+      : SafeArea(child: GenerateHomeScreen());
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class GenerateHomeScreen extends StatelessWidget {
+  const GenerateHomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Studentifier',
-              style: TextStyle(
-                  color: Theme.of(context).textTheme.headline1?.color),
-            ),
-            iconTheme: Theme.of(context).iconTheme,
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Studentifier',
+            style:
+                TextStyle(color: Theme.of(context).textTheme.headline1?.color),
           ),
-          body: SingleChildScrollView(
-            child: FirstTab(),
-          ),
-          drawer: SideDrawer(),
-          bottomNavigationBar: BottomNavBar()),
-    );
+          iconTheme: Theme.of(context).iconTheme,
+        ),
+        body: SingleChildScrollView(
+          child: FirstTab(),
+        ),
+        drawer: SideDrawer(),
+        bottomNavigationBar: BottomNavBar());
   }
 }

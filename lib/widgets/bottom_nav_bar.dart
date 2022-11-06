@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -9,7 +11,9 @@ class BottomNavBar extends StatelessWidget {
     return Container(
       color: Theme.of(context).navigationBarTheme.backgroundColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        padding: Platform.isIOS
+            ? const EdgeInsets.fromLTRB(5, 5, 5, 17)
+            : const EdgeInsets.all(5),
         child: GNav(
           backgroundColor:
               Theme.of(context).navigationBarTheme.backgroundColor as Color,
@@ -17,7 +21,7 @@ class BottomNavBar extends StatelessWidget {
           activeColor: Colors.white,
           tabBackgroundColor:
               Theme.of(context).navigationBarTheme.indicatorColor as Color,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           gap: 8,
           onTabChange: (tabIndex) {
             print(tabIndex.toString());
