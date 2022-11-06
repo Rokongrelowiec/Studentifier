@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +14,7 @@ class SideDrawer extends StatelessWidget {
       builder: (ctx, orientation) => Drawer(
         elevation: 0,
         child: ListView(
-          padding: EdgeInsets.zero,
+          padding: Platform.isIOS ? EdgeInsets.only(top: 30) : EdgeInsets.zero,
           children: [
             Container(
               height: orientation == Orientation.portrait
@@ -26,6 +28,7 @@ class SideDrawer extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 10),
                     child: CircleAvatar(
                       backgroundColor: Colors.orangeAccent,
+                      child: Icon(Icons.tag_faces_outlined, size: 60, color: Colors.white,),
                       radius: 50,
                     ),
                   ),
