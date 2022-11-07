@@ -12,7 +12,7 @@ class BottomNavBar extends StatelessWidget {
       color: Theme.of(context).navigationBarTheme.backgroundColor,
       child: Padding(
         padding: Platform.isIOS
-            ? const EdgeInsets.fromLTRB(5, 5, 5, 17)
+            ? const EdgeInsets.fromLTRB(5, 5, 5, 20)
             : const EdgeInsets.all(5),
         child: GNav(
           backgroundColor:

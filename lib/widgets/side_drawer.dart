@@ -1,12 +1,122 @@
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as Path;
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/theme_provider.dart';
 
-class SideDrawer extends StatelessWidget {
+class SideDrawer extends StatefulWidget {
   SideDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<SideDrawer> createState() => _SideDrawerState();
+}
+
+class _SideDrawerState extends State<SideDrawer> {
+  File? image;
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final XFile? image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+
+      final imageTemporary = File(image.path);
+      // final imagePermanent = await saveImagePermanently(image.path);
+
+      setState(() {
+        this.image = imageTemporary;
+        // this.image = imagePermanent;
+      });
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick image: $e');
+    }
+  }
+
+  Future<File> saveImagePermanently(String imagePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final name = Path.basename(imagePath);
+    final image = File('${directory.path}/$name');
+
+
+    return File(imagePath).copy(image.path);
+  }
+
+  showImageSource() {
+    if (Platform.isIOS) {
+      return showCupertinoModalPopup(
+        context: context,
+        builder: (ctx) => CupertinoActionSheet(
+          actions: [
+            CupertinoActionSheetAction(
+              child: const Text('Gallery'),
+              onPressed: () {
+                pickImage(ImageSource.gallery);
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Camera'),
+              onPressed: () {
+                pickImage(ImageSource.camera);
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color.fromRGBO(255, 55, 55, 1)),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              isDefaultAction: true,
+            ),
+          ],
+        ),
+      );
+    } else {
+      return showModalBottomSheet(
+        context: context,
+        builder: (ctx) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.image),
+              title: Text('Gallery'),
+              onTap: () {
+                pickImage(ImageSource.gallery);
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.camera),
+              title: Text('Camera'),
+              onTap: () {
+                pickImage(ImageSource.camera);
+                Navigator.of(context).pop();
+              },
+            ),
+            Divider(thickness: 1, color: Colors.grey),
+            ListTile(
+              leading: Icon(Icons.close),
+              title: Text(
+                'Cancel',
+                style: TextStyle(color: Color.fromRGBO(255, 55, 55, 1)),
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +136,26 @@ class SideDrawer extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.orangeAccent,
-                      child: Icon(Icons.tag_faces_outlined, size: 60, color: Colors.white,),
-                      radius: 50,
+                    child: InkWell(
+                      onTap: showImageSource,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.orangeAccent,
+                        child: image != null
+                            ? ClipOval(
+                                child: Image.file(
+                                  image!,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Icon(
+                                Icons.tag_faces_outlined,
+                                size: 60,
+                                color: Colors.white,
+                              ),
+                        radius: 50,
+                      ),
                     ),
                   ),
                   Padding(
@@ -90,7 +216,8 @@ class SideDrawer extends StatelessWidget {
                   trailing: Consumer<ThemeProvider>(
                       builder: (context, provider, child) {
                     return DropdownButton(
-                      dropdownColor: Theme.of(context).drawerTheme.backgroundColor,
+                      dropdownColor:
+                          Theme.of(context).drawerTheme.backgroundColor,
                       value: provider.currentTheme,
                       icon: const Icon(Icons.keyboard_arrow_down_rounded),
                       elevation: 16,
