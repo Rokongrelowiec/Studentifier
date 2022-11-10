@@ -6,6 +6,7 @@ import '../widgets/side_drawer.dart';
 import './first_tab.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const routeName = '/home-screen';
   HomeScreen({Key? key}) : super(key: key);
 
   @override
