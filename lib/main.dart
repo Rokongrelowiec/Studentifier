@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentifier/models/theme_provider.dart';
+import 'package:studentifier/screens/login_screen.dart';
+
+import './models/theme_provider.dart';
+import './screens/animated_splash_screen.dart';
 
 import './screens/home_screen.dart';
 
@@ -23,6 +26,11 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeProvider>(
       builder: (context, provider, child) {
         return MaterialApp(
+          initialRoute: '/',
+          routes: {
+            HomeScreen.routeName: (_) => HomeScreen(),
+            LoginScreen.routeName: (_) => LoginScreen(),
+          },
           debugShowCheckedModeBanner: false,
           title: 'Studentifier',
           themeMode: provider.themeMode,
@@ -48,7 +56,7 @@ class MyApp extends StatelessWidget {
             ),
             iconTheme: IconThemeData(color: Colors.white),
           ),
-          home: HomeScreen(),
+          home: AnimatedSplashScreen(),
         );
       },
     );

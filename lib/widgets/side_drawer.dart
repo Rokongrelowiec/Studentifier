@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:studentifier/screens/login_screen.dart';
 
 import '../models/theme_provider.dart';
 
@@ -21,6 +22,7 @@ class _SideDrawerState extends State<SideDrawer> {
   File? image;
 
   Future pickImage(ImageSource source) async {
+    // TODO Save image -> DB
     try {
       final XFile? image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
@@ -41,7 +43,6 @@ class _SideDrawerState extends State<SideDrawer> {
     final directory = await getApplicationDocumentsDirectory();
     final name = Path.basename(imagePath);
     final image = File('${directory.path}/$name');
-
 
     return File(imagePath).copy(image.path);
   }
@@ -66,17 +67,14 @@ class _SideDrawerState extends State<SideDrawer> {
                 Navigator.of(context).pop();
               },
             ),
-            CupertinoActionSheetAction(
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Color.fromRGBO(255, 55, 55, 1)),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              isDefaultAction: true,
-            ),
           ],
+          cancelButton: CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
       );
     } else {
@@ -194,7 +192,41 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          backgroundColor:
+                              Theme.of(context).drawerTheme.backgroundColor,
+                          title: Text(
+                            'Sing out',
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline1?.color,
+                            ),
+                          ),
+                          content: Text(
+                            'Are you sure you want to sign out?',
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline1?.color,
+                            ),
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                      LoginScreen.routeName, (route) => false),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                     icon: Icon(Icons.power_settings_new_outlined),
                   ),
                 ],
