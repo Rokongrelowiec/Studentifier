@@ -8,11 +8,14 @@ import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../models/theme_provider.dart';
 
 class SideDrawer extends StatefulWidget {
-  SideDrawer({Key? key}) : super(key: key);
+  final bool isAdmin;
+
+  SideDrawer({Key? key, this.isAdmin = false}) : super(key: key);
 
   @override
   State<SideDrawer> createState() => _SideDrawerState();
@@ -137,7 +140,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: InkWell(
-                      onTap: showImageSource,
+                      onTap: widget.isAdmin ? showImageSource : null,
                       child: CircleAvatar(
                         backgroundColor: Colors.orangeAccent,
                         child: image != null
@@ -167,7 +170,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         SizedBox(
                           height: 14,
                         ),
-                        Text('Witaj!',
+                        Text('Hi',
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Theme.of(context)
@@ -175,11 +178,11 @@ class _SideDrawerState extends State<SideDrawer> {
                                     .headline1
                                     ?.color)),
                         SizedBox(
-                          height: 25,
+                          height: 22,
                         ),
                         Container(
                           width: 100,
-                          child: Text('Salazar Drumin',
+                          child: Text(widget.isAdmin ? 'admin!' : 'there!',
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Theme.of(context)
@@ -193,44 +196,56 @@ class _SideDrawerState extends State<SideDrawer> {
                     ),
                   ),
                   Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          backgroundColor:
-                              Theme.of(context).drawerTheme.backgroundColor,
-                          title: Text(
-                            'Sing out',
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color,
-                            ),
-                          ),
-                          content: Text(
-                            'Are you sure you want to sign out?',
-                            style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color,
-                            ),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Text('Cancel'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => Navigator.of(context)
-                                  .pushNamedAndRemoveUntil(
-                                      LoginScreen.routeName, (route) => false),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.power_settings_new_outlined),
-                  ),
+                  widget.isAdmin
+                      ? IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                backgroundColor: Theme.of(context)
+                                    .drawerTheme
+                                    .backgroundColor,
+                                title: Text(
+                                  'Sing out',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color,
+                                  ),
+                                ),
+                                content: Text(
+                                  'Are you sure you want to sign out?',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color,
+                                  ),
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil(
+                                              HomeScreen.routeName,
+                                              (route) => false,
+                                              arguments: false);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.power_settings_new_outlined),
+                        )
+                      : Container(),
                 ],
               ),
             ),
@@ -323,6 +338,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                   onTap: () {
                     print('Clicked Settings');
+                    Navigator.of(context).pushNamed(LoginScreen.routeName);
                   },
                 ),
                 Padding(

@@ -23,7 +23,6 @@ class GenerateLoginScreen extends StatefulWidget {
 }
 
 class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
-  bool isRegistryScreen = false;
   bool password = true;
   Color iconColor = Colors.grey;
 
@@ -54,7 +53,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                 width: size.width,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
-                    Colors.orangeAccent.withOpacity(0.9),
+                    Colors.orangeAccent.withOpacity(0.8),
                     Colors.orange,
                   ], begin: Alignment.topLeft, end: Alignment.bottomLeft),
                 ),
@@ -68,9 +67,24 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 40, top: 100),
+                      padding: Platform.isIOS
+                          ? EdgeInsets.only(top: 40, left: 10)
+                          : EdgeInsets.only(top: 10, left: 10),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, top: 30),
                       child: Text(
-                        "Welcome",
+                        "Administrator",
                         style: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
@@ -80,7 +94,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 40),
                       child: Text(
-                        "in Studentifier",
+                        "Login",
                         style: TextStyle(
                             fontSize: 30,
                             color: Colors.white,
@@ -88,7 +102,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.fromLTRB(40, 100, 50, 0),
+                        padding: EdgeInsets.fromLTRB(40, 120, 50, 0),
                         child: Container(
                           child: TextFormField(
                             keyboardType: TextInputType.emailAddress,
@@ -166,89 +180,33 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                   color: Color(0xFFDD9246), width: 1),
                             ),
                           ),
-                          textInputAction: isRegistryScreen
-                              ? TextInputAction.next
-                              : TextInputAction.done,
-                          onFieldSubmitted: isRegistryScreen ? (_)=> FocusScope.of(context).nextFocus() : null,
+                          textInputAction: TextInputAction.done,
                         ),
                       ),
                     ),
-                    isRegistryScreen
-                        ? Padding(
-                            padding: EdgeInsets.fromLTRB(40, 10, 50, 0),
-                            child: Container(
-                              child: TextFormField(
-                                obscureText: password,
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        ?.color),
-                                decoration: InputDecoration(
-                                  suffixIcon: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        password = !password;
-                                      });
-                                    },
-                                    icon: password
-                                        ? Icon(
-                                            Icons.visibility_off,
-                                            color: iconColor,
-                                          )
-                                        : Icon(
-                                            Icons.visibility,
-                                            color: iconColor,
-                                          ),
-                                  ),
-                                  prefixIcon: Icon(Icons.lock_outline_rounded,
-                                      color: Theme.of(context).primaryColor),
-                                  labelText: "Confirm Password",
-                                  labelStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .headline1
-                                          ?.color),
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  contentPadding:
-                                      EdgeInsets.only(top: 15, bottom: 15),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFFE0E0E0), width: 2),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFFDD9246), width: 1),
-                                  ),
-                                ),
-                                textInputAction: TextInputAction.done,
-                              ),
+                    Row(
+                      children: [
+                        Spacer(),
+                        Padding(
+                          padding: EdgeInsets.only(right: 49, top: 20),
+                          child: TextButton(
+                            onPressed: () {
+                              //TODO Forgot Password
+                            },
+                            child: Text(
+                              "forgot password?".toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFFDD9746),
+                                  fontWeight: FontWeight.w700),
                             ),
-                          )
-                        : Row(
-                            children: [
-                              Spacer(),
-                              Padding(
-                                padding: EdgeInsets.only(right: 49, top: 20),
-                                child: TextButton(
-                                  onPressed: () {
-                                    //TODO Forgot Password
-                                  },
-                                  child: Text(
-                                    "forgot password?".toUpperCase(),
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFFDD9746),
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ),
-                            ],
                           ),
+                        ),
+                      ],
+                    ),
                     Center(
                       child: Padding(
-                        padding:
-                            EdgeInsets.only(top: isRegistryScreen ? 30 : 37),
+                        padding: EdgeInsets.only(top: 30),
                         child: Container(
                           height: 45,
                           width: 130,
@@ -260,13 +218,12 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             ),
                             onPressed: () {
                               //TODO Email Validation
-                              if (!isRegistryScreen) {
-                                Navigator.of(context)
-                                    .pushReplacementNamed(HomeScreen.routeName);
-                              }
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  HomeScreen.routeName, (route) => false,
+                                  arguments: true);
                             },
                             child: Text(
-                              isRegistryScreen ? 'Register' : 'Login',
+                              'Login',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -276,38 +233,12 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                         ),
                       ),
                     ),
-                    // CompanyLogosBelow
-                    /*
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left: size.width / 5, right: size.width / 5, top: 30),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Material(
-                                elevation: 0,
-                                borderRadius: BorderRadius.circular(50),
-                                child: Image.network(
-                                    "https://i.postimg.cc/zG2dhf5X/twitter-1.png"),
-                              ),
-                              Material(
-                                elevation: 0,
-                                borderRadius: BorderRadius.circular(90),
-                                child: Image.network(
-                                    "https://i.postimg.cc/L4vj5bmm/facebook-1.png"),
-                              ),
-                            ],
-                          ),
-                        ),
-                        */
                     SizedBox(
                       height: 30,
                     ),
                     Center(
                       child: Text(
-                        isRegistryScreen
-                            ? 'Have an account?'
-                            : "Don't have an account?",
+                        "Don't have an account?",
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[400],
@@ -321,11 +252,11 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            isRegistryScreen = !isRegistryScreen;
+                            // TODO Send email to Admin?
                           });
                         },
                         child: Text(
-                          isRegistryScreen ? "LOGIN" : "SIGN UP",
+                          "Contact the Administrator",
                           style: TextStyle(
                               fontSize: 18,
                               color: Color(0xFFDD9246),
@@ -366,7 +297,7 @@ class DrawClipSecond extends CustomClipper<Path> {
   Path getClip(Size size) {
     Path path = Path();
     path.addOval(
-        Rect.fromCircle(center: Offset(size.width * 0.3, 50), radius: 200));
+        Rect.fromCircle(center: Offset(size.width * 0.2, 50), radius: 200));
     return path;
   }
 

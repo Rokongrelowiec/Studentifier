@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart' as ASS;
 import 'package:page_transition/page_transition.dart';
-
-import './login_screen.dart';
+import './home_screen.dart';
 
 class AnimatedSplashScreen extends StatelessWidget {
   AnimatedSplashScreen({Key? key}) : super(key: key);
@@ -25,7 +24,7 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
         gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.orange, Colors.deepOrangeAccent]),
+            colors: [Colors.yellow, Colors.deepOrangeAccent]),
       ),
       child: ASS.AnimatedSplashScreen(
         backgroundColor: Colors.transparent,
@@ -46,7 +45,7 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
             )
           ],
         ),
-        nextScreen: LoginScreen(),
+        nextScreen: HomeScreen(),
         duration: 1500,
         splashTransition: ASS.SplashTransition.sizeTransition,
         pageTransitionType: PageTransitionType.rightToLeft,
