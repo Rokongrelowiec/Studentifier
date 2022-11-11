@@ -22,8 +22,10 @@ class GenerateHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = (ModalRoute.of(context)?.settings.arguments ?? false) as bool;
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             'Studentifier',
             style:
@@ -34,7 +36,7 @@ class GenerateHomeScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: FirstTab(),
         ),
-        drawer: SideDrawer(),
+        drawer: SideDrawer(isAdmin: isAdmin,),
         bottomNavigationBar: BottomNavBar());
   }
 }
