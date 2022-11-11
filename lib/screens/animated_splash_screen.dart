@@ -25,7 +25,7 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
         gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.deepOrangeAccent, Colors.orange]),
+            colors: [Colors.orange, Colors.deepOrangeAccent]),
       ),
       child: ASS.AnimatedSplashScreen(
         backgroundColor: Colors.transparent,
