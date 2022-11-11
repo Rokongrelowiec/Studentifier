@@ -7,8 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:studentifier/screens/login_screen.dart';
 
+import '../screens/login_screen.dart';
 import '../models/theme_provider.dart';
 
 class SideDrawer extends StatefulWidget {
@@ -122,7 +122,9 @@ class _SideDrawerState extends State<SideDrawer> {
       builder: (ctx, orientation) => Drawer(
         elevation: 0,
         child: ListView(
-          padding: Platform.isIOS ? EdgeInsets.only(top: 30) : EdgeInsets.zero,
+          padding: Platform.isIOS
+              ? EdgeInsets.only(top: 50)
+              : EdgeInsets.only(top: 20),
           children: [
             Container(
               height: orientation == Orientation.portrait
@@ -217,7 +219,7 @@ class _SideDrawerState extends State<SideDrawer> {
                               onPressed: () => Navigator.of(context).pop(),
                               child: const Text('Cancel'),
                             ),
-                            TextButton(
+                            ElevatedButton(
                               onPressed: () => Navigator.of(context)
                                   .pushNamedAndRemoveUntil(
                                       LoginScreen.routeName, (route) => false),

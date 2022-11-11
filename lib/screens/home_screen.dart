@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import '../widgets/bottom_nav_bar.dart';
@@ -7,6 +8,7 @@ import './first_tab.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
+
   HomeScreen({Key? key}) : super(key: key);
 
   @override

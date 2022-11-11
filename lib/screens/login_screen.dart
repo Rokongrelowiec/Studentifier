@@ -25,7 +25,6 @@ class GenerateLoginScreen extends StatefulWidget {
 class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
   bool isRegistryScreen = false;
   bool password = true;
-  bool confirmPassword = true;
   Color iconColor = Colors.grey;
 
   @override
@@ -172,7 +171,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                           padding: EdgeInsets.fromLTRB(40, 10, 50, 0),
                           child: Container(
                             child: TextFormField(
-                              obscureText: confirmPassword,
+                              obscureText: password,
                               style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
@@ -182,10 +181,10 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 suffixIcon: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      confirmPassword = !confirmPassword;
+                                      password = !password;
                                     });
                                   },
-                                  icon: confirmPassword
+                                  icon: password
                                       ? Icon(
                                           Icons.visibility_off,
                                           color: iconColor,
