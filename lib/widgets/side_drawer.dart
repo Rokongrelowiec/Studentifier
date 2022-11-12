@@ -327,18 +327,18 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
                 ListTile(
                   trailing: Icon(
-                    Icons.settings,
+                    widget.isAdmin ? Icons.ssid_chart : Icons.settings,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
-                    'Settings',
+                    widget.isAdmin ? 'Chart' : 'Setting',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                     ),
                   ),
                   onTap: () {
-                    print('Clicked Settings');
-                    Navigator.of(context).pushNamed(LoginScreen.routeName);
+                    if (!widget.isAdmin)
+                      Navigator.of(context).pushNamed(LoginScreen.routeName);
                   },
                 ),
                 Padding(

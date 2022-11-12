@@ -1,8 +1,10 @@
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
-import '../widgets/bottom_nav_bar.dart';
+import './daily_report_screen.dart';
+import './monthly_report.dart';
 import '../widgets/side_drawer.dart';
 import './first_tab.dart';
 
@@ -17,26 +19,73 @@ class HomeScreen extends StatelessWidget {
       : SafeArea(child: GenerateHomeScreen());
 }
 
-class GenerateHomeScreen extends StatelessWidget {
-  const GenerateHomeScreen({Key? key}) : super(key: key);
+class GenerateHomeScreen extends StatefulWidget {
+  GenerateHomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<GenerateHomeScreen> createState() => _GenerateHomeScreenState();
+}
+
+class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
+  List navBarWidgets = [FirstTab(), DailyReport(), MonthlyReport()];
+  int activeIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin = (ModalRoute.of(context)?.settings.arguments ?? false) as bool;
+    bool isAdmin =
+        (ModalRoute.of(context)?.settings.arguments ?? false) as bool;
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            'Studentifier',
-            style:
-                TextStyle(color: Theme.of(context).textTheme.headline1?.color),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Studentifier',
+          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
+        ),
+        iconTheme: Theme.of(context).iconTheme,
+      ),
+      body: SingleChildScrollView(
+        child: navBarWidgets[activeIndex],
+      ),
+      drawer: SideDrawer(
+        isAdmin: isAdmin,
+      ),
+      bottomNavigationBar: Container(
+        color: Theme.of(context).navigationBarTheme.backgroundColor,
+        child: Padding(
+          padding: Platform.isIOS
+              ? const EdgeInsets.fromLTRB(5, 5, 5, 20)
+              : const EdgeInsets.all(5),
+          child: GNav(
+            backgroundColor:
+                Theme.of(context).navigationBarTheme.backgroundColor as Color,
+            color: Colors.white,
+            activeColor: Colors.white,
+            tabBackgroundColor:
+                Theme.of(context).navigationBarTheme.indicatorColor as Color,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            gap: 8,
+            onTabChange: (tabIndex) {
+              setState(() {
+                activeIndex = tabIndex;
+              });
+            },
+            tabs: [
+              GButton(
+                icon: Icons.camera,
+                text: 'OCR',
+              ),
+              GButton(
+                icon: Icons.find_in_page,
+                text: 'Daily Report',
+              ),
+              GButton(
+                icon: Icons.calendar_month,
+                text: 'Monthly Report',
+              ),
+            ],
           ),
-          iconTheme: Theme.of(context).iconTheme,
         ),
-        body: SingleChildScrollView(
-          child: FirstTab(),
-        ),
-        drawer: SideDrawer(isAdmin: isAdmin,),
-        bottomNavigationBar: BottomNavBar());
+      ),
+    );
   }
 }
