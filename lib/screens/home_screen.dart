@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import './daily_report_screen.dart';
-import './monthly_report.dart';
+import './monthly_report_screen.dart';
 import '../widgets/side_drawer.dart';
-import './first_tab.dart';
+import './orc_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
@@ -32,8 +32,6 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin =
-        (ModalRoute.of(context)?.settings.arguments ?? false) as bool;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -46,9 +44,7 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
       body: SingleChildScrollView(
         child: navBarWidgets[activeIndex],
       ),
-      drawer: SideDrawer(
-        isAdmin: isAdmin,
-      ),
+      drawer: SideDrawer(),
       bottomNavigationBar: Container(
         color: Theme.of(context).navigationBarTheme.backgroundColor,
         child: Padding(

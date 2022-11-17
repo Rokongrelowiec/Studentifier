@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/admin_provider.dart';
 import './home_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -218,9 +220,9 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             ),
                             onPressed: () {
                               //TODO Email Validation
+                              Provider.of<AdminProvider>(context, listen: false).changePermission(true);
                               Navigator.of(context).pushNamedAndRemoveUntil(
-                                  HomeScreen.routeName, (route) => false,
-                                  arguments: true);
+                                  HomeScreen.routeName, (route) => false);
                             },
                             child: Text(
                               'Login',

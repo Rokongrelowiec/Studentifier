@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import './screens/about_the_app_screen.dart';
+import './screens/chart_screen.dart';
+import './screens/registered_license_plates.dart';
+import './models/admin_provider.dart';
 import './models/theme_provider.dart';
 import './screens/animated_splash_screen.dart';
 import './screens/home_screen.dart';
@@ -32,6 +36,9 @@ void main() {
         ChangeNotifierProvider(
           create: (_) => ThemeProvider()..initialize(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => AdminProvider()..initialize(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -50,6 +57,9 @@ class MyApp extends StatelessWidget {
           routes: {
             HomeScreen.routeName: (_) => HomeScreen(),
             LoginScreen.routeName: (_) => LoginScreen(),
+            ChartScreen.routeName: (_) => ChartScreen(),
+            AboutApp.routeName: (_) => AboutApp(),
+            RegisteredLicensePlates.routeName: (_) => RegisteredLicensePlates(),
           },
           debugShowCheckedModeBanner: false,
           title: 'Studentifier',

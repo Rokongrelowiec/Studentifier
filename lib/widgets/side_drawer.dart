@@ -7,15 +7,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../screens/about_the_app_screen.dart';
+import '../screens/chart_screen.dart';
+import '../screens/registered_license_plates.dart';
+import '../models/admin_provider.dart';
 import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../models/theme_provider.dart';
 
 class SideDrawer extends StatefulWidget {
-  final bool isAdmin;
 
-  SideDrawer({Key? key, this.isAdmin = false}) : super(key: key);
+  SideDrawer({Key? key}) : super(key: key);
 
   @override
   State<SideDrawer> createState() => _SideDrawerState();
@@ -121,6 +125,7 @@ class _SideDrawerState extends State<SideDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
     return OrientationBuilder(
       builder: (ctx, orientation) => Drawer(
         elevation: 0,
@@ -140,7 +145,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: InkWell(
-                      onTap: widget.isAdmin ? showImageSource : null,
+                      onTap: isAdmin ? showImageSource : null,
                       child: CircleAvatar(
                         backgroundColor: Colors.orangeAccent,
                         child: image != null
@@ -182,7 +187,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         ),
                         Container(
                           width: 100,
-                          child: Text(widget.isAdmin ? 'admin!' : 'there!',
+                          child: Text(isAdmin ? 'admin!' : 'there!',
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Theme.of(context)
@@ -196,7 +201,7 @@ class _SideDrawerState extends State<SideDrawer> {
                     ),
                   ),
                   Spacer(),
-                  widget.isAdmin
+                  isAdmin
                       ? IconButton(
                           onPressed: () {
                             showDialog(
@@ -231,11 +236,11 @@ class _SideDrawerState extends State<SideDrawer> {
                                   ),
                                   ElevatedButton(
                                     onPressed: () {
+                                      Provider.of<AdminProvider>(context, listen: false).changePermission(false);
                                       Navigator.of(context)
                                           .pushNamedAndRemoveUntil(
                                               HomeScreen.routeName,
-                                              (route) => false,
-                                              arguments: false);
+                                              (route) => false);
                                     },
                                     child: const Text('OK'),
                                   ),
@@ -257,7 +262,7 @@ class _SideDrawerState extends State<SideDrawer> {
               children: [
                 ListTile(
                   title: Text(
-                    'Select Mode',
+                    'Select mode',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                     ),
@@ -305,17 +310,17 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
                 ListTile(
                   trailing: Icon(
-                    Icons.analytics,
+                    Icons.ssid_chart,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
-                    'Statistics',
+                    'Chart',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                     ),
                   ),
                   onTap: () {
-                    print('Clicked Statistics');
+                    Navigator.of(context).pushNamed(ChartScreen.routeName);
                   },
                 ),
                 Padding(
@@ -327,18 +332,17 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
                 ListTile(
                   trailing: Icon(
-                    widget.isAdmin ? Icons.ssid_chart : Icons.settings,
+                    Icons.text_snippet,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
-                    widget.isAdmin ? 'Chart' : 'Setting',
+                    'About the app',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                     ),
                   ),
                   onTap: () {
-                    if (!widget.isAdmin)
-                      Navigator.of(context).pushNamed(LoginScreen.routeName);
+                    Navigator.of(context).pushNamed(AboutApp.routeName);
                   },
                 ),
                 Padding(
@@ -348,6 +352,56 @@ class _SideDrawerState extends State<SideDrawer> {
                     color: Colors.black,
                   ),
                 ),
+                ListTile(
+                  trailing: Icon(
+                    isAdmin ? Icons.drive_eta : Icons.settings,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  title: Text(
+                    isAdmin ? 'Registered license plates' : 'Setting',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline1?.color,
+                    ),
+                  ),
+                  onTap: () {
+                    if (!isAdmin)
+                      Navigator.of(context).pushNamed(LoginScreen.routeName);
+                    else
+                      Navigator.of(context).pushNamed(RegisteredLicensePlates.routeName);
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Divider(
+                    thickness: 0.5,
+                    color: Colors.black,
+                  ),
+                ),
+
+                isAdmin ? ListTile(
+                  trailing: Icon(
+                    Icons.code,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  title: Text(
+                    'Source code',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline1?.color,
+                    ),
+                  ),
+                  onTap: () async {
+                    final Uri url = Uri.parse("https://github.com/Rokongrelowiec/Studentifier");
+                    if (!await launchUrl(url))
+                      throw 'Could not launch $url';
+                  },
+                ) : Container(),
+                isAdmin ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Divider(
+                    thickness: 0.5,
+                    color: Colors.black,
+                  ),
+                ) : Container()
               ],
             ),
           ],
