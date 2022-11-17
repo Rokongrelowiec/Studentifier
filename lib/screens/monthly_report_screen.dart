@@ -1,6 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import './student_details_screen.dart';
+import '../models/admin_provider.dart';
 
 class MonthlyReport extends StatefulWidget {
   MonthlyReport({Key? key}) : super(key: key);
@@ -46,28 +50,27 @@ class _MonthlyReportState extends State<MonthlyReport> {
     '11:21',
   ];
 
-  List studentIndexes = List.generate(15, (index) => index + 27980); // student indexes
-  List visitsAmount = (List.generate(15, (index) => Random().nextInt(50)+1)); // random num
+  List studentIndexes = List.generate(15, (index) => index + 27980);
+  List visitsCount = (List.generate(15, (index) => Random().nextInt(50) + 1));
 
   late int locationIndex;
   late int removedStudentIndex;
   late String removedLicensePlate;
   late String removedScanTime;
-  late int removedNumber;
+  late int removedVisitsCount;
 
   void removeItem(index) {
-    locationIndex = index; // identify index in lists
+    locationIndex = index; // identify index in lists - used in undoOperation
     removedStudentIndex = studentIndexes[index];
     removedLicensePlate = licensePlates[index];
     removedScanTime = scanTime[index];
-    // removedNumber
-    removedNumber = visitsAmount[index]; // random num - on left side
+    removedVisitsCount = visitsCount[index];
 
     setState(() {
       studentIndexes.removeAt(index);
       licensePlates.removeAt(index);
       scanTime.removeAt(index);
-      visitsAmount.removeAt(index);
+      visitsCount.removeAt(index);
     });
   }
 
@@ -76,19 +79,20 @@ class _MonthlyReportState extends State<MonthlyReport> {
       studentIndexes.insert(locationIndex, removedStudentIndex);
       licensePlates.insert(locationIndex, removedLicensePlate);
       scanTime.insert(locationIndex, removedScanTime);
-      visitsAmount.insert(locationIndex, removedNumber);
+      visitsCount.insert(locationIndex, removedVisitsCount);
     });
   }
 
   @override
   void initState() {
-    visitsAmount.sort();
-    visitsAmount = List.from(visitsAmount.reversed);
+    visitsCount.sort();
+    visitsCount = List.from(visitsCount.reversed);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    // debugPrint(count.toString());
+    final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
     return SingleChildScrollView(
       physics: ScrollPhysics(),
       child: Column(
@@ -119,12 +123,14 @@ class _MonthlyReportState extends State<MonthlyReport> {
             height: 5,
           ),
           Text(
-            'Found: ' + studentIndexes.length.toString() + ' elements!',
+            'Found: ${studentIndexes.length} elements!',
             style: TextStyle(
               color: Theme.of(context).textTheme.headline1?.color,
             ),
           ),
-          SizedBox(height: 5,),
+          SizedBox(
+            height: 5,
+          ),
           ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
@@ -132,8 +138,24 @@ class _MonthlyReportState extends State<MonthlyReport> {
             itemBuilder: (ctx, index) => Card(
               color: Theme.of(context).drawerTheme.backgroundColor,
               child: ListTile(
+                onTap: () async {
+                  final newValues = await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => StudentDetails(
+                        studentId: studentIndexes[index],
+                        licensePlate: licensePlates[index],
+                      ),
+                    ),
+                  ) ?? '';
+                  if (newValues.isNotEmpty){
+                    setState(() {
+                      studentIndexes[index] = newValues['studentId'];
+                      licensePlates[index] = newValues['licensePlate'];
+                    });
+                  }
+                },
                 leading: Text(
-                  visitsAmount[index].toString(),
+                  visitsCount[index].toString(),
                   style: TextStyle(
                       fontSize: 25,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -170,26 +192,27 @@ class _MonthlyReportState extends State<MonthlyReport> {
                     ),
                   ],
                 ),
-                trailing: IconButton(
-                  onPressed: () {
-                    removeItem(index);
-                    final snackBar = SnackBar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      content: Text(
-                        'Removed item number: ${index + 1}',
-                      ),
-                      action: SnackBarAction(
-                          label: 'Undo',
-                          textColor: Colors.white,
-                          onPressed: () => undoOperation()),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                ),
+                trailing: isAdmin
+                    ? IconButton(
+                        onPressed: () {
+                          removeItem(index);
+                          final snackBar = SnackBar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            content: Text(
+                              'Removed item number: ${index + 1}',
+                            ),
+                            action: SnackBarAction(
+                                label: 'Undo',
+                                textColor: Colors.white,
+                                onPressed: () => undoOperation()),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                      ) : null,
               ),
             ),
           ),

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../models/admin_provider.dart';
+import './student_details_screen.dart';
 
 class DailyReport extends StatefulWidget {
   DailyReport({Key? key}) : super(key: key);
@@ -48,7 +52,7 @@ class _DailyReportState extends State<DailyReport> {
   late String removedScanTime;
 
   void removeItem(index) {
-    locationIndex = index;
+    locationIndex = index; // identify index in lists - used in undoOperation
     removedStudentIndex = studentIndexes[index];
     removedLicensePlate = licensePlates[index];
     removedScanTime = scanTime[index];
@@ -70,7 +74,7 @@ class _DailyReportState extends State<DailyReport> {
 
   @override
   Widget build(BuildContext context) {
-    // debugPrint(licensePlates[0].length.toString());
+    final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
     return SingleChildScrollView(
       physics: ScrollPhysics(),
       child: Column(
@@ -101,7 +105,7 @@ class _DailyReportState extends State<DailyReport> {
             height: 5,
           ),
           Text(
-            'Found: ' + studentIndexes.length.toString() + ' elements!',
+            'Found: ${studentIndexes.length} elements!',
             style: TextStyle(
               color: Theme.of(context).textTheme.headline1?.color,
             ),
@@ -116,6 +120,23 @@ class _DailyReportState extends State<DailyReport> {
             itemBuilder: (ctx, index) => Card(
               color: Theme.of(context).drawerTheme.backgroundColor,
               child: ListTile(
+                onTap: () async {
+                    final newValues = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) =>
+                            StudentDetails(
+                              studentId: studentIndexes[index],
+                              licensePlate: licensePlates[index],
+                            ),
+                      ),
+                    ) ?? '';
+                  if (newValues.isNotEmpty){
+                    setState(() {
+                      studentIndexes[index] = newValues['studentId'];
+                      licensePlates[index] = newValues['licensePlate'];
+                    });
+                  }
+                },
                 leading: Text(
                   scanTime[index],
                   style: TextStyle(
@@ -137,12 +158,6 @@ class _DailyReportState extends State<DailyReport> {
                         color: Theme.of(context).textTheme.headline1?.color,
                       ),
                     ),
-                    // Spacer(),
-                    // Text(
-                    //   hours[index],
-                    //   style: TextStyle(
-                    //       color: Theme.of(context).textTheme.headline1?.color),
-                    // ),
                   ],
                 ),
                 subtitle: Row(
@@ -160,7 +175,7 @@ class _DailyReportState extends State<DailyReport> {
                     ),
                   ],
                 ),
-                trailing: IconButton(
+                trailing: isAdmin ? IconButton(
                   onPressed: () {
                     removeItem(index);
                     final snackBar = SnackBar(
@@ -178,8 +193,8 @@ class _DailyReportState extends State<DailyReport> {
                   icon: Icon(
                     Icons.delete,
                     color: Theme.of(context).iconTheme.color,
-                  ),
-                ),
+                  )
+                ) : null
               ),
             ),
           ),
