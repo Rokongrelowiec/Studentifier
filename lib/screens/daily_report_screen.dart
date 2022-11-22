@@ -12,6 +12,38 @@ class DailyReport extends StatefulWidget {
 }
 
 class _DailyReportState extends State<DailyReport> {
+  List firstNames = [
+    'James',
+    'Robert',
+    'Mary',
+    'Patricia',
+    'John',
+    'Jennifer',
+    'Michael',
+    'Linda',
+    'David',
+    'Elizabeth',
+    'William',
+    'Barbara',
+    'Richard'
+  ];
+
+  List lastNames = [
+    'Smith',
+    'Johnson',
+    'Williams',
+    'Brown',
+    'Jones',
+    'Garcia',
+    'Miller',
+    'Davis',
+    'Rodriguez',
+    'Martinez',
+    'Hernandez',
+    'Lopez',
+    'Gonzales',
+  ];
+
   List licensePlates = [
     'SW UI3X1',
     'PO W11F5',
@@ -48,18 +80,25 @@ class _DailyReportState extends State<DailyReport> {
 
   late int locationIndex; //index of list
   late int removedStudentIndex;
+
   late String removedLicensePlate;
+  late String removedFirstName;
+  late String removedLastName;
   late String removedScanTime;
 
   void removeItem(index) {
     locationIndex = index; // identify index in lists - used in undoOperation
     removedStudentIndex = studentIndexes[index];
     removedLicensePlate = licensePlates[index];
+    removedFirstName = firstNames[index];
+    removedLastName = lastNames[index];
     removedScanTime = scanTime[index];
 
     setState(() {
       studentIndexes.removeAt(index);
       licensePlates.removeAt(index);
+      firstNames.removeAt(index);
+      lastNames.removeAt(index);
       scanTime.removeAt(index);
     });
   }
@@ -68,6 +107,8 @@ class _DailyReportState extends State<DailyReport> {
     setState(() {
       studentIndexes.insert(locationIndex, removedStudentIndex);
       licensePlates.insert(locationIndex, removedLicensePlate);
+      firstNames.insert(locationIndex, removedFirstName);
+      lastNames.insert(locationIndex, removedLastName);
       scanTime.insert(locationIndex, removedScanTime);
     });
   }
@@ -120,82 +161,94 @@ class _DailyReportState extends State<DailyReport> {
             itemBuilder: (ctx, index) => Card(
               color: Theme.of(context).drawerTheme.backgroundColor,
               child: ListTile(
-                onTap: () async {
+                  onTap: () async {
                     final newValues = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            StudentDetails(
+                          MaterialPageRoute(
+                            builder: (_) => StudentDetails(
                               studentId: studentIndexes[index],
                               licensePlate: licensePlates[index],
+                              firstName: firstNames[index],
+                              lastName: lastNames[index],
                             ),
-                      ),
-                    ) ?? '';
-                  if (newValues.isNotEmpty){
-                    setState(() {
-                      studentIndexes[index] = newValues['studentId'];
-                      licensePlates[index] = newValues['licensePlate'];
-                    });
-                  }
-                },
-                leading: Text(
-                  scanTime[index],
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).textTheme.headline1?.color),
-                ),
-                title: Row(
-                  children: [
-                    Text(
-                      'Index: ',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1?.color,
-                      ),
-                    ),
-                    Text(
-                      studentIndexes[index].toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.headline1?.color,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: Row(
-                  children: [
-                    Text(
-                      'License Plate: ',
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
-                    ),
-                    Text(
-                      licensePlates[index],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).textTheme.headline1?.color),
-                    ),
-                  ],
-                ),
-                trailing: isAdmin ? IconButton(
-                  onPressed: () {
-                    removeItem(index);
-                    final snackBar = SnackBar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      content: Text(
-                        'Removed item number: ${index + 1}',
-                      ),
-                      action: SnackBarAction(
-                          label: 'Undo',
-                          textColor: Colors.white,
-                          onPressed: () => undoOperation()),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          ),
+                        ) ??
+                        '';
+                    if (newValues.isNotEmpty) {
+                      setState(() {
+                        studentIndexes[index] = newValues['studentId'];
+                        licensePlates[index] = newValues['licensePlate'];
+                        firstNames[index] = newValues['firstName'];
+                        lastNames[index] = newValues['lastName'];
+                      });
+                    }
                   },
-                  icon: Icon(
-                    Icons.delete,
-                    color: Theme.of(context).iconTheme.color,
-                  )
-                ) : null
-              ),
+                  leading: Text(
+                    scanTime[index],
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Theme.of(context).textTheme.headline1?.color),
+                  ),
+                  title: Row(
+                    children: [
+                      Text(
+                        'Index: ',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1?.color,
+                        ),
+                      ),
+                      Text(
+                        studentIndexes[index].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.headline1?.color,
+                        ),
+                      ),
+                    ],
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Text(
+                        'Name: ',
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.headline1?.color),
+                      ),
+                      Container(
+                        width: 180,
+                        child: Text(
+                          '${firstNames[index]} ${lastNames[index]}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  trailing: isAdmin
+                      ? IconButton(
+                          onPressed: () {
+                            removeItem(index);
+                            final snackBar = SnackBar(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              content: Text(
+                                'Removed item number: ${index + 1}',
+                              ),
+                              action: SnackBarAction(
+                                  label: 'Undo',
+                                  textColor: Colors.white,
+                                  onPressed: () => undoOperation()),
+                            );
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          },
+                          icon: Icon(
+                            Icons.delete,
+                            color: Theme.of(context).iconTheme.color,
+                          ))
+                      : null),
             ),
           ),
         ],
