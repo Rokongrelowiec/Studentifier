@@ -14,6 +14,43 @@ class MonthlyReport extends StatefulWidget {
 }
 
 class _MonthlyReportState extends State<MonthlyReport> {
+
+  List firstNames = [
+    'James',
+    'Robert',
+    'Mary',
+    'Patricia',
+    'John',
+    'Jennifer',
+    'Michael',
+    'Linda',
+    'David',
+    'Elizabeth',
+    'William',
+    'Barbara',
+    'Richard',
+    'Susan',
+    'Jessica',
+  ];
+
+  List lastNames = [
+    'Smith',
+    'Johnson',
+    'Williams',
+    'Brown',
+    'Jones',
+    'Garcia',
+    'Miller',
+    'Davis',
+    'Rodriguez',
+    'Martinez',
+    'Hernandez',
+    'Lopez',
+    'Gonzales',
+    'Wilson',
+    'Anderson',
+  ];
+
   List licensePlates = [
     'DAN 13L',
     'S4L 4Z4R',
@@ -56,6 +93,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
   late int locationIndex;
   late int removedStudentIndex;
   late String removedLicensePlate;
+  late String removedFirstName;
+  late String removedLastName;
   late String removedScanTime;
   late int removedVisitsCount;
 
@@ -63,12 +102,16 @@ class _MonthlyReportState extends State<MonthlyReport> {
     locationIndex = index; // identify index in lists - used in undoOperation
     removedStudentIndex = studentIndexes[index];
     removedLicensePlate = licensePlates[index];
+    removedFirstName = firstNames[index];
+    removedLastName = lastNames[index];
     removedScanTime = scanTime[index];
     removedVisitsCount = visitsCount[index];
 
     setState(() {
       studentIndexes.removeAt(index);
       licensePlates.removeAt(index);
+      firstNames.removeAt(index);
+      lastNames.removeAt(index);
       scanTime.removeAt(index);
       visitsCount.removeAt(index);
     });
@@ -78,6 +121,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
     setState(() {
       studentIndexes.insert(locationIndex, removedStudentIndex);
       licensePlates.insert(locationIndex, removedLicensePlate);
+      firstNames.insert(locationIndex, removedFirstName);
+      lastNames.insert(locationIndex, removedLastName);
       scanTime.insert(locationIndex, removedScanTime);
       visitsCount.insert(locationIndex, removedVisitsCount);
     });
@@ -144,6 +189,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
                       builder: (_) => StudentDetails(
                         studentId: studentIndexes[index],
                         licensePlate: licensePlates[index],
+                        firstName: firstNames[index],
+                        lastName: lastNames[index],
                       ),
                     ),
                   ) ?? '';
@@ -151,6 +198,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
                     setState(() {
                       studentIndexes[index] = newValues['studentId'];
                       licensePlates[index] = newValues['licensePlate'];
+                      firstNames[index] = newValues['firstName'];
+                      lastNames[index] = newValues['lastName'];
                     });
                   }
                 },
@@ -180,15 +229,20 @@ class _MonthlyReportState extends State<MonthlyReport> {
                 subtitle: Row(
                   children: [
                     Text(
-                      'License Plate: ',
+                      'Name: ',
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color),
                     ),
-                    Text(
-                      licensePlates[index],
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).textTheme.headline1?.color),
+                    Container(
+                      width: 180,
+                      child: Text(
+                        '${firstNames[index]} ${lastNames[index]}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.headline1?.color,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -206,6 +260,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                 textColor: Colors.white,
                                 onPressed: () => undoOperation()),
                           );
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         },
                         icon: Icon(
