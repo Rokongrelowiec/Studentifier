@@ -1,1 +1,1 @@
-web: ./dart-sdk/bin/dart webserver/bin/webserver.dart --port 8069
+web: ./dart-sdk/bin/dart webserver/bin/webserver.dart
