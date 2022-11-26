@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:webserver/webserver.dart' as webserver;
 import 'package:args/args.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
-import 'package:supabase/supabase.dart';
+import 'package:intl/intl.dart';
+
+import 'db_credentials.dart';
 
 const _hostname = 'localhost';
 
@@ -21,9 +22,6 @@ void main(List<String> arguments) async {
     return;
   }
 
-  stdout.writeln('Database URL: ${Platform.environment['SB_DB_URL']}');
-  stdout.writeln('Database PW: ${String.fromEnvironment('SB_DB_PW')}');
-
   var handler = const shelf.Pipeline()
                            .addMiddleware(shelf.logRequests())
                            .addHandler(_echoRequest);
@@ -34,15 +32,13 @@ void main(List<String> arguments) async {
 }
 
 Future<shelf.Response> _echoUsers(shelf.Request request) async {
-  final SB_DB_PW = await File('/Users/yourusername/.supabase_db_pw').readAsString();
-  stdout.writeln(SB_DB_PW);
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
 
-  final client = SupabaseClient(Platform.environment['SB_DB_URL']!, SB_DB_PW.trim());
-  final response = await client
+  final response = await dbClient
     .from('student')
     .select();
-
-  stdout.writeln(response);
 
   var map = {
     'student' : response
@@ -53,10 +49,86 @@ Future<shelf.Response> _echoUsers(shelf.Request request) async {
   return shelf.Response.ok(body);
 }
 
+Future<shelf.Response> _echoActiveUsers(shelf.Request request) async{
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  final String formatted = formatter.format(now);
+  
+  final response = await dbClient
+    .from('student')
+    .select()
+    .gte('data_waznosci', formatted);
+
+  var map = {
+    'student' : response
+  };
+
+  var body = jsonEncode(map);
+
+  return shelf.Response.ok(body);
+
+}
+
+Future<shelf.Response> _echoUpdateUsersStudentId(shelf.Request request) async{
+  var readString = await request.readAsString();
+  print(readString);
+
+  return shelf.Response.ok('hello');
+}
+
 Future<shelf.Response> _echoRequest(shelf.Request request) async {
   switch(request.url.toString()) {
-    case 'api/students': return _echoUsers(request);
+    case 'api/v1/students': return _echoUsers(request);
+    case 'api/v1/students/active': return _echoActiveUsers(request);
+    case 'api/v1/students/update/student_id': return _echoUpdateUsersStudentId(request);
+    case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
+    case 'api/v1/vehicles/licenseplates/lecturers': return _echoVehiclesLicensePlatesOfLecturers(request);
     default : return shelf.Response.badRequest(body: 'Invalid method');
   }
 }
+
+Future<shelf.Response> _echoVehiclesLicensePlatesOfLecturers(shelf.Request request) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  final response = await dbClient
+    .from('rejestracje')
+    .select()
+    .eq('wykladowca', 'true');
+
+  var map = {
+    'vehicles' : response
+  };
+
+  var body = jsonEncode(map);
+
+  return shelf.Response.ok(body);
+
+
+}
+
+Future<shelf.Response> _echoVehiclesLicensePlates(shelf.Request request) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+  
+  final response = await dbClient
+    .from('rejestracje')
+    .select();
+
+  var map = {
+    'vehicles' : response
+  };
+
+  var body = jsonEncode(map);
+
+  return shelf.Response.ok(body);
+}
+
+
+
 
