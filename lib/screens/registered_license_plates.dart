@@ -134,6 +134,7 @@ class _GenerateRegisteredLicensePlatesState extends State<GenerateRegisteredLice
                             textColor: Colors.white,
                             onPressed: () => undoOperation()),
                       );
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     },
                     icon: Icon(
