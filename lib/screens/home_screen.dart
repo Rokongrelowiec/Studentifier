@@ -41,9 +41,7 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
         ),
         iconTheme: Theme.of(context).iconTheme,
       ),
-      body: SingleChildScrollView(
-        child: navBarWidgets[activeIndex],
-      ),
+      body:  navBarWidgets[activeIndex],
       drawer: SideDrawer(),
       bottomNavigationBar: Container(
         color: Theme.of(context).navigationBarTheme.backgroundColor,

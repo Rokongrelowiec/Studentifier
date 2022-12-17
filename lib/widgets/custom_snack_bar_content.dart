@@ -25,13 +25,13 @@ class CustomSnackBarContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Something went wrong...",
+                      "Oops...",
                       style: const TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     const Spacer(),
                     Text(
                       errorText,
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                      style: const TextStyle(fontSize: 14, color: Colors.white),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

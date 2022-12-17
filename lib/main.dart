@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:camera/camera.dart';
 
 import './screens/about_the_app_screen.dart';
 import './screens/chart_screen.dart';
@@ -10,7 +11,11 @@ import './screens/animated_splash_screen.dart';
 import './screens/home_screen.dart';
 import './screens/login_screen.dart';
 
-void main() {
+late List<CameraDescription> cameras;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   ErrorWidget.builder = (FlutterErrorDetails details) {
     bool inDebug = false;
     assert(() {
