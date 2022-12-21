@@ -39,12 +39,10 @@ dependencies:
   animated_splash_screen: ^1.3.0
   url_launcher: ^6.0.12
   syncfusion_flutter_charts: ^20.3.57
-  camera: ^0.10.0+5
-#  tflite: ^1.1.2
-  tflite:
-    path: ./lib/tflite_own
+  camera: ^0.9.4
+  flutter_tflite: ^1.0.1
 #  tflite_flutter_helper: ^0.3.1
-  #  tflite_flutter: ^0.9.0
+#  tflite_flutter: ^0.9.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

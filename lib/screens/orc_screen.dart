@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tflite/tflite.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_tflite/flutter_tflite.dart';
 
 import '../main.dart';
 import '../widgets/custom_snack_bar_content.dart';
@@ -21,40 +21,41 @@ class _FirstTabState extends State<FirstTab> {
   void initState() {
     super.initState();
     loadModel();
-    debugPrint('Model Loaded!');
+    print('Model Loaded!');
     initCamera();
   }
 
-  runModelOnStreamFrames() async {
-    if (imgCamera != null) {
-      var recognitions = await Tflite.runModelOnFrame(
-        bytesList: imgCamera.planes.map((plane) {
-          return plane.bytes;
-        }).toList(),
-        imageHeight: imgCamera.width,
-        imageWidth: imgCamera.width,
-        imageMean: 127.5,
-        imageStd: 127.5,
-        rotation: 90,
-        numResults: 3,
-        threshold: 0.1,
-        asynch: true,
-      );
+  Future<List<dynamic>?> runModelOnStreamFrames() async {
+    var recognitions = await Tflite.runModelOnFrame(
+      bytesList: imgCamera.planes.map((plane) {
+        return plane.bytes;
+      }).toList(),
+      imageHeight: imgCamera.width,
+      imageWidth: imgCamera.width,
+      imageMean: 127.5,
+      imageStd: 127.5,
+      rotation: 90,
+      numResults: 5,
+      threshold: 0.1,
+      asynch: true,
+    );
 
-      result = "";
-
-      recognitions?.forEach((response) {
-        result += response['label'] +
-            ' ' +
-            (response['confidence'] as double).toStringAsFixed(2) +
-            '\n\n';
-      });
-
-      setState(() {
-        result;
-        print(result);
-      });
-    }
+    return recognitions;
+    // result = "";
+    //
+    // recognitions?.forEach((response) {
+    //   print(response);
+    //   result += response['label'] +
+    //       ' ' +
+    //       (response['confidence'] as double).toStringAsFixed(2) +
+    //       '\n\n';
+    // });
+    //
+    // print(result);
+    // setState(() {
+    //   result;
+    //   print(result);
+    // });
   }
 
   loadModel() async {
@@ -73,7 +74,8 @@ class _FirstTabState extends State<FirstTab> {
       setState(() {
         cameraController.startImageStream((imageFromStream) => {
               imgCamera = imageFromStream,
-              runModelOnStreamFrames(),
+              //TODO: fix issue connected to the line below
+              // runModelOnStreamFrames(),
             });
       });
     }).catchError((Object e) {
@@ -81,7 +83,7 @@ class _FirstTabState extends State<FirstTab> {
         switch (e.code) {
           case 'CameraAccessDenied':
             // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            // ScaffoldMessenger.of(context).showSnackBar(
+            // ScaffoldMessenger.of(context).showSnackBar(W
             //   SnackBar(
             //     content: CustomSnackBarContent('CameraAccessDenied'),
             //     behavior: SnackBarBehavior.floating,
