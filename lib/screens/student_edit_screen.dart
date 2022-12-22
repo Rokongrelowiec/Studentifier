@@ -129,8 +129,8 @@ class StudentEditGenerate extends StatelessWidget {
                       backgroundColor: Colors.grey.withOpacity(0.9),
                       radius: 80,
                       child: Icon(
-                        color: Colors.white,
                         Icons.person,
+                        color: Colors.white,
                         size: 100,
                       ),
                     ),
@@ -204,7 +204,8 @@ class StudentEditGenerate extends StatelessWidget {
                           color: Theme.of(context).textTheme.headline1?.color),
                       decoration: InputDecoration(
                         icon: Icon(
-                          Icons.key,
+                          // Icons.key, // v2
+                          Icons.vpn_key,
                           size: 30,
                           color: Colors.grey,
                         ),

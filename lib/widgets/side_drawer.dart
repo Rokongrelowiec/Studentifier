@@ -195,7 +195,9 @@ class _SideDrawerState extends State<SideDrawer> {
                                       .headline1
                                       ?.color,
                                   fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.ellipsis)),
+                                  // overflow: TextOverflow.ellipsis, // v2
+                              ),
+                          ),
                         ),
                       ],
                     ),
@@ -208,7 +210,8 @@ class _SideDrawerState extends State<SideDrawer> {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 backgroundColor: Theme.of(context)
-                                    .drawerTheme
+                                    // .drawerTheme // v2
+                                    .bannerTheme
                                     .backgroundColor,
                                 title: Text(
                                   'Sing out',
@@ -271,7 +274,8 @@ class _SideDrawerState extends State<SideDrawer> {
                       builder: (context, provider, child) {
                     return DropdownButton(
                       dropdownColor:
-                          Theme.of(context).drawerTheme.backgroundColor,
+                          // Theme.of(context).drawerTheme.backgroundColor, // v2
+                          Theme.of(context).bannerTheme.backgroundColor,
                       value: provider.currentTheme,
                       icon: const Icon(Icons.keyboard_arrow_down_rounded),
                       elevation: 16,
@@ -310,7 +314,8 @@ class _SideDrawerState extends State<SideDrawer> {
                 ),
                 ListTile(
                   trailing: Icon(
-                    Icons.ssid_chart,
+                    // Icons.ssid_chart, // v2
+                    Icons.stacked_line_chart,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
@@ -391,7 +396,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                   onTap: () async {
                     final Uri url = Uri.parse("https://github.com/Rokongrelowiec/Studentifier");
-                    if (!await launchUrl(url))
+                    // if (!await launchUrl(url)) // v2
                       throw 'Could not launch $url';
                   },
                 ) : Container(),

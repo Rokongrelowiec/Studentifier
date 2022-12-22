@@ -89,7 +89,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Card(
-                color: Theme.of(context).drawerTheme.backgroundColor,
+                // color: Theme.of(context).drawerTheme.backgroundColor, // v2
+                color: Theme.of(context).bannerTheme.backgroundColor,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -121,7 +122,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Card(
-                color: Theme.of(context).drawerTheme.backgroundColor,
+                // color: Theme.of(context).drawerTheme.backgroundColor, // v2
+                color: Theme.of(context).bannerTheme.backgroundColor,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -153,7 +155,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Card(
-                color: Theme.of(context).drawerTheme.backgroundColor,
+                // color: Theme.of(context).drawerTheme.backgroundColor, // v2
+                color: Theme.of(context).bannerTheme.backgroundColor,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -185,7 +188,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Card(
-                color: Theme.of(context).drawerTheme.backgroundColor,
+                // color: Theme.of(context).drawerTheme.backgroundColor, // v2
+                color: Theme.of(context).bannerTheme.backgroundColor,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
@@ -217,7 +221,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Card(
-                color: Theme.of(context).drawerTheme.backgroundColor,
+                // color: Theme.of(context).drawerTheme.backgroundColor,
+                color: Theme.of(context).bannerTheme.backgroundColor,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 5),

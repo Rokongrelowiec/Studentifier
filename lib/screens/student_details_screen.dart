@@ -153,8 +153,8 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     backgroundColor: Colors.grey.withOpacity(0.9),
                     radius: 80,
                     child: Icon(
-                      color: Colors.white,
                       Icons.person,
+                      color: Colors.white,
                       size: 100,
                     ),
                   ),

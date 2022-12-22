@@ -51,7 +51,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp();
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +71,10 @@ class MyApp extends StatelessWidget {
           themeMode: provider.themeMode,
           theme: ThemeData(
             primarySwatch: Colors.orange,
-            navigationBarTheme: NavigationBarThemeData(
+            navigationRailTheme: NavigationRailThemeData(
+            // navigationBarTheme: NavigationBarThemeData( // v2
               backgroundColor: Colors.orange[300],
-              indicatorColor: Colors.orangeAccent[400],
+              // indicatorColor: Colors.orangeAccent[400], // v2
             ),
             textTheme: TextTheme(
               headline1: TextStyle(color: Colors.black),
@@ -83,9 +84,14 @@ class MyApp extends StatelessWidget {
           darkTheme: ThemeData(
             primarySwatch: Colors.orange,
             scaffoldBackgroundColor: Colors.grey[900],
-            navigationBarTheme: NavigationBarThemeData(
-                backgroundColor: Colors.black, indicatorColor: Colors.white30),
-            drawerTheme: DrawerThemeData(backgroundColor: Colors.grey[850]),
+            navigationRailTheme: NavigationRailThemeData(
+            // navigationBarTheme: NavigationBarThemeData( // v2
+                backgroundColor: Colors.black,
+                // indicatorColor: Colors.white30, // v2
+
+            ),
+            bannerTheme: MaterialBannerThemeData(backgroundColor: Colors.grey[850]),
+            // drawerTheme: DrawerThemeData(backgroundColor: Colors.grey[850]) // v2
             textTheme: TextTheme(
               headline1: TextStyle(color: Colors.white),
             ),

@@ -44,18 +44,21 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
       body:  navBarWidgets[activeIndex],
       drawer: SideDrawer(),
       bottomNavigationBar: Container(
-        color: Theme.of(context).navigationBarTheme.backgroundColor,
+        // color: Theme.of(context).navigationBarTheme.backgroundColor, // v2
+        color: Theme.of(context).navigationRailTheme.backgroundColor,
         child: Padding(
           padding: Platform.isIOS
               ? const EdgeInsets.fromLTRB(5, 5, 5, 20)
               : const EdgeInsets.all(5),
           child: GNav(
             backgroundColor:
-                Theme.of(context).navigationBarTheme.backgroundColor as Color,
+                // Theme.of(context).navigationBarTheme.backgroundColor as Color, // v2
+                Theme.of(context).navigationRailTheme.backgroundColor as Color,
             color: Colors.white,
             activeColor: Colors.white,
             tabBackgroundColor:
-                Theme.of(context).navigationBarTheme.indicatorColor as Color,
+                // Theme.of(context).navigationBarTheme.indicatorColor as Color,
+                Colors.orangeAccent[400] as Color,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
             gap: 8,
             onTabChange: (tabIndex) {
@@ -73,7 +76,8 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
                 text: 'Daily Report',
               ),
               GButton(
-                icon: Icons.calendar_month,
+                // icon: Icons.calendar_month, // v2
+                icon: Icons.calendar_today_outlined,
                 text: 'Monthly Report',
               ),
             ],

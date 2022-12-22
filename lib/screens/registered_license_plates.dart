@@ -112,7 +112,8 @@ class _GenerateRegisteredLicensePlatesState extends State<GenerateRegisteredLice
               physics: NeverScrollableScrollPhysics(),
               itemCount: registeredLicensePlates.length,
               itemBuilder: (ctx, index) => Card(
-                color: Theme.of(context).drawerTheme.backgroundColor,
+                // color: Theme.of(context).drawerTheme.backgroundColor, // v2
+                color: Theme.of(context).bannerTheme.backgroundColor,
                 child: ListTile(
                   key: UniqueKey(),
                   title: Text(

@@ -181,7 +181,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: licensePlates.length,
             itemBuilder: (ctx, index) => Card(
-              color: Theme.of(context).drawerTheme.backgroundColor,
+              // color: Theme.of(context).drawerTheme.backgroundColor, // v2
+              color: Theme.of(context).bannerTheme.backgroundColor,
               child: ListTile(
                 onTap: () async {
                   final newValues = await Navigator.of(context).push(
@@ -240,7 +241,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).textTheme.headline1?.color,
-                          overflow: TextOverflow.ellipsis,
+                          // overflow: TextOverflow.ellipsis, // v2
                         ),
                       ),
                     ),

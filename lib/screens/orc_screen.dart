@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter_tflite/flutter_tflite.dart';
+// import 'package:flutter_tflite/flutter_tflite.dart';
+import 'package:tflite/tflite.dart';
 
 import '../main.dart';
 import '../widgets/custom_snack_bar_content.dart';
@@ -75,7 +76,7 @@ class _FirstTabState extends State<FirstTab> {
         cameraController.startImageStream((imageFromStream) => {
               imgCamera = imageFromStream,
               //TODO: fix issue connected to the line below
-              // runModelOnStreamFrames(),
+              runModelOnStreamFrames(),
             });
       });
     }).catchError((Object e) {

@@ -159,7 +159,8 @@ class _DailyReportState extends State<DailyReport> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: licensePlates.length,
             itemBuilder: (ctx, index) => Card(
-              color: Theme.of(context).drawerTheme.backgroundColor,
+              // color: Theme.of(context).drawerTheme.backgroundColor,
+              color: Theme.of(context).bannerTheme.backgroundColor,
               child: ListTile(
                   onTap: () async {
                     final newValues = await Navigator.of(context).push(
@@ -220,7 +221,7 @@ class _DailyReportState extends State<DailyReport> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).textTheme.headline1?.color,
-                            overflow: TextOverflow.ellipsis,
+                            // overflow: TextOverflow.ellipsis, // v2
                           ),
                         ),
                       ),
