@@ -25,7 +25,7 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
   @override
   void initState() {
     super.initState();
-    _initializeDetector(DetectionMode.stream);
+    _initializeDetector();
   }
 
   @override
@@ -44,58 +44,22 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
       onImage: (inputImage) {
         processImage(inputImage);
       },
-      onScreenModeChanged: _onScreenModeChanged,
+      onScreenModeChanged: _initializeDetector,
+      // onScreenModeChanged: _onScreenModeChanged,
       initialDirection: CameraLensDirection.back,
     );
   }
 
-  void _onScreenModeChanged(ScreenMode mode) {
-    switch (mode) {
-      case ScreenMode.gallery:
-        _initializeDetector(DetectionMode.single);
-        return;
-
-      case ScreenMode.liveFeed:
-        _initializeDetector(DetectionMode.stream);
-        return;
-    }
-  }
-
-  void _initializeDetector(DetectionMode mode) async {
-    print('Set detector in mode: $mode');
-
-    // uncomment next lines if you want to use the default model
-    // final options = ObjectDetectorOptions(
-    //     mode: mode,
-    //     classifyObjects: true,
-    //     multipleObjects: true);
-    // _objectDetector = ObjectDetector(options: options);
-
-    // uncomment next lines if you want to use a local model
-    // make sure to add tflite model to assets/ml
+  void _initializeDetector() async {
     final path = 'assets/object_labeler.tflite';
     final modelPath = await _getModel(path);
     final options = LocalObjectDetectorOptions(
-      mode: mode,
+      mode: DetectionMode.stream,
       modelPath: modelPath,
       classifyObjects: true,
       multipleObjects: true,
     );
     _objectDetector = ObjectDetector(options: options);
-
-    // uncomment next lines if you want to use a remote model
-    // make sure to add model to firebase
-    // final modelName = 'bird-classifier';
-    // final response =
-    //     await FirebaseObjectDetectorModelManager().downloadModel(modelName);
-    // print('Downloaded: $response');
-    // final options = FirebaseObjectDetectorOptions(
-    //   mode: mode,
-    //   modelName: modelName,
-    //   classifyObjects: true,
-    //   multipleObjects: true,
-    // );
-    // _objectDetector = ObjectDetector(options: options);
 
     _canProcess = true;
   }
@@ -108,23 +72,12 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
       _text = '';
     });
     final objects = await _objectDetector.processImage(inputImage);
-    if (inputImage.inputImageData?.size != null &&
-        inputImage.inputImageData?.imageRotation != null) {
+    print(objects);
       final painter = ObjectDetectorPainter(
           objects,
           inputImage.inputImageData!.imageRotation,
           inputImage.inputImageData!.size);
       _customPaint = CustomPaint(painter: painter);
-    } else {
-      String text = 'Objects found: ${objects.length}\n\n';
-      for (final object in objects) {
-        text +=
-        'Object:  trackingId: ${object.trackingId} - ${object.labels.map((e) => e.text)}\n\n';
-      }
-      _text = text;
-      // TODO: set _customPaint to draw boundingRect on top of image
-      _customPaint = null;
-    }
     _isBusy = false;
     if (mounted) {
       setState(() {});
