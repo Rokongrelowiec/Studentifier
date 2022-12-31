@@ -45,7 +45,6 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
         processImage(inputImage);
       },
       onScreenModeChanged: _initializeDetector,
-      // onScreenModeChanged: _onScreenModeChanged,
       initialDirection: CameraLensDirection.back,
     );
   }
