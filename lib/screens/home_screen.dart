@@ -27,7 +27,7 @@ class GenerateHomeScreen extends StatefulWidget {
 }
 
 class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
-  List navBarWidgets = [ObjectDetectorView(), DailyReport(), MonthlyReport()];
+  List navBarWidgets = [OCRScreen(), DailyReport(), MonthlyReport()];
   int activeIndex = 0;
 
   @override
@@ -65,7 +65,7 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
             },
             tabs: [
               GButton(
-                icon: Icons.camera,
+                icon: Icons.camera_alt,
                 text: 'OCR',
               ),
               GButton(

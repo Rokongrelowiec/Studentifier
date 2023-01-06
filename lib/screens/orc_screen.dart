@@ -3,24 +3,25 @@ import 'dart:io' as io;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mlkit_object_detection/google_mlkit_object_detection.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
+import './license_screen.dart';
 import '../widgets/camera_view.dart';
 import '../widgets/object_detector_painter.dart';
 
-class ObjectDetectorView extends StatefulWidget {
+class OCRScreen extends StatefulWidget {
+
   @override
-  State<ObjectDetectorView> createState() => _ObjectDetectorView();
+  State<OCRScreen> createState() => _OCRScreen();
 }
 
-class _ObjectDetectorView extends State<ObjectDetectorView> {
+class _OCRScreen extends State<OCRScreen> {
   late ObjectDetector _objectDetector;
   bool _canProcess = false;
-  bool _isBusy = false;
   CustomPaint? _customPaint;
-  String? _text;
+  Map licenses = {};
 
   @override
   void initState() {
@@ -40,9 +41,8 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     return CameraView(
       title: 'Object Detector',
       customPaint: _customPaint,
-      text: _text,
       onImage: (inputImage) {
-        processImage(inputImage);
+        processImage(inputImage, context);
       },
       onScreenModeChanged: _initializeDetector,
       initialDirection: CameraLensDirection.back,
@@ -63,23 +63,55 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
     _canProcess = true;
   }
 
-  Future<void> processImage(InputImage inputImage) async {
+  Future<void> processImage(InputImage inputImage, BuildContext context) async {
     if (!_canProcess) return;
-    if (_isBusy) return;
-    _isBusy = true;
-    setState(() {
-      _text = '';
-    });
     final objects = await _objectDetector.processImage(inputImage);
-    print(objects);
-      final painter = ObjectDetectorPainter(
-          objects,
-          inputImage.inputImageData!.imageRotation,
-          inputImage.inputImageData!.size);
-      _customPaint = CustomPaint(painter: painter);
-    _isBusy = false;
+    final painter = ObjectDetectorPainter(
+        objects,
+        inputImage.inputImageData!.imageRotation,
+        inputImage.inputImageData!.size);
+    _customPaint = CustomPaint(painter: painter);
     if (mounted) {
       setState(() {});
+    }
+
+    for (DetectedObject detectedObject in objects) {
+      for (Label label in detectedObject.labels) {
+        // print('${label.text} ${label.confidence}');
+        if ((label.text == 'Car' && label.confidence > 0.85) || label.text == 'License plate') {
+          final textDetector = GoogleMlKit.vision.textRecognizer();
+          final recognisedText = await textDetector.processImage(inputImage);
+          setState(() {
+            for (TextBlock block in recognisedText.blocks) {
+              final String text = block.text;
+              bool checked = true;
+              if (text.length < 4) {
+                continue;
+              }
+              for (int i = 0; i < text.length; i++) {
+                if (text[i].toUpperCase() != text[i]) {
+                  checked = false;
+                  break;
+                }
+              }
+              if (checked) {
+                // print('licenses: $licenses');
+                if (licenses.containsKey(text)) {
+                  licenses[text] += 1;
+                } else {
+                  licenses[text] = 1;
+                }
+                if (licenses[text] > 4) {
+                  licenses = {};
+                  _canProcess = false;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (ctx) => LicenseScreen(license: text)));
+                }
+              }
+            }
+          });
+        }
+      }
     }
   }
 
