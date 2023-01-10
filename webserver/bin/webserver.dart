@@ -1,13 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:args/args.dart';
+import 'package:image/image.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:intl/intl.dart';
+import 'package:supabase/supabase.dart';
 
 import 'db_credentials.dart';
+import 'qr_code.dart';
 
 const _hostname = 'localhost';
+
+enum PersonType {
+  STUDENT,
+  LECTURER
+}
 
 void main(List<String> arguments) async {
   var parser = ArgParser()..addOption('port', abbr: 'p');
@@ -35,6 +43,17 @@ Future<shelf.Response> _echoUsers(shelf.Request request) async {
   final dbCredentials = DatabaseCredentials();
   await DatabaseCredentials.initCredentials(dbCredentials);
   final dbClient = DatabaseConnector(dbCredentials).client;
+
+  var providedApiKey = request.headers['x-api-key'];
+  print(providedApiKey);
+
+  var readApiKeyResponse = await dbClient.from('apiKey').select('apiKey').eq('id', '1');
+  var readApiKeyMap = readApiKeyResponse[0];
+  var readApiKey = readApiKeyMap['apiKey'];
+
+  if (readApiKey != providedApiKey) {
+    return shelf.Response.forbidden('UNAUTHORIZED API KEY');
+  }
 
   final response = await dbClient
     .from('student')
@@ -84,10 +103,47 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/students': return _echoUsers(request);
     case 'api/v1/students/active': return _echoActiveUsers(request);
     case 'api/v1/students/update/student_id': return _echoUpdateUsersStudentId(request);
+    case 'api/v1/students/qr': return _echoQrCodeDownload(request, PersonType.STUDENT);
     case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
     case 'api/v1/vehicles/licenseplates/lecturers': return _echoVehiclesLicensePlatesOfLecturers(request);
+    case 'api/v1/lecturers/qr': return _echoQrCodeDownload(request, PersonType.LECTURER);
     default : return shelf.Response.badRequest(body: 'Invalid method');
   }
+}
+
+Future<shelf.Response> _echoQrCodeDownload(shelf.Request request, PersonType type) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var header = {
+    'Content-Type' : 'image/png'
+  };
+
+  switch (type) {
+    case PersonType.STUDENT:
+      print('Student type of request');
+      break;
+    case PersonType.LECTURER:
+      print('Lecturer type of request');
+      break;
+
+  }
+
+  var qrCode = StudentifierQRCode();
+  var requestBodyAwaited = await request.readAsString();
+  qrCode.dataMap = jsonDecode(requestBodyAwaited).toString();
+  qrCode.drawQrCode();
+
+  return shelf.Response.ok(encodePng(qrCode.qrCode), headers: header);
 }
 
 Future<shelf.Response> _echoVehiclesLicensePlatesOfLecturers(shelf.Request request) async {
@@ -129,6 +185,30 @@ Future<shelf.Response> _echoVehiclesLicensePlates(shelf.Request request) async {
   return shelf.Response.ok(body);
 }
 
+Future<bool> isUserAuthenticated(Map<String, String> requestHeader, SupabaseClient dbClient) async {
+  String? apiKeyFromHeader = requestHeader['x-api-key'];
+
+  final response = await dbClient
+      .from('apiKey')
+      .select('apiKey')
+      .eq('apiKey', apiKeyFromHeader)
+      .single();
+
+  String retrievedApiKey = response.values.elementAt(0);
+  if (apiKeyFromHeader == retrievedApiKey) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool isRequestTheTypeSameAsProvided(String providedRequest, String expectedRequest) {
+  return providedRequest == expectedRequest;
+}
+
+void retrieveStudentByStudentId() {
+
+}
 
 
 

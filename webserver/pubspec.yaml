@@ -16,3 +16,7 @@ dependencies:
   shelf: ^1.1.0
   supabase: ^1.1.0
   intl: ^0.17.0
+  qr: ^3.0.1
+  barcode: ^2.2.3
+  barcode_image: ^2.0.2
+  image: ^3.2.2
