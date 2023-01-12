@@ -1,126 +1,132 @@
-import 'package:flutter/material.dart';
+import 'dart:io' as io;
+
 import 'package:camera/camera.dart';
-import 'package:flutter_tflite/flutter_tflite.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
-import '../main.dart';
-import '../widgets/custom_snack_bar_content.dart';
+import './license_screen.dart';
+import '../widgets/camera_view.dart';
+import '../widgets/object_detector_painter.dart';
 
-class FirstTab extends StatefulWidget {
-  const FirstTab({Key? key}) : super(key: key);
+class OCRScreen extends StatefulWidget {
 
   @override
-  State<FirstTab> createState() => _FirstTabState();
+  State<OCRScreen> createState() => _OCRScreen();
 }
 
-class _FirstTabState extends State<FirstTab> {
-  late CameraController cameraController;
-  late CameraImage imgCamera;
-  String result = "";
+class _OCRScreen extends State<OCRScreen> {
+  late ObjectDetector _objectDetector;
+  bool _canProcess = false;
+  CustomPaint? _customPaint;
+  Map licenses = {};
 
   @override
   void initState() {
     super.initState();
-    loadModel();
-    print('Model Loaded!');
-    initCamera();
-  }
-
-  Future<List<dynamic>?> runModelOnStreamFrames() async {
-    var recognitions = await Tflite.runModelOnFrame(
-      bytesList: imgCamera.planes.map((plane) {
-        return plane.bytes;
-      }).toList(),
-      imageHeight: imgCamera.width,
-      imageWidth: imgCamera.width,
-      imageMean: 127.5,
-      imageStd: 127.5,
-      rotation: 90,
-      numResults: 5,
-      threshold: 0.1,
-      asynch: true,
-    );
-
-    return recognitions;
-    // result = "";
-    //
-    // recognitions?.forEach((response) {
-    //   print(response);
-    //   result += response['label'] +
-    //       ' ' +
-    //       (response['confidence'] as double).toStringAsFixed(2) +
-    //       '\n\n';
-    // });
-    //
-    // print(result);
-    // setState(() {
-    //   result;
-    //   print(result);
-    // });
-  }
-
-  loadModel() async {
-    await Tflite.loadModel(
-      model: 'assets/detect.tflite',
-      labels: 'assets/labels.txt',
-    );
-  }
-
-  initCamera() {
-    cameraController = CameraController(cameras[0], ResolutionPreset.max);
-    cameraController.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        cameraController.startImageStream((imageFromStream) => {
-              imgCamera = imageFromStream,
-              //TODO: fix issue connected to the line below
-              // runModelOnStreamFrames(),
-            });
-      });
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            // ScaffoldMessenger.of(context).showSnackBar(W
-            //   SnackBar(
-            //     content: CustomSnackBarContent('CameraAccessDenied'),
-            //     behavior: SnackBarBehavior.floating,
-            //     backgroundColor: Colors.transparent,
-            //     elevation: 0,
-            //   ),
-            // );
-            break;
-          default:
-            // ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: CustomSnackBarContent('Something went wrong...'),
-            //     behavior: SnackBarBehavior.floating,
-            //     backgroundColor: Colors.transparent,
-            //     elevation: 0,
-            //   ),
-            // );
-            break;
-        }
-      }
-    });
+    _initializeDetector();
   }
 
   @override
-  void dispose() async {
+  void dispose() {
+    _canProcess = false;
+    _objectDetector.close();
     super.dispose();
-    await Tflite.close();
-    cameraController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: CameraPreview(cameraController),
+    return CameraView(
+      title: 'Object Detector',
+      customPaint: _customPaint,
+      onImage: (inputImage) {
+        processImage(inputImage, context);
+      },
+      onScreenModeChanged: _initializeDetector,
+      initialDirection: CameraLensDirection.back,
     );
+  }
+
+  void _initializeDetector() async {
+    final path = 'assets/object_labeler.tflite';
+    final modelPath = await _getModel(path);
+    final options = LocalObjectDetectorOptions(
+      mode: DetectionMode.stream,
+      modelPath: modelPath,
+      classifyObjects: true,
+      multipleObjects: true,
+    );
+    _objectDetector = ObjectDetector(options: options);
+
+    _canProcess = true;
+  }
+
+  Future<void> processImage(InputImage inputImage, BuildContext context) async {
+    if (!_canProcess) return;
+    final objects = await _objectDetector.processImage(inputImage);
+    final painter = ObjectDetectorPainter(
+        objects,
+        inputImage.inputImageData!.imageRotation,
+        inputImage.inputImageData!.size);
+    _customPaint = CustomPaint(painter: painter);
+    if (mounted) {
+      setState(() {});
+    }
+
+    for (DetectedObject detectedObject in objects) {
+      for (Label label in detectedObject.labels) {
+        // print('${label.text} ${label.confidence}');
+        if ((label.text == 'Car' && label.confidence > 0.85) || label.text == 'License plate') {
+          final textDetector = GoogleMlKit.vision.textRecognizer();
+          final recognisedText = await textDetector.processImage(inputImage);
+          setState(() {
+            for (TextBlock block in recognisedText.blocks) {
+              final String text = block.text;
+              bool checked = true;
+              if (text.length < 4) {
+                continue;
+              }
+              for (int i = 0; i < text.length; i++) {
+                if (text[i].toUpperCase() != text[i]) {
+                  checked = false;
+                  break;
+                }
+              }
+              if (checked) {
+                // print('licenses: $licenses');
+                if (licenses.containsKey(text)) {
+                  licenses[text] += 1;
+                } else {
+                  licenses[text] = 1;
+                }
+                if (licenses[text] > 4) {
+                  licenses = {};
+                  _canProcess = false;
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (ctx) => LicenseScreen(license: text)));
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+  }
+
+  Future<String> _getModel(String assetPath) async {
+    if (io.Platform.isAndroid) {
+      return 'flutter_assets/$assetPath';
+    }
+    final path = '${(await getApplicationSupportDirectory()).path}/$assetPath';
+    await io.Directory(dirname(path)).create(recursive: true);
+    final file = io.File(path);
+    if (!await file.exists()) {
+      final byteData = await rootBundle.load(assetPath);
+      await file.writeAsBytes(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+    }
+    return file.path;
   }
 }
