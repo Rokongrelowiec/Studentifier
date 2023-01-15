@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class StudentEdit extends StatelessWidget {
   String firstName;
@@ -44,6 +45,8 @@ class StudentEdit extends StatelessWidget {
 }
 
 class StudentEditGenerate extends StatelessWidget {
+  final formKey = GlobalKey<FormState>();
+
   String firstName;
   String lastName;
   int studentId;
@@ -62,6 +65,19 @@ class StudentEditGenerate extends StatelessWidget {
       Key? key})
       : super(key: key);
 
+  setFirstUpperCase(String text) {
+    final res = text.substring(0, 1).toUpperCase() + text.substring(1);
+    return res;
+  }
+
+  setAllUpperCase(String text) {
+    String res = '';
+    for (int i=0; i<text.length; i++) {
+      res += text[i].toUpperCase();
+    }
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     TextEditingController firstNameController = TextEditingController();
@@ -79,44 +95,50 @@ class StudentEditGenerate extends StatelessWidget {
     validityOfStudentIdController.text = validityOfStudentId;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Edit student',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.headline1?.color,
-            ),
+      appBar: AppBar(
+        title: Text(
+          'Edit student',
+          style: TextStyle(
+            color: Theme.of(context).textTheme.headline1?.color,
           ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {
-                // TODO Saving dateTime
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // TODO Saving dateTime
+              final isValidForm = formKey.currentState!.validate();
+              if (isValidForm) {
                 Navigator.of(context).pop({
-                  'firstName': firstNameController.text,
-                  'lastName': lastNameController.text,
+                  'firstName': setFirstUpperCase(firstNameController.text),
+                  'lastName': setFirstUpperCase(lastNameController.text),
                   'studentId': studentIdController.text,
-                  'licensePlate': licensePlateController.text,
+                  'licensePlate': setAllUpperCase(licensePlateController.text),
                   'numberOfVisits': numberOfVisitsController.text,
                   'validityOfStudentId': validityOfStudentIdController.text,
                 });
-              },
-              icon: Icon(
-                Icons.save,
-                color: Theme.of(context).iconTheme.color,
-              ),
-            ),
-          ],
-          leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
+              }
             },
             icon: Icon(
-              Icons.cancel,
+              Icons.save,
               color: Theme.of(context).iconTheme.color,
             ),
           ),
+        ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(
+            Icons.cancel,
+            color: Theme.of(context).iconTheme.color,
+          ),
         ),
-        body: SingleChildScrollView(
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          key: formKey,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -162,6 +184,15 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                      ],
+                      validator: (value) {
+                        if (value != null && value.length < 1) {
+                          return 'Too short value';
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -192,6 +223,15 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                      ],
+                      validator: (value) {
+                        if (value != null && value.length < 2) {
+                          return 'Too short value';
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -223,6 +263,15 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                      ],
+                      validator: (value) {
+                        if (value != null && value.length < 1) {
+                          return 'Too short value';
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -253,6 +302,18 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z0-9]")),
+                      ],
+                      validator: (value) {
+                        if (value != null && value.length < 1) {
+                          return 'Too short value';
+                        }
+                        if (value != null && value.length > 9) {
+                          return 'Too long value';
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -284,6 +345,15 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                      ],
+                      validator: (value) {
+                        if (value != null && value.length < 1) {
+                          return 'Too short value';
+                        }
+                        return null;
+                      },
                       textInputAction: TextInputAction.next,
                     ),
                   ),
@@ -301,7 +371,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: 30,
                           color: Colors.grey,
                         ),
-                        labelText: "Validity of student ID",
+                        labelText: "Validity of ID",
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color),
@@ -324,6 +394,7 @@ class StudentEditGenerate extends StatelessWidget {
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }
