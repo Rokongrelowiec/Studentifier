@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:intl/intl.dart';
 
 class ChartScreen extends StatelessWidget {
   static const routeName = '/chart';
@@ -65,7 +66,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                 ),
                 tooltipBehavior: _tooltipBehavior,
                 series: <ChartSeries>[
-                  LineSeries<Visits, int>(
+                  LineSeries<Visits, String>(
                       name: 'Visits',
                       dataSource: _chartData,
                       xValueMapper: (Visits visits, _) => visits.day,
@@ -73,8 +74,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       enableTooltip: true,
                       color: Colors.orange)
                 ],
-                primaryXAxis:
-                    NumericAxis(edgeLabelPlacement: EdgeLabelPlacement.shift),
+                primaryXAxis: CategoryAxis(arrangeByIndex: true),
               ),
             ),
             Text(
@@ -251,13 +251,18 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 }
 
 List<Visits> getChartData() {
-  final List<Visits> chartData =
-      List.generate(30, (index) => Visits(index + 1, Random().nextInt(300)));
+  final today = DateTime.now();
+  final List<Visits> chartData = List.generate(
+      30,
+      (index) => Visits(
+          DateFormat('dd-MM')
+              .format(today.subtract(Duration(days: 29 - index))),
+          Random().nextInt(300)));
   return chartData;
 }
 
 class Visits {
-  int day;
+  String day;
   int visits;
 
   Visits(this.day, this.visits);
