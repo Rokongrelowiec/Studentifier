@@ -107,8 +107,88 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
     case 'api/v1/vehicles/licenseplates/lecturers': return _echoVehiclesLicensePlatesOfLecturers(request);
     case 'api/v1/lecturers/qr': return _echoQrCodeDownload(request, PersonType.LECTURER);
+    case 'api/v1/logs/entries/month': return _echoEntriesInAMonth(request);
+    case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
+    case 'api/v1/logs/log/entry': return _echoLogEntry(request);
     default : return shelf.Response.badRequest(body: 'Invalid method');
   }
+}
+
+Future<shelf.Response> _echoLogEntry(shelf.Request request) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+
+  var tableName = decoded.values.elementAt(0);
+  var licensePlate = decoded.values.elementAt(1);
+  var hour = decoded.values.elementAt(2);
+  var day = decoded.values.elementAt(3);
+
+  final response = await dbClient
+      .from('entries${tableName}')
+      .insert({'rejestracja': licensePlate, 'godzinaPrzyjazdu': hour, 'dataPrzyjazdu': day});
+
+  return shelf.Response.ok(jsonEncode(response));
+
+}
+
+Future<shelf.Response> _echoEntriesInADay(shelf.Request request) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  var reportFor = decoded.values.elementAt(0);
+  var dayFor = decoded.values.elementAt(1);
+
+  final response = await dbClient
+      .from('entries${reportFor}')
+      .select('rejestracja, godzinaPrzyjazdu')
+      .eq('dataPrzyjazdu', dayFor);
+
+  return shelf.Response.ok(jsonEncode(response));
+}
+
+Future<shelf.Response> _echoEntriesInAMonth(shelf.Request request) async{
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+  return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+  return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  var reportFor = decoded.values.elementAt(0);
+
+  final response = await dbClient
+      .from('${reportFor}-raport')
+      .select();
+
+  return shelf.Response.ok(jsonEncode(response));
+
 }
 
 Future<shelf.Response> _echoQrCodeDownload(shelf.Request request, PersonType type) async {
@@ -204,10 +284,6 @@ Future<bool> isUserAuthenticated(Map<String, String> requestHeader, SupabaseClie
 
 bool isRequestTheTypeSameAsProvided(String providedRequest, String expectedRequest) {
   return providedRequest == expectedRequest;
-}
-
-void retrieveStudentByStudentId() {
-
 }
 
 
