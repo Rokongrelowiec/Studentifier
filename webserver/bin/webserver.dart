@@ -200,7 +200,7 @@ Future<shelf.Response> _echoQrCodeDownload(shelf.Request request, PersonType typ
     return shelf.Response.forbidden("Bad authorization key.");
   }
 
-  if(isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+  if(!isRequestTheTypeSameAsProvided(request.method, 'POST')) {
     return shelf.Response.badRequest(body:"Wrong Method.");
   }
 
