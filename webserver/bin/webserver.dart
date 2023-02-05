@@ -102,6 +102,7 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
   switch(request.url.toString()) {
     case 'api/v1/students': return _echoUsers(request);
     case 'api/v1/students/active': return _echoActiveUsers(request);
+    case 'api/v1/students/bystudentId': return _echoUserByStudentId(request);
     case 'api/v1/students/update/student_id': return _echoUpdateUsersStudentId(request);
     case 'api/v1/students/qr': return _echoQrCodeDownload(request, PersonType.STUDENT);
     case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
@@ -112,6 +113,30 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
     default : return shelf.Response.badRequest(body: 'Invalid method');
   }
+}
+
+Future<shelf.Response> _echoUserByStudentId(shelf.Request request) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  var studentId = decoded.values.elementAt(0);
+
+  final response = await dbClient
+      .from('student')
+      .select('imie, nazwisko, data_waznosci')
+      .eq('numer_albumu', studentId);
+
+  return shelf.Response.ok(jsonEncode(response));
 }
 
 Future<shelf.Response> _echoLogEntry(shelf.Request request) async {
