@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 import './license_screen.dart';
 import '../widgets/camera_view.dart';
@@ -66,8 +68,19 @@ class _OCRScreen extends State<OCRScreen> {
   Future<void> processImage(InputImage inputImage, BuildContext context) async {
     if (!_canProcess) return;
     final objects = await _objectDetector.processImage(inputImage);
+    // List<DetectedObject> carRelatedObjects = objects;//<DetectedObject>[];
+    List<DetectedObject> carRelatedObjects = <DetectedObject>[];
+    for (DetectedObject detectedObject in objects) {
+      for (Label label in detectedObject.labels) {
+        if(label.text == "Car" || label.text == "License plate") {
+          carRelatedObjects.add(detectedObject);
+        } else {
+          continue;
+        }
+      }
+    }
     final painter = ObjectDetectorPainter(
-        objects,
+        carRelatedObjects,
         inputImage.inputImageData!.imageRotation,
         inputImage.inputImageData!.size);
     _customPaint = CustomPaint(painter: painter);
@@ -75,11 +88,11 @@ class _OCRScreen extends State<OCRScreen> {
       setState(() {});
     }
 
-    for (DetectedObject detectedObject in objects) {
+    for (DetectedObject detectedObject in carRelatedObjects) {
       for (Label label in detectedObject.labels) {
         // print('${label.text} ${label.confidence}');
-        if ((label.text == 'Car' && label.confidence > 0.85) || label.text == 'License plate') {
-          final textDetector = GoogleMlKit.vision.textRecognizer();
+        if ((label.text == 'Car' && label.confidence > 0.85) || (label.text == 'License plate' && label.confidence > 0.85)) {
+          final textDetector = GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.latin);
           final recognisedText = await textDetector.processImage(inputImage);
           setState(() {
             for (TextBlock block in recognisedText.blocks) {
