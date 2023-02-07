@@ -91,13 +91,16 @@ class _OCRScreen extends State<OCRScreen> {
     for (DetectedObject detectedObject in carRelatedObjects) {
       for (Label label in detectedObject.labels) {
         // print('${label.text} ${label.confidence}');
-        if ((label.text == 'Car' && label.confidence > 0.85) || (label.text == 'License plate' && label.confidence > 0.85)) {
+        if ((label.text == 'Car' && label.confidence > 0.5) || (label.text == 'License plate' && label.confidence > 0.5)) {
           final textDetector = GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.latin);
           final recognisedText = await textDetector.processImage(inputImage);
           setState(() {
             for (TextBlock block in recognisedText.blocks) {
               final String text = block.text;
               bool checked = true;
+              if(!detectedObject.boundingBox.overlaps(block.boundingBox)){
+                continue;
+              }
               if (text.length < 4) {
                 continue;
               }
