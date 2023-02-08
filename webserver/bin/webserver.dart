@@ -17,6 +17,16 @@ enum PersonType {
   LECTURER
 }
 
+enum RequestMethod {
+  POST,
+  GET
+}
+
+var requestMethodMap = {
+  RequestMethod.POST : "POST",
+  RequestMethod.GET : "GET"
+};
+
 void main(List<String> arguments) async {
   var parser = ArgParser()..addOption('port', abbr: 'p');
   var result = parser.parse(arguments);
@@ -112,7 +122,7 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/logs/entries/month': return _echoEntriesInAMonth(request);
     case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
-    default : return shelf.Response.badRequest(body: 'Invalid method');
+    default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
 }
 
@@ -125,7 +135,7 @@ Future<shelf.Response> _echoVehiclesCheckByLicensePlate(shelf.Request request) a
     return shelf.Response.forbidden("Bad authorization key.");
   }
 
-  if(!isRequestTheTypeSameAsProvided(request.method, 'POST')) {
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
     return shelf.Response.badRequest(body:"Wrong Method.");
   }
   var requestBodyAwaited = await request.readAsString();
@@ -211,7 +221,8 @@ Future<shelf.Response> _echoEntriesInADay(shelf.Request request) async {
   final response = await dbClient
       .from('entries${reportFor}')
       .select('rejestracja, godzinaPrzyjazdu')
-      .eq('dataPrzyjazdu', dayFor);
+      .eq('dataPrzyjazdu', dayFor)
+      .order('godzinaPrzyjazdu', ascending: true);
 
   return shelf.Response.ok(jsonEncode(response));
 }

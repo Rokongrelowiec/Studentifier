@@ -20,3 +20,4 @@ dependencies:
   barcode: ^2.2.3
   barcode_image: ^2.0.2
   image: ^3.2.2
+  crypto: ^3.0.2
