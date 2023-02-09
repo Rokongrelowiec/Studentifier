@@ -123,8 +123,36 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/logs/entries/month/top': return _echoEntriesInAMonthTop(request);
     case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
+    case 'api/v1/admin/login': return _echoLoginAdmin(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoLoginAdmin(shelf.Request request) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  var credentialHash = decoded.values.elementAt(0);
+
+  final response = await dbClient
+      .from('admins')
+      .select('hash')
+      .eq('hash', credentialHash)
+      .limit(1);
+
+
+  return response.isEmpty ? shelf.Response.forbidden('not ok') : shelf.Response.ok('ok');
 }
 
 Future<shelf.Response> _echoEntriesInAMonthTop(shelf.Request request) async{
