@@ -99,14 +99,15 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
     controller.scannedDataStream.listen(
       (barcode) => setState(() {
         this.barcode = barcode;
-        printedResult = 'Done!';
         Map mapData = json.decode(barcode.code as String);
         if (mapData.containsKey('name') &&
             mapData.containsKey('surname') &&
             mapData.containsKey('studentId') &&
             mapData.containsKey('isPrivileged')
         ) {
+          printedResult = 'Done!';
           // TODO Request to DB
+          sendData();
           Future.delayed(
             Duration(seconds: 1),
             () => Navigator.of(context).pushReplacement(
@@ -140,4 +141,8 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
           maxLines: 3,
         ),
       );
+}
+
+sendData() async {
+
 }
