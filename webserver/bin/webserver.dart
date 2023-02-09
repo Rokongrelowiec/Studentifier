@@ -120,10 +120,37 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/vehicles/licenseplates/checkone': return _echoVehiclesCheckByLicensePlate(request);
     case 'api/v1/lecturers/qr': return _echoQrCodeDownload(request, PersonType.LECTURER);
     case 'api/v1/logs/entries/month': return _echoEntriesInAMonth(request);
+    case 'api/v1/logs/entries/month/top': return _echoEntriesInAMonthTop(request);
     case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoEntriesInAMonthTop(shelf.Request request) async{
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  var scope = decoded.values.elementAt(0);
+
+  final response = await dbClient
+      .from('${scope.toString().toUpperCase()}-raport-top')
+      .select()
+      .limit(1);
+
+  return shelf.Response.ok(jsonEncode(response));
+
 }
 
 Future<shelf.Response> _echoVehiclesCheckByLicensePlate(shelf.Request request) async {
