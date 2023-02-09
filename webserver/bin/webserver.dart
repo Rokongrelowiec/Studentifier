@@ -10,7 +10,7 @@ import 'package:supabase/supabase.dart';
 import 'db_credentials.dart';
 import 'qr_code.dart';
 
-const _hostname = 'localhost';
+const _hostname = '0.0.0.0';
 
 enum PersonType {
   STUDENT,
@@ -27,7 +27,11 @@ var requestMethodMap = {
   RequestMethod.GET : "GET"
 };
 
+final dbCredentials = DatabaseCredentials();
+
 void main(List<String> arguments) async {
+
+  await DatabaseCredentials.initCredentials(dbCredentials);
   var parser = ArgParser()..addOption('port', abbr: 'p');
   var result = parser.parse(arguments);
 
@@ -50,8 +54,7 @@ void main(List<String> arguments) async {
 }
 
 Future<shelf.Response> _echoUsers(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   var providedApiKey = request.headers['x-api-key'];
@@ -79,8 +82,7 @@ Future<shelf.Response> _echoUsers(shelf.Request request) async {
 }
 
 Future<shelf.Response> _echoActiveUsers(shelf.Request request) async{
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
   final DateTime now = DateTime.now();
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -126,13 +128,17 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
     case 'api/v1/admin/login': return _echoLoginAdmin(request);
+    case 'healthcheck': return _echoHealthcheck(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
 }
 
+Future<shelf.Response> _echoHealthcheck(shelf.Request request) async {
+  return shelf.Response.ok('ping. pong.');
+}
+
 Future<shelf.Response> _echoAddLicensePlateWithType(shelf.Request request, PersonType type) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -168,8 +174,7 @@ Future<shelf.Response> _echoAddLicensePlateWithType(shelf.Request request, Perso
 }
 
 Future<shelf.Response> _echoLoginAdmin(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -195,8 +200,7 @@ Future<shelf.Response> _echoLoginAdmin(shelf.Request request) async {
 }
 
 Future<shelf.Response> _echoEntriesInAMonthTop(shelf.Request request) async{
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -221,8 +225,7 @@ Future<shelf.Response> _echoEntriesInAMonthTop(shelf.Request request) async{
 }
 
 Future<shelf.Response> _echoVehiclesCheckByLicensePlate(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -244,8 +247,7 @@ Future<shelf.Response> _echoVehiclesCheckByLicensePlate(shelf.Request request) a
 }
 
 Future<shelf.Response> _echoUserByStudentId(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -268,8 +270,7 @@ Future<shelf.Response> _echoUserByStudentId(shelf.Request request) async {
 }
 
 Future<shelf.Response> _echoLogEntry(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -296,8 +297,7 @@ Future<shelf.Response> _echoLogEntry(shelf.Request request) async {
 }
 
 Future<shelf.Response> _echoEntriesInADay(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -322,8 +322,7 @@ Future<shelf.Response> _echoEntriesInADay(shelf.Request request) async {
 }
 
 Future<shelf.Response> _echoEntriesInAMonth(shelf.Request request) async{
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -346,8 +345,7 @@ Future<shelf.Response> _echoEntriesInAMonth(shelf.Request request) async{
 }
 
 Future<shelf.Response> _echoQrCodeDownload(shelf.Request request, PersonType type) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   if(! await isUserAuthenticated(request.headers, dbClient)) {
@@ -392,8 +390,7 @@ Future<shelf.Response> _echoQrCodeDownload(shelf.Request request, PersonType typ
 }
 
 Future<shelf.Response> _echoVehiclesLicensePlatesOfLecturers(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
 
   final response = await dbClient
@@ -413,8 +410,7 @@ Future<shelf.Response> _echoVehiclesLicensePlatesOfLecturers(shelf.Request reque
 }
 
 Future<shelf.Response> _echoVehiclesLicensePlates(shelf.Request request) async {
-  final dbCredentials = DatabaseCredentials();
-  await DatabaseCredentials.initCredentials(dbCredentials);
+
   final dbClient = DatabaseConnector(dbCredentials).client;
   
   final response = await dbClient
