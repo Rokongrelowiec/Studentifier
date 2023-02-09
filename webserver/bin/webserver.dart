@@ -118,6 +118,8 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
     case 'api/v1/vehicles/licenseplates/lecturers': return _echoVehiclesLicensePlatesOfLecturers(request);
     case 'api/v1/vehicles/licenseplates/checkone': return _echoVehiclesCheckByLicensePlate(request);
+    case 'api/v1/vehicles/licenseplates/add/student': return _echoAddLicensePlateWithType(request, PersonType.STUDENT);
+    case 'api/v1/vehicles/licenseplates/add/lecturer': return _echoAddLicensePlateWithType(request, PersonType.LECTURER);
     case 'api/v1/lecturers/qr': return _echoQrCodeDownload(request, PersonType.LECTURER);
     case 'api/v1/logs/entries/month': return _echoEntriesInAMonth(request);
     case 'api/v1/logs/entries/month/top': return _echoEntriesInAMonthTop(request);
@@ -126,6 +128,43 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/admin/login': return _echoLoginAdmin(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoAddLicensePlateWithType(shelf.Request request, PersonType type) async {
+  final dbCredentials = DatabaseCredentials();
+  await DatabaseCredentials.initCredentials(dbCredentials);
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+  return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+  return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  var studentId;
+  var licenseplate;
+  var isLecturer;
+
+  if(type == PersonType.LECTURER) {
+    studentId = -1;
+    licenseplate = decoded.values.elementAt(0);
+    isLecturer = true;
+  } else {
+    studentId = decoded.values.elementAt(0);
+    licenseplate = decoded.values.elementAt(1);
+    isLecturer = false;
+  }
+
+  final response = await dbClient
+      .from('rejestracje')
+      .insert({'numer_albumu': studentId, 'rejestracja': licenseplate, 'wykladowca': isLecturer});
+
+  return shelf.Response.ok(response);
+
 }
 
 Future<shelf.Response> _echoLoginAdmin(shelf.Request request) async {
@@ -323,19 +362,30 @@ Future<shelf.Response> _echoQrCodeDownload(shelf.Request request, PersonType typ
     'Content-Type' : 'image/png'
   };
 
+  var qrMap;
+  var requestBody = await request.readAsString();
+  var bodyAsJson = jsonDecode(requestBody);
+
   switch (type) {
     case PersonType.STUDENT:
-      print('Student type of request');
+      qrMap = {
+        'isPrivileged' : false,
+        'imie' : bodyAsJson['imie'],
+        'nazwisko' : bodyAsJson['nazwisko'],
+        'numer_indeksu' : bodyAsJson['numer_indeksu']
+      };
       break;
     case PersonType.LECTURER:
-      print('Lecturer type of request');
+      qrMap = {
+        'isPrivileged' : true,
+        'wykladowca' : bodyAsJson['wykladowca']
+      };
       break;
-
   }
 
+
   var qrCode = StudentifierQRCode();
-  var requestBodyAwaited = await request.readAsString();
-  qrCode.dataMap = jsonDecode(requestBodyAwaited).toString();
+  qrCode.dataMap = jsonEncode(qrMap).toString();
   qrCode.drawQrCode();
 
   return shelf.Response.ok(encodePng(qrCode.qrCode), headers: header);
