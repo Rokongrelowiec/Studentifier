@@ -72,6 +72,8 @@ class GenerateLicenseScreen extends StatefulWidget {
 }
 
 class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = new TextEditingController();
@@ -125,6 +127,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                         ),
                       ),
                       content: Form(
+                        key: formKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: TextFormField(
                           autofocus: true,
@@ -162,7 +165,13 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                           child: const Text('Cancel'),
                         ),
                         ElevatedButton(
-                          onPressed: () => editLicense(),
+                          onPressed: () {
+                            final isValidForm =
+                                formKey.currentState!.validate();
+                            if (isValidForm) {
+                              editLicense();
+                            }
+                          },
                           child: const Text('OK'),
                         ),
                       ],

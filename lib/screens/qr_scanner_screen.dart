@@ -2,6 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:studentifier/screens/added_data_screen.dart';
 
@@ -103,14 +107,21 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
         if (mapData.containsKey('name') &&
             mapData.containsKey('surname') &&
             mapData.containsKey('studentId') &&
-            mapData.containsKey('isPrivileged')
-        ) {
+            mapData.containsKey('isPrivileged')) {
           printedResult = 'Done!';
-          // TODO Request to DB
-          sendData();
-          Future.delayed(
-            Duration(seconds: 1),
-            () => Navigator.of(context).pushReplacement(
+          debugPrint('isPrivileged: ${mapData['isPrivileged']}');
+          if (mapData['isPrivileged']) {
+            sendLecturerData(mapData['isPrivileged'], widget.licensePlate);
+          } else {
+            sendStudentData(
+                name: mapData['name'],
+                surname: mapData['surname'],
+                studentId: mapData['studentId'],
+                isPrivileged: mapData['isPrivileged'],
+                licensePlate: widget.licensePlate,
+                scanTime: widget.scanTime);
+          }
+         Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (_) => AddedDataScreen(
                   name: mapData['name'],
@@ -121,8 +132,7 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
                   isPrivileged: mapData['isPrivileged'],
                 ),
               ),
-            ),
-          );
+            );
           controller.pauseCamera();
         }
       }),
@@ -143,6 +153,65 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
       );
 }
 
-sendData() async {
+sendLecturerData(bool isPrivileged, String licensePlate) async {
+  String key = await rootBundle.loadString('assets/api-key.txt');
+  var requestBody = jsonEncode({"licenseplate": licensePlate});
+  var response = await http.post(
+      Uri.parse(
+          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
+      headers: {'x-api-key': key},
+      body: requestBody);
+  debugPrint('Lecturer: ${response.statusCode}');
+}
 
+sendStudentData({
+  required String name,
+  required String surname,
+  required int studentId,
+  required bool isPrivileged,
+  required String scanTime,
+  required String licensePlate,
+}) async {
+
+  String key = await rootBundle.loadString('assets/api-key.txt');
+  var requestBody =
+      jsonEncode({"studentId": studentId, "licenseplate": licensePlate});
+  var response = await http.post(
+      Uri.parse(
+          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/student'),
+      headers: {'x-api-key': key},
+      body: requestBody);
+  debugPrint('First: ${response.statusCode}');
+
+  DateTime date = DateTime.parse(scanTime);
+  var day = DateFormat('yyyy-MM-dd').format(date);
+  var hour = '${DateFormat.Hms().format(date)}+00';
+  requestBody = jsonEncode({
+    'slice': 'FEB2023',
+    'rejestracja': licensePlate,
+    'godzinaPrzyjazdu': hour,
+    'dzien': day
+  });
+  response = await http.post(
+      Uri.parse('http://130.61.192.162:8069/api/v1/logs/log/entry'),
+      headers: {'x-api-key': key},
+      body: requestBody);
+  debugPrint('Second ${response.statusCode}');
+
+  requestBody = jsonEncode({'numer_albumu': studentId});
+  response = await http.post(
+      Uri.parse(
+          'http://130.61.192.162:8069/api/v1/students/bystudentId'),
+      headers: {'x-api-key': key},
+      body: requestBody);
+  debugPrint('Third ${response.statusCode}');
+  if (jsonDecode(response.body).isEmpty) {
+    requestBody = jsonEncode({'numer_albumu': studentId, 'imie': name, 'nazwisko': surname});
+    response = await http.post(
+        Uri.parse(
+            'http://130.61.192.162:8069/api/v1/students/add'),
+        headers: {'x-api-key': key},
+        body: requestBody);
+    debugPrint('Fourth ${response.statusCode}');
+  }
 }

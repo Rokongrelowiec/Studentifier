@@ -329,7 +329,7 @@ class _DailyReportState extends State<DailyReport> {
                             ],
                           ),
                           trailing: isAdmin
-                              //TODO removing
+                              //TODO removing and undo operation
                               ? IconButton(
                                   onPressed: () {
                                     removeItem(index);
