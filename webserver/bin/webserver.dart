@@ -60,7 +60,7 @@ Future<shelf.Response> _echoUsers(shelf.Request request) async {
   var providedApiKey = request.headers['x-api-key'];
   print(providedApiKey);
 
-  var readApiKeyResponse = await dbClient.from('apiKey').select('apiKey').eq('id', '1');
+  var readApiKeyResponse = await dbClient.from('apikey').select('apiKey').eq('id', '1');
   var readApiKeyMap = readApiKeyResponse[0];
   var readApiKey = readApiKeyMap['apiKey'];
 
@@ -455,7 +455,7 @@ Future<bool> isUserAuthenticated(Map<String, String> requestHeader, SupabaseClie
   final response = await dbClient
       .from('apikey')
       .select('apiKey')
-      .eq('apikey', apiKeyFromHeader)
+      .eq('apiKey', apiKeyFromHeader)
       .single();
 
   String retrievedApiKey = response.values.elementAt(0);
