@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
 import '../models/admin_provider.dart';
 import './home_screen.dart';
@@ -27,6 +31,10 @@ class GenerateLoginScreen extends StatefulWidget {
 class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
   bool password = true;
   Color iconColor = Colors.grey;
+  final formKey = GlobalKey<FormState>();
+  bool invalidRequest = false;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,211 +73,273 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
               height: size.height,
               width: size.width,
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: Platform.isIOS
-                          ? EdgeInsets.only(top: 40, left: 10)
-                          : EdgeInsets.only(top: 10, left: 10),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                          size: 30,
+                child: Form(
+                  key: formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: Platform.isIOS
+                            ? EdgeInsets.only(top: 40, left: 10)
+                            : EdgeInsets.only(top: 10, left: 10),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, top: 30),
-                      child: Text(
-                        "Administrator",
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, top: 30),
+                        child: Text(
+                          "Administrator",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40),
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40),
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(40, 120, 50, 0),
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(40, 120, 50, 0),
+                          child: Container(
+                              child: TextFormField(
+                                keyboardType: TextInputType.emailAddress,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color),
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.email_outlined,
+                                      color: Theme.of(context).primaryColor),
+                                  labelText: "E-mail Address",
+                                  labelStyle: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.color),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  contentPadding:
+                                      EdgeInsets.only(top: 15, bottom: 15),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFFE0E0E0), width: 2),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Color(0xFFDD9246), width: 1),
+                                  ),
+                                ),
+                                onChanged: (String? newVal) {
+                                  if (invalidRequest) {
+                                    invalidRequest = false;
+                                  }
+                                },
+                                validator: (String? val) {
+                                  if (invalidRequest) {
+                                    return "Invalid email or password";
+                                  }
+                                  if (val?.length == 0) {
+                                    return "Please enter email";
+                                  }
+                                  else if (val != null && !val.contains('@') || val!=null && !val.contains('.')) {
+                                    return "Please enter valid email";
+                                  }
+                                  return null;
+                                },
+                                controller: emailController,
+                                textInputAction: TextInputAction.next,
+                              ),
+                          )),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(40, 10, 50, 0),
                         child: Container(
-                          child: TextFormField(
-                            keyboardType: TextInputType.emailAddress,
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color),
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.email_outlined,
-                                  color: Theme.of(context).primaryColor),
-                              labelText: "E-mail Address",
-                              labelStyle: TextStyle(
+                            child: TextFormField(
+                              obscureText: password,
+                              style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
                                       .headline1
                                       ?.color),
-                              hintStyle: TextStyle(color: Colors.grey),
-                              contentPadding:
-                                  EdgeInsets.only(top: 15, bottom: 15),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFE0E0E0), width: 2),
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      password = !password;
+                                    });
+                                  },
+                                  icon: password
+                                      ? Icon(
+                                          Icons.visibility_off,
+                                          color: iconColor,
+                                        )
+                                      : Icon(
+                                          Icons.visibility,
+                                          color: iconColor,
+                                        ),
+                                ),
+                                prefixIcon: Icon(Icons.lock_outline_rounded,
+                                    color: Theme.of(context).primaryColor),
+                                labelText: "Password",
+                                labelStyle: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color),
+                                hintStyle: TextStyle(color: Colors.grey),
+                                contentPadding:
+                                    EdgeInsets.only(top: 15, bottom: 15),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFFE0E0E0), width: 2),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFFDD9246), width: 1),
+                                ),
                               ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Color(0xFFDD9246), width: 1),
-                              ),
-                            ),
-                            textInputAction: TextInputAction.next,
-                          ),
-                        )),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(40, 10, 50, 0),
-                      child: Container(
-                        child: TextFormField(
-                          obscureText: password,
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color),
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  password = !password;
-                                });
+                              onChanged: (String? newVal) {
+                                if (invalidRequest) {
+                                  invalidRequest = false;
+                                }
                               },
-                              icon: password
-                                  ? Icon(
-                                      Icons.visibility_off,
-                                      color: iconColor,
-                                    )
-                                  : Icon(
-                                      Icons.visibility,
-                                      color: iconColor,
-                                    ),
+                              validator: (String? val) {
+                                if (invalidRequest) {
+                                  return "Invalid email or password";
+                                }
+                                if (val?.length == 0) {
+                                  return "Please enter password";
+                                } else if (val != null && val.length < 6) {
+                                  return "Enter min. 6 characters";
+                                }
+                                return null;
+                              },
+                              controller: passwordController,
+                              textInputAction: TextInputAction.done,
                             ),
-                            prefixIcon: Icon(Icons.lock_outline_rounded,
-                                color: Theme.of(context).primaryColor),
-                            labelText: "Password",
-                            labelStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color),
-                            hintStyle: TextStyle(color: Colors.grey),
-                            contentPadding:
-                                EdgeInsets.only(top: 15, bottom: 15),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFFE0E0E0), width: 2),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFFDD9246), width: 1),
-                            ),
-                          ),
-                          textInputAction: TextInputAction.done,
                         ),
                       ),
-                    ),
-                    Row(
-                      children: [
-                        Spacer(),
-                        Padding(
-                          padding: EdgeInsets.only(right: 49, top: 20),
-                          child: TextButton(
-                            onPressed: () {
-                              //TODO Forgot Password
-                            },
-                            child: Text(
-                              "forgot password?".toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFFDD9746),
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Container(
-                          height: 45,
-                          width: 130,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0),
+                      Row(
+                        children: [
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(right: 49, top: 20),
+                            child: TextButton(
+                              onPressed: () {
+                                //TODO Forgot Password
+                              },
+                              child: Text(
+                                "forgot password?".toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFFDD9746),
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
-                            onPressed: () {
-                              //TODO Email Validation
-                              Provider.of<AdminProvider>(context, listen: false).changePermission(true);
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  HomeScreen.routeName, (route) => false);
-                            },
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                          ),
+                        ],
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 30),
+                          child: Container(
+                            height: 45,
+                            width: 130,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(30.0),
+                                ),
+                              ),
+                              onPressed: () async {
+                                final isValidForm = formKey.currentState!.validate();
+                                if (isValidForm) {
+                                  String email = emailController.text;
+                                  String pass = passwordController.text;
+                                  var bytes = utf8.encode("email:$email|password:$pass");
+                                  Digest sha = sha512.convert(bytes);
+                                  var requestBody = jsonEncode({"hash":sha.toString()});
+                                  String key = await rootBundle.loadString('assets/api-key.txt');
+                                  var response = await http.post(
+                                      Uri.parse(
+                                          'http://130.61.192.162:8069/api/v1/admin/login'),
+                                      headers: {'x-api-key': key},
+                                      body: requestBody);
+                                  debugPrint('First: ${response.statusCode}');
+                                  if (response.statusCode == 200) {
+                                    Provider.of<AdminProvider>(context, listen: false)
+                                        .changePermission(true);
+                                    Navigator.of(context).pushNamedAndRemoveUntil(
+                                        HomeScreen.routeName, (route) => false);
+                                  } else {
+                                    setState(() {
+                                      invalidRequest = true;
+                                    });
+                                  }
+                                }
+                              },
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Center(
-                      child: Text(
-                        "Don't have an account?",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w700),
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            // TODO Send email to Admin?
-                          });
-                        },
+                      Center(
                         child: Text(
-                          "Contact the Administrator",
+                          "Don't have an account?",
                           style: TextStyle(
                               fontSize: 18,
-                              color: Color(0xFFDD9246),
+                              color: Colors.grey[400],
                               fontWeight: FontWeight.w700),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Center(
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              // TODO Send email to Admin?
+                            });
+                          },
+                          child: Text(
+                            "Contact the Administrator",
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xFFDD9246),
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
