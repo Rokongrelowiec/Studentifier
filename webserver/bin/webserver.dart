@@ -117,6 +117,7 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/students/bystudentId': return _echoUserByStudentId(request);
     case 'api/v1/students/update/student_id': return _echoUpdateUsersStudentId(request);
     case 'api/v1/students/qr': return _echoQrCodeDownload(request, PersonType.STUDENT);
+    case 'api/v1/students/add': return _echoAddUser(request);
     case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
     case 'api/v1/vehicles/licenseplates/lecturers': return _echoVehiclesLicensePlatesOfLecturers(request);
     case 'api/v1/vehicles/licenseplates/checkone': return _echoVehiclesCheckByLicensePlate(request);
@@ -131,6 +132,28 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'healthcheck': return _echoHealthcheck(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoAddUser(shelf.Request request) async {
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+  return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+  return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+
+  final response = await dbClient
+      .from('student')
+      .insert({'numer_albumu': decoded['numer_albumu'], 'imie': decoded['imie'], 'nazwisko': decoded['nazwisko'], 'data_waznosci': '2024-03-31'});
+
+  return shelf.Response.ok(response);
+
 }
 
 Future<shelf.Response> _echoHealthcheck(shelf.Request request) async {
