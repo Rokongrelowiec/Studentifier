@@ -239,7 +239,7 @@ Future<shelf.Response> _echoEntriesInAMonthTop(shelf.Request request) async{
   var scope = decoded.values.elementAt(0);
 
   final response = await dbClient
-      .from('${scope.toString().toUpperCase()}-raport-top')
+      .from('${scope.toString().toLowerCase()}raporttop')
       .select()
       .limit(1);
 
@@ -312,7 +312,7 @@ Future<shelf.Response> _echoLogEntry(shelf.Request request) async {
   var day = decoded.values.elementAt(3);
 
   final response = await dbClient
-      .from('entries${tableName}')
+      .from('entries${tableName.toLowerCase()}')
       .insert({'rejestracja': licensePlate, 'godzinaPrzyjazdu': hour, 'dataPrzyjazdu': day});
 
   return shelf.Response.ok(jsonEncode(response));
@@ -336,7 +336,7 @@ Future<shelf.Response> _echoEntriesInADay(shelf.Request request) async {
   var dayFor = decoded.values.elementAt(1);
 
   final response = await dbClient
-      .from('entries${reportFor}')
+      .from('entries${reportFor.toLowerCase()}')
       .select('rejestracja, godzinaPrzyjazdu')
       .eq('dataPrzyjazdu', dayFor)
       .order('godzinaPrzyjazdu', ascending: true);
@@ -360,7 +360,7 @@ Future<shelf.Response> _echoEntriesInAMonth(shelf.Request request) async{
   var reportFor = decoded.values.elementAt(0);
 
   final response = await dbClient
-      .from('${reportFor}-raport')
+      .from('${reportFor.toLowerCase()}raport')
       .select();
 
   return shelf.Response.ok(jsonEncode(response));
@@ -453,9 +453,9 @@ Future<bool> isUserAuthenticated(Map<String, String> requestHeader, SupabaseClie
   String? apiKeyFromHeader = requestHeader['x-api-key'];
 
   final response = await dbClient
-      .from('apiKey')
+      .from('apikey')
       .select('apiKey')
-      .eq('apiKey', apiKeyFromHeader)
+      .eq('apikey', apiKeyFromHeader)
       .single();
 
   String retrievedApiKey = response.values.elementAt(0);
