@@ -112,15 +112,15 @@ class _DailyReportState extends State<DailyReport> {
     });
   }
 
-  void undoOperation() {
-    setState(() {
-      studentIndexes.insert(locationIndex, removedStudentIndex);
-      licensePlates.insert(locationIndex, removedLicensePlate);
-      firstNames.insert(locationIndex, removedFirstName);
-      lastNames.insert(locationIndex, removedLastName);
-      scanTime.insert(locationIndex, removedScanTime);
-    });
-  }
+  // void undoOperation() {
+  //   setState(() {
+  //     studentIndexes.insert(locationIndex, removedStudentIndex);
+  //     licensePlates.insert(locationIndex, removedLicensePlate);
+  //     firstNames.insert(locationIndex, removedFirstName);
+  //     lastNames.insert(locationIndex, removedLastName);
+  //     scanTime.insert(locationIndex, removedScanTime);
+  //   });
+  // }
 
   Future getData() async {
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -145,8 +145,8 @@ class _DailyReportState extends State<DailyReport> {
         headers: {'x-api-key': apiKey},
         body: requestBody,
       );
-      requestBody = jsonDecode(response.body)[0]['numer_albumu'];
-      studentIdList.add(requestBody);
+      var responseDecoded = jsonDecode(response.body)[0]['numer_albumu'];
+      studentIdList.add(responseDecoded);
     }
 
     for (int i = 0; i < studentIdList.length; i++) {
@@ -161,10 +161,10 @@ class _DailyReportState extends State<DailyReport> {
       nameSurnameList.add({name: surname});
     }
 
-    print(
-        licenseAndHourList); // [{rejestracja: ABC123, godzinaPrzyjazdu: 17:14:35+00}, {rejestracja: DEF456, godzinaPrzyjazdu: 17:22:38+00}]
-    print(studentIdList); // [27980, 27988]
-    print(nameSurnameList); // [{Marek: Las}, {Rober: Kubica}]
+    debugPrint(licenseAndHourList
+        .toString()); // [{rejestracja: ABC123, godzinaPrzyjazdu: 17:14:35+00}, {rejestracja: DEF456, godzinaPrzyjazdu: 17:22:38+00}]
+    debugPrint(studentIdList.toString()); // [27980, 27988]
+    debugPrint(nameSurnameList.toString()); // [{Marek: Las}, {Rober: Kubica}]
     records = licenseAndHourList.length;
   }
 
@@ -240,6 +240,7 @@ class _DailyReportState extends State<DailyReport> {
                     itemBuilder: (ctx, index) => Card(
                       color: Theme.of(context).drawerTheme.backgroundColor,
                       child: ListTile(
+                          key: UniqueKey(),
                           onTap: () async {
                             final newValues = await Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -337,12 +338,12 @@ class _DailyReportState extends State<DailyReport> {
                                       backgroundColor:
                                           Theme.of(context).primaryColor,
                                       content: Text(
-                                        'Removed item number: ${index + 1}',
+                                        'Removed index: ${studentIdList[index]}',
                                       ),
-                                      action: SnackBarAction(
-                                          label: 'Undo',
-                                          textColor: Colors.white,
-                                          onPressed: () => undoOperation()),
+                                      // action: SnackBarAction(
+                                      //     label: 'Undo',
+                                      //     textColor: Colors.white,
+                                      //     onPressed: () => undoOperation()),
                                     );
                                     ScaffoldMessenger.of(context)
                                         .hideCurrentSnackBar();
