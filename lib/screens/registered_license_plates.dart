@@ -166,12 +166,12 @@ class _GenerateRegisteredLicensePlatesState
                               final snackBar = SnackBar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 content: Text(
-                                  'Removed item number: ${index + 1}',
+                                  'Removed licence plate: ${lecturersLicencePlates[index]['rejestracja']}',
                                 ),
-                                action: SnackBarAction(
-                                    label: 'Undo',
-                                    textColor: Colors.white,
-                                    onPressed: () => undoOperation()),
+                                // action: SnackBarAction(
+                                //     label: 'Undo',
+                                //     textColor: Colors.white,
+                                //     onPressed: () => undoOperation()),
                               );
                               ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar();

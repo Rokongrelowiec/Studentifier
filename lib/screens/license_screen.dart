@@ -243,7 +243,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                       headers: {'x-api-key': apiKey},
                       body: requestBody);
                   var decodedResponse = jsonDecode(response.body);
-                  print(decodedResponse);
+                  debugPrint(decodedResponse.toString());
                   if (decodedResponse.isEmpty) {
                     showDialog(
                       context: context,
@@ -330,7 +330,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                     );
                   } else {
                     if (decodedResponse[0]['wykladowca']) {
-                      // print('LECTURER');
+                      debugPrint('LECTURER');
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (_) => AddedDataScreen(
@@ -344,7 +344,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                         ),
                       );
                     } else {
-                      // print('STUDENT');
+                      debugPrint('STUDENT');
                       var studentId = decodedResponse[0]['numer_albumu'];
                       requestBody = jsonEncode({'numer_albumu': studentId});
                       response = await http.post(
@@ -354,10 +354,10 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                           body: requestBody);
 
                       decodedResponse = jsonDecode(response.body);
-                      print(decodedResponse);
+                      debugPrint(decodedResponse.toString());
 
                       DateTime date = DateTime.parse('${widget.scanTime}');
-                      print(date);
+                      debugPrint(date.toString());
                       var day = DateFormat('yyyy-MM-dd').format(date);
                       var hour = '${DateFormat.Hms().format(date)}+00';
 
@@ -368,7 +368,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                         'godzinaPrzyjazdu': hour,
                         'dzien': day
                       });
-                      print(requestBody);
+                      debugPrint(requestBody);
                       response = await http.post(
                           Uri.parse(
                             'http://130.61.192.162:8069/api/v1/logs/log/entry',

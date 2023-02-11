@@ -121,18 +121,18 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
                 licensePlate: widget.licensePlate,
                 scanTime: widget.scanTime);
           }
-         Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) => AddedDataScreen(
-                  name: mapData['name'],
-                  surname: mapData['surname'],
-                  studentId: mapData['studentId'],
-                  licensePlate: widget.licensePlate,
-                  scanTime: widget.scanTime,
-                  isPrivileged: mapData['isPrivileged'],
-                ),
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) => AddedDataScreen(
+                name: mapData['name'],
+                surname: mapData['surname'],
+                studentId: mapData['studentId'],
+                licensePlate: widget.licensePlate,
+                scanTime: widget.scanTime,
+                isPrivileged: mapData['isPrivileged'],
               ),
-            );
+            ),
+          );
           controller.pauseCamera();
         }
       }),
@@ -172,16 +172,20 @@ sendStudentData({
   required String scanTime,
   required String licensePlate,
 }) async {
-
+  List controlList = [true, true, true, true];
   String key = await rootBundle.loadString('assets/api-key.txt');
+  var response;
   var requestBody =
       jsonEncode({"studentId": studentId, "licenseplate": licensePlate});
-  var response = await http.post(
-      Uri.parse(
-          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/student'),
-      headers: {'x-api-key': key},
-      body: requestBody);
-  debugPrint('First: ${response.statusCode}');
+  if (controlList[0]) {
+    response = await http.post(
+        Uri.parse(
+            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/student'),
+        headers: {'x-api-key': key},
+        body: requestBody);
+    debugPrint('First: ${response.statusCode}');
+    controlList[0] = false;
+  }
 
   DateTime date = DateTime.parse(scanTime);
   var day = DateFormat('yyyy-MM-dd').format(date);
@@ -192,26 +196,34 @@ sendStudentData({
     'godzinaPrzyjazdu': hour,
     'dzien': day
   });
-  response = await http.post(
-      Uri.parse('http://130.61.192.162:8069/api/v1/logs/log/entry'),
-      headers: {'x-api-key': key},
-      body: requestBody);
-  debugPrint('Second ${response.statusCode}');
-
-  requestBody = jsonEncode({'numer_albumu': studentId});
-  response = await http.post(
-      Uri.parse(
-          'http://130.61.192.162:8069/api/v1/students/bystudentId'),
-      headers: {'x-api-key': key},
-      body: requestBody);
-  debugPrint('Third ${response.statusCode}');
-  if (jsonDecode(response.body).isEmpty) {
-    requestBody = jsonEncode({'numer_albumu': studentId, 'imie': name, 'nazwisko': surname});
+  if (controlList[1]) {
     response = await http.post(
-        Uri.parse(
-            'http://130.61.192.162:8069/api/v1/students/add'),
+        Uri.parse('http://130.61.192.162:8069/api/v1/logs/log/entry'),
         headers: {'x-api-key': key},
         body: requestBody);
-    debugPrint('Fourth ${response.statusCode}');
+    debugPrint('Second ${response.statusCode}');
+    controlList[1] = false;
+  }
+
+  requestBody = jsonEncode({'numer_albumu': studentId});
+  if (controlList[2]) {
+    response = await http.post(
+        Uri.parse('http://130.61.192.162:8069/api/v1/students/bystudentId'),
+        headers: {'x-api-key': key},
+        body: requestBody);
+    debugPrint('Third ${response.statusCode}');
+    controlList[2] = false;
+  }
+  if (jsonDecode(response.body).isEmpty) {
+    requestBody = jsonEncode(
+        {'numer_albumu': studentId, 'imie': name, 'nazwisko': surname});
+    if (controlList[3]) {
+      response = await http.post(
+          Uri.parse('http://130.61.192.162:8069/api/v1/students/add'),
+          headers: {'x-api-key': key},
+          body: requestBody);
+      debugPrint('Fourth ${response.statusCode}');
+      controlList[3] = false;
+    }
   }
 }
