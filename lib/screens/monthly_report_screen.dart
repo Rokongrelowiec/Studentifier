@@ -183,6 +183,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
             itemBuilder: (ctx, index) => Card(
               color: Theme.of(context).drawerTheme.backgroundColor,
               child: ListTile(
+                key: UniqueKey(),
                 onTap: () async {
                   final newValues = await Navigator.of(context).push(
                     MaterialPageRoute(
@@ -255,10 +256,10 @@ class _MonthlyReportState extends State<MonthlyReport> {
                             content: Text(
                               'Removed item number: ${index + 1}',
                             ),
-                            action: SnackBarAction(
-                                label: 'Undo',
-                                textColor: Colors.white,
-                                onPressed: () => undoOperation()),
+                            // action: SnackBarAction(
+                            //     label: 'Undo',
+                            //     textColor: Colors.white,
+                            //     onPressed: () => undoOperation()),
                           );
                           ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);

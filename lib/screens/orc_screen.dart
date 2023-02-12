@@ -68,7 +68,6 @@ class _OCRScreen extends State<OCRScreen> {
   Future<void> processImage(InputImage inputImage, BuildContext context) async {
     if (!_canProcess) return;
     final objects = await _objectDetector.processImage(inputImage);
-    // List<DetectedObject> carRelatedObjects = objects;//<DetectedObject>[];
     List<DetectedObject> carRelatedObjects = <DetectedObject>[];
     for (DetectedObject detectedObject in objects) {
       for (Label label in detectedObject.labels) {
@@ -117,7 +116,7 @@ class _OCRScreen extends State<OCRScreen> {
                 } else {
                   licenses[text] = 1;
                 }
-                if (licenses[text] > 4) {
+                if (licenses[text] > 3) {
                   licenses = {};
                   _canProcess = false;
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
