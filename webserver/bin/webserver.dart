@@ -123,15 +123,78 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/vehicles/licenseplates/checkone': return _echoVehiclesCheckByLicensePlate(request);
     case 'api/v1/vehicles/licenseplates/add/student': return _echoAddLicensePlateWithType(request, PersonType.STUDENT);
     case 'api/v1/vehicles/licenseplates/add/lecturer': return _echoAddLicensePlateWithType(request, PersonType.LECTURER);
+    case 'api/v1/vehicles/licenseplates/delete': return _echoRemoveLicensePlate(request);
     case 'api/v1/lecturers/qr': return _echoQrCodeDownload(request, PersonType.LECTURER);
     case 'api/v1/logs/entries/month': return _echoEntriesInAMonth(request);
     case 'api/v1/logs/entries/month/top': return _echoEntriesInAMonthTop(request);
     case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
+    case 'api/v1/logs/entries/delete': return _echoRemoveEntryInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
     case 'api/v1/admin/login': return _echoLoginAdmin(request);
     case 'healthcheck': return _echoHealthcheck(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoRemoveEntryInADay(shelf.Request request) async {
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+  return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+  return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  final response;
+
+  try {
+    if(decoded.containsKey('id')) {
+      response = await dbClient
+          .from('entries${decoded['slice'].toString().toLowerCase()}')
+          .delete()
+          .match({'id' : decoded['id']});
+    } else {
+      response = await dbClient
+          .from('entries${decoded['slice']}')
+          .delete()
+          .match({'rejestracja' : decoded['licenseplate'], 'dataPrzyjazdu' : decoded['dateOfArrival'], 'godzinaPrzyjazdu' : decoded['hourOfArrival']});
+    }
+
+  } on PostgrestException catch (postgresEx) {
+  return shelf.Response.notFound(postgresEx.details);
+  }
+
+  return shelf.Response.ok(response);
+}
+
+Future<shelf.Response> _echoRemoveLicensePlate(shelf.Request request) async{
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  final response;
+  try {
+    response = await dbClient
+        .from('rejestracje')
+        .delete()
+        .match({'rejestracja' : decoded['licenseplate']});
+  } on PostgrestException catch (postgresEx) {
+    return shelf.Response.notFound(postgresEx.details);
+  }
+
+  return shelf.Response.ok(response);
 }
 
 Future<shelf.Response> _echoAddUser(shelf.Request request) async {
@@ -147,10 +210,14 @@ Future<shelf.Response> _echoAddUser(shelf.Request request) async {
 
   var requestBodyAwaited = await request.readAsString();
   var decoded = jsonDecode(requestBodyAwaited);
-
-  final response = await dbClient
-      .from('student')
-      .insert({'numer_albumu': decoded['numer_albumu'], 'imie': decoded['imie'], 'nazwisko': decoded['nazwisko'], 'data_waznosci': '2024-03-31'});
+  final response;
+  try {
+    response = await dbClient
+        .from('student')
+        .insert({'numer_albumu': decoded['numer_albumu'], 'imie': decoded['imie'], 'nazwisko': decoded['nazwisko'], 'data_waznosci': '2024-03-31'});
+  } on PostgrestException catch (postgresEx) {
+    return shelf.Response.notFound(postgresEx.details);
+  }
 
   return shelf.Response.ok(response);
 
@@ -452,18 +519,22 @@ Future<shelf.Response> _echoVehiclesLicensePlates(shelf.Request request) async {
 Future<bool> isUserAuthenticated(Map<String, String> requestHeader, SupabaseClient dbClient) async {
   String? apiKeyFromHeader = requestHeader['x-api-key'];
 
-  final response = await dbClient
-      .from('apikey')
-      .select('apiKey')
-      .eq('apiKey', apiKeyFromHeader)
-      .single();
-
-  String retrievedApiKey = response.values.elementAt(0);
-  if (apiKeyFromHeader == retrievedApiKey) {
-    return true;
-  } else {
+  try {
+    final response = await dbClient
+        .from('apikey')
+        .select('apiKey')
+        .eq('apiKey', apiKeyFromHeader)
+        .single();
+    String retrievedApiKey = response.values.elementAt(0);
+    if (apiKeyFromHeader == retrievedApiKey) {
+      return true;
+    } else {
+      return false;
+    }
+  } on PostgrestException catch (postEx) {
     return false;
   }
+
 }
 
 bool isRequestTheTypeSameAsProvided(String providedRequest, String expectedRequest) {
