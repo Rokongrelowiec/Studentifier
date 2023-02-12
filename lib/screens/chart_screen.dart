@@ -354,7 +354,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 
   getChartData() async {
     String key = await rootBundle.loadString('assets/api-key.txt');
-    var requestBody = jsonEncode({"period": "JAN2023"});
+    var requestBody = jsonEncode({"period": "FEB2023"});
     var response = await http.post(
         Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month'),
         headers: {'x-api-key': '$key'},
@@ -380,7 +380,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             "-${decodedResponse[i]['dataPrzyjazdu'].substring(0, 4)}";
       }
     }
-    average = visitsCounter / decodedResponse.length;
+    int date = DateTime.now().day;
+    average = visitsCounter / date;
     chartData = List.generate(
         decodedResponse.length,
             (index) =>
@@ -390,7 +391,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     5, 7)}",
                 decodedResponse[index]['count']));
 
-    requestBody = jsonEncode({"period": "JAN2023"});
+    requestBody = jsonEncode({"period": "FEB2023"});
     response = await http.post(
         Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month/top'),
         headers: {'x-api-key': '$key'},

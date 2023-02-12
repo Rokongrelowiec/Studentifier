@@ -66,8 +66,18 @@ class _OCRScreen extends State<OCRScreen> {
   Future<void> processImage(InputImage inputImage, BuildContext context) async {
     if (!_canProcess) return;
     final objects = await _objectDetector.processImage(inputImage);
+    List<DetectedObject> carRelatedObjects = <DetectedObject>[];
+    for (DetectedObject detectedObject in objects) {
+      for (Label label in detectedObject.labels) {
+        if(label.text == "Car" || label.text == "License plate") {
+          carRelatedObjects.add(detectedObject);
+        } else {
+          continue;
+        }
+      }
+    }
     final painter = ObjectDetectorPainter(
-        objects,
+        carRelatedObjects,
         inputImage.inputImageData!.imageRotation,
         inputImage.inputImageData!.size);
     _customPaint = CustomPaint(painter: painter);
@@ -75,16 +85,19 @@ class _OCRScreen extends State<OCRScreen> {
       setState(() {});
     }
 
-    for (DetectedObject detectedObject in objects) {
+    for (DetectedObject detectedObject in carRelatedObjects) {
       for (Label label in detectedObject.labels) {
         // print('${label.text} ${label.confidence}');
-        if ((label.text == 'Car' && label.confidence > 0.85) || label.text == 'License plate') {
-          final textDetector = GoogleMlKit.vision.textRecognizer();
+        if ((label.text == 'Car' && label.confidence > 0.5) || (label.text == 'License plate' && label.confidence > 0.5)) {
+          final textDetector = GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.latin);
           final recognisedText = await textDetector.processImage(inputImage);
           setState(() {
             for (TextBlock block in recognisedText.blocks) {
               final String text = block.text;
               bool checked = true;
+              if(!detectedObject.boundingBox.overlaps(block.boundingBox)){
+                continue;
+              }
               if (text.length < 4) {
                 continue;
               }
@@ -101,7 +114,7 @@ class _OCRScreen extends State<OCRScreen> {
                 } else {
                   licenses[text] = 1;
                 }
-                if (licenses[text] > 4) {
+                if (licenses[text] > 3) {
                   licenses = {};
                   _canProcess = false;
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
