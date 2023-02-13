@@ -14,10 +14,9 @@ class ChartScreen extends StatelessWidget {
   const ChartScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      Platform.isIOS
-          ? GenerateChartScreen()
-          : SafeArea(child: GenerateChartScreen());
+  Widget build(BuildContext context) => Platform.isIOS
+      ? GenerateChartScreen()
+      : SafeArea(child: GenerateChartScreen());
 }
 
 class GenerateChartScreen extends StatefulWidget {
@@ -30,13 +29,13 @@ class GenerateChartScreen extends StatefulWidget {
 class _GenerateChartScreenState extends State<GenerateChartScreen> {
   late List<Visits> chartData;
   late TooltipBehavior _tooltipBehavior;
-  int visitsCounter=0;
+  int visitsCounter = 0;
   late int minVisitsNum;
-  int maxVisitsNum=0;
-  num average=0;
-  String minVisitsDay='';
-  String maxVisitsDay='';
-  String mostVisitsLicensePlate='';
+  int maxVisitsNum = 0;
+  num average = 0;
+  String minVisitsDay = '';
+  String maxVisitsDay = '';
+  String mostVisitsLicensePlate = '';
   var mostVisitsStudentId;
 
   @override
@@ -47,26 +46,18 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Chart',
-          style: TextStyle(color: Theme
-              .of(context)
-              .textTheme
-              .headline1
-              ?.color),
+          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
         ),
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back_ios_rounded,
-            color: Theme
-                .of(context)
-                .iconTheme
-                .color,
+            color: Theme.of(context).iconTheme.color,
           ),
         ),
       ),
@@ -82,18 +73,13 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             if (snapshot.hasError) {
               return Center(
                   child: Text(
-                    'Sorry\nCould not fetch the data',
-                    style: TextStyle(
-                        color: Theme
-                            .of(context)
-                            .textTheme
-                            .headline1
-                            ?.color,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold
-                    ),
-                    textAlign: TextAlign.center,
-                  ));
+                'Sorry\nCould not fetch the data',
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.headline1?.color,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ));
             } else {
               return SingleChildScrollView(
                 child: Column(
@@ -106,11 +92,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                           text: 'Visits in last month',
                           textStyle: TextStyle(
                               color:
-                              Theme
-                                  .of(context)
-                                  .textTheme
-                                  .headline1
-                                  ?.color,
+                                  Theme.of(context).textTheme.headline1?.color,
                               fontSize: 20),
                         ),
                         tooltipBehavior: _tooltipBehavior,
@@ -130,11 +112,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       'Data Sheet',
                       style: TextStyle(
                           fontSize: 22,
-                          color: Theme
-                              .of(context)
-                              .textTheme
-                              .headline1
-                              ?.color),
+                          color: Theme.of(context).textTheme.headline1?.color),
                     ),
                     SizedBox(
                       height: 10,
@@ -142,10 +120,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
-                        color: Theme
-                            .of(context)
-                            .drawerTheme
-                            .backgroundColor,
+                        color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
@@ -156,8 +131,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 'Most visits - license plate:',
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -166,8 +140,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 mostVisitsLicensePlate,
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -183,10 +156,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
-                        color: Theme
-                            .of(context)
-                            .drawerTheme
-                            .backgroundColor,
+                        color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
@@ -197,8 +167,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 'Most visits - index:',
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -207,8 +176,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 mostVisitsStudentId.toString(),
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -224,10 +192,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
-                        color: Theme
-                            .of(context)
-                            .drawerTheme
-                            .backgroundColor,
+                        color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
@@ -238,8 +203,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 'Most visits - day:',
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -248,8 +212,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 maxVisitsDay,
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -265,10 +228,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
-                        color: Theme
-                            .of(context)
-                            .drawerTheme
-                            .backgroundColor,
+                        color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
@@ -279,8 +239,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 'Least visits - day:',
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -289,8 +248,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 minVisitsDay,
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -306,10 +264,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
-                        color: Theme
-                            .of(context)
-                            .drawerTheme
-                            .backgroundColor,
+                        color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 5, vertical: 5),
@@ -320,8 +275,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 'Average of visits per day:',
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -330,8 +284,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                 average.toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: Theme
-                                        .of(context)
+                                    color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color),
@@ -347,9 +300,6 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             }
           }),
     );
-
-    // }
-    // );
   }
 
   getChartData() async {
@@ -360,12 +310,31 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
         headers: {'x-api-key': '$key'},
         body: requestBody);
     var decodedResponse = jsonDecode(response.body);
+    var endDate = DateFormat('dd').format(DateTime.now());
+    var startDate = DateFormat('dd').format(
+        DateTime.now().subtract(Duration(days: DateTime.now().day - 1)));
+    for (int i = int.parse(startDate); i <= int.parse(endDate); i++) {
+      try {
+        if (int.parse(decodedResponse[i - 1]['dataPrzyjazdu'].substring(8)) !=
+            i) {
+          var day = i.toString().length == 1 ? '0$i' : i.toString();
+          var month = DateTime.now().month.toString().length == 1
+              ? '0${DateTime.now().month}'
+              : DateTime.now().month.toString();
+          decodedResponse.insert(i - 1, {
+            'dataPrzyjazdu': '${DateTime.now().year}-$month-$day',
+            'count': 0
+          });
+        }
+      } catch (e) {}
+    }
+    debugPrint(decodedResponse.toString()); // day
     visitsCounter = 0; // control set
     minVisitsNum = decodedResponse[0]['count'];
     minVisitsDay = "${decodedResponse[0]['dataPrzyjazdu'].substring(8)}"
         "-${decodedResponse[0]['dataPrzyjazdu'].substring(5, 7)}"
         "-${decodedResponse[0]['dataPrzyjazdu'].substring(0, 4)}";
-    for (int i=0; i<decodedResponse.length; i++) {
+    for (int i = 0; i < decodedResponse.length; i++) {
       visitsCounter += decodedResponse[i]['count'] as int;
       if (decodedResponse[i]['count'] > maxVisitsNum) {
         maxVisitsNum = decodedResponse[i]['count'];
@@ -384,12 +353,9 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
     average = visitsCounter / date;
     chartData = List.generate(
         decodedResponse.length,
-            (index) =>
-            Visits(
-                "${decodedResponse[index]['dataPrzyjazdu'].substring(
-                    8)}-${decodedResponse[index]['dataPrzyjazdu'].substring(
-                    5, 7)}",
-                decodedResponse[index]['count']));
+        (index) => Visits(
+            "${decodedResponse[index]['dataPrzyjazdu'].substring(8)}-${decodedResponse[index]['dataPrzyjazdu'].substring(5, 7)}",
+            decodedResponse[index]['count']));
 
     requestBody = jsonEncode({"period": "FEB2023"});
     response = await http.post(
@@ -401,7 +367,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 
     requestBody = jsonEncode({"licenseplate": "$mostVisitsLicensePlate"});
     response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/vehicles/licenseplates/checkone'),
+        Uri.parse(
+            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/checkone'),
         headers: {'x-api-key': '$key'},
         body: requestBody);
     decodedResponse = jsonDecode(response.body);

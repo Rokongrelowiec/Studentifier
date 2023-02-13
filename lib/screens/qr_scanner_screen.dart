@@ -184,7 +184,9 @@ sendStudentData({
         headers: {'x-api-key': key},
         body: requestBody);
     debugPrint('First: ${response.statusCode}');
-    controlList[0] = false;
+    if (response.statusCode == 200) {
+      controlList[0] = false;
+    }
   }
 
   DateTime date = DateTime.parse(scanTime);
@@ -202,7 +204,9 @@ sendStudentData({
         headers: {'x-api-key': key},
         body: requestBody);
     debugPrint('Second ${response.statusCode}');
-    controlList[1] = false;
+    if (response.statusCode == 200) {
+      controlList[1] = false;
+    }
   }
 
   requestBody = jsonEncode({'numer_albumu': studentId});
@@ -212,7 +216,9 @@ sendStudentData({
         headers: {'x-api-key': key},
         body: requestBody);
     debugPrint('Third ${response.statusCode}');
-    controlList[2] = false;
+    if (response.statusCode) {
+      controlList[2] = false;
+    }
   }
   if (jsonDecode(response.body).isEmpty) {
     requestBody = jsonEncode(
@@ -223,7 +229,9 @@ sendStudentData({
           headers: {'x-api-key': key},
           body: requestBody);
       debugPrint('Fourth ${response.statusCode}');
-      controlList[3] = false;
+      if (response.statusCode == 200) {
+        controlList[3] = false;
+      }
     }
   }
 }
