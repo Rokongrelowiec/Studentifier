@@ -7,23 +7,14 @@ class DatabaseCredentials {
   late String databasePassword;
   DatabaseCredentials();
 
-   static initCredentialsLocal(DatabaseCredentials credentials) async {
+   static initCredentials(DatabaseCredentials credentials) async {
     await File('${Platform.environment['HOME']}/.supabase_db_creds').readAsString().then((String json) {
-      print('I do the file read');
       Map<String, dynamic> jsonMap = jsonDecode(json);
       credentials.databaseUrl = jsonMap['dbUrl'];
       credentials.databasePassword = jsonMap['dbPassword'];
     });
    }
 
-   static initCredentialsHeroku(DatabaseCredentials credentials) async {
-     credentials.databaseUrl = Platform.environment['dbUrl']!;
-     credentials.databasePassword = Platform.environment['dbPassowrd']!;
-   }
-
-   static initCredentials(DatabaseCredentials credentials) async {
-     Platform.environment['herokuBased'] == "TRUE" ? await initCredentialsHeroku(credentials) : await initCredentialsLocal(credentials);
-   }
 }
 
 
