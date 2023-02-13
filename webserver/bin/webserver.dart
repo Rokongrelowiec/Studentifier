@@ -103,19 +103,38 @@ Future<shelf.Response> _echoActiveUsers(shelf.Request request) async{
 
 }
 
-Future<shelf.Response> _echoUpdateUsersStudentId(shelf.Request request) async{
-  var readString = await request.readAsString();
-  print(readString);
+Future<shelf.Response> _echoUpdateUserByStudentId(shelf.Request request) async{
+  final dbClient = DatabaseConnector(dbCredentials).client;
 
-  return shelf.Response.ok('hello');
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  final response = await dbClient
+      .from('student')
+      .update({
+                'imie': decoded['imie'],
+                'nazwisko': decoded['nazwisko'],
+                'data_waznosci': decoded['data_waznosci']
+              })
+      .match({'numer_albumu':decoded['numer_albumu']});
+
+  return shelf.Response.ok(jsonEncode(response));
 }
 
 Future<shelf.Response> _echoRequest(shelf.Request request) async {
   switch(request.url.toString()) {
     case 'api/v1/students': return _echoUsers(request);
     case 'api/v1/students/active': return _echoActiveUsers(request);
+    case 'api/v1/students/active/checkone': return _echoCheckIfActiveByStudentId(request);
     case 'api/v1/students/bystudentId': return _echoUserByStudentId(request);
-    case 'api/v1/students/update/student_id': return _echoUpdateUsersStudentId(request);
+    case 'api/v1/students/update/bystudentId': return _echoUpdateUserByStudentId(request);
     case 'api/v1/students/qr': return _echoQrCodeDownload(request, PersonType.STUDENT);
     case 'api/v1/students/add': return _echoAddUser(request);
     case 'api/v1/vehicles/licenseplates': return _echoVehiclesLicensePlates(request);
@@ -137,6 +156,27 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'healthcheck': return _echoHealthcheck(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoCheckIfActiveByStudentId(shelf.Request request) async{
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+  return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+  return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  final response = await dbClient
+      .from('student')
+      .select('data_waznosci')
+      .match({'numer_albumu':decoded['numer_albumu']});
+
+  return shelf.Response.ok(jsonEncode(response));
 }
 
 Future<shelf.Response> _echoEntriesInAmonthCountByLicensePlate(shelf.Request request) async {
