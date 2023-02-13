@@ -126,7 +126,9 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/vehicles/licenseplates/delete': return _echoRemoveLicensePlate(request);
     case 'api/v1/lecturers/qr': return _echoQrCodeDownload(request, PersonType.LECTURER);
     case 'api/v1/logs/entries/month': return _echoEntriesInAMonth(request);
+    case 'api/v1/logs/entries/month/full': return _echoEntriesInAMonthGranular(request);
     case 'api/v1/logs/entries/month/top': return _echoEntriesInAMonthTop(request);
+    case 'api/v1/logs/entries/month/licenseplates': return _echoEntriesInAMonthByLicensePlates(request);
     case 'api/v1/logs/entries/day': return _echoEntriesInADay(request);
     case 'api/v1/logs/entries/delete': return _echoRemoveEntryInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
@@ -134,6 +136,46 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'healthcheck': return _echoHealthcheck(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoEntriesInAMonthGranular(shelf.Request request) async {
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  final response = await dbClient
+      .from('entries${decoded['scope'].toString().toLowerCase()}')
+      .select();
+
+  return shelf.Response.ok(jsonEncode(response));
+}
+
+Future<shelf.Response> _echoEntriesInAMonthByLicensePlates(shelf.Request request) async{
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+  final response = await dbClient
+      .from('${decoded['scope'].toString().toLowerCase()}raporttop')
+      .select();
+
+  return shelf.Response.ok(jsonEncode(response));
 }
 
 Future<shelf.Response> _echoRemoveEntryInADay(shelf.Request request) async {

@@ -7,7 +7,7 @@ RUN /bin/bash -c 'dart pub get && \
                   dart --disable-analytics'
 
 
-HEALTHCHECK --interval=5m --timeout=3s \
+HEALTHCHECK --interval=30s --timeout=3s \
     CMD curl -f http://localhost:8069/healthcheck || return 1
 
 ENTRYPOINT ["dart", "run", "bin/webserver.dart", "--port", "8069"]
