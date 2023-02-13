@@ -8,9 +8,9 @@ import 'package:confetti/confetti.dart';
 import './home_screen.dart';
 
 class AddedDataScreen extends StatelessWidget {
-  String name;
-  String surname;
-  int studentId;
+  String? name;
+  String? surname;
+  int? studentId;
   String licensePlate;
   String scanTime;
   bool isPrivileged;
@@ -48,9 +48,9 @@ class AddedDataScreen extends StatelessWidget {
 }
 
 class GenerateAddedDataScreen extends StatefulWidget {
-  String name;
-  String surname;
-  int studentId;
+  String? name;
+  String? surname;
+  int? studentId;
   String licensePlate;
   String scanTime;
   bool isPrivileged;
@@ -135,14 +135,14 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                           color: Theme.of(context).textTheme.headline1?.color,
                           fontSize: 25),
                     ),
-                    // TODO comment Text widget below -> self data validation
-                    // Text(
-                    //   'Your data: ${widget.name}, ${widget.surname}, ${widget.studentId},\n'
-                    //       '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
-                    //   style: TextStyle(
-                    //     color: Theme.of(context).textTheme.headline1?.color,
-                    //   ),
-                    // ),
+                    // comment Text widget below -> self data validation
+                    Text(
+                      'Your data: ${widget.name}, ${widget.surname}, ${widget.studentId},\n'
+                          '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1?.color,
+                      ),
+                    ),
                     buildTimer(),
                     Text(
                       'Soon you will return to the home screen',

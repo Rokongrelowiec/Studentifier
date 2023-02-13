@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:studentifier/screens/added_data_screen.dart';
 
 import './home_screen.dart';
 import './qr_scanner_screen.dart';
@@ -69,6 +72,8 @@ class GenerateLicenseScreen extends StatefulWidget {
 }
 
 class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = new TextEditingController();
@@ -122,6 +127,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                         ),
                       ),
                       content: Form(
+                        key: formKey,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         child: TextFormField(
                           autofocus: true,
@@ -159,7 +165,13 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                           child: const Text('Cancel'),
                         ),
                         ElevatedButton(
-                          onPressed: () => editLicense(),
+                          onPressed: () {
+                            final isValidForm =
+                                formKey.currentState!.validate();
+                            if (isValidForm) {
+                              editLicense();
+                            }
+                          },
                           child: const Text('OK'),
                         ),
                       ],
@@ -218,93 +230,168 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO request -> LicensePlate exists in DB or not
+                onPressed: () async {
                   // if exists -> added_data_screen!
                   // if not -> code below
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      backgroundColor:
-                          Theme.of(context).drawerTheme.backgroundColor,
-                      title: Text(
-                        'License plate does not exist in database',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
-                        ),
-                      ),
-                      content: Text(
-                        'What do you want to do?',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
-                        ),
-                      ),
-                      actions: <Widget>[
-                        OutlinedButton(
-                          onPressed: () async {
-                            await FlutterPhoneDirectCaller.callNumber(
-                                '+48730724858');
-                          },
-                          style: OutlinedButton.styleFrom(
-                              side: BorderSide(
-                                  color: Theme.of(context).primaryColor)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Call to the caretaker',
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.color,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Icon(
-                                Icons.call,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ],
+                  String apiKey = await DefaultAssetBundle.of(context)
+                      .loadString('assets/api-key.txt');
+                  var requestBody =
+                      jsonEncode({'licenseplate': '${widget.license}'});
+                  var response = await http.post(
+                      Uri.parse(
+                          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/checkone'),
+                      headers: {'x-api-key': apiKey},
+                      body: requestBody);
+                  var decodedResponse = jsonDecode(response.body);
+                  debugPrint(decodedResponse.toString());
+                  if (decodedResponse.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        backgroundColor:
+                            Theme.of(context).drawerTheme.backgroundColor,
+                        title: Text(
+                          'License plate does not exist in database',
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
                           ),
                         ),
-                        SizedBox(
-                          height: 5,
+                        content: Text(
+                          'What do you want to do?',
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
+                          ),
                         ),
-                        ElevatedButton(
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => QRScannerScreen(
-                                  licensePlate: widget.license,
-                                  scanTime: widget.scanTime),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () async {
+                              await FlutterPhoneDirectCaller.callNumber(
+                                  '+48730724858');
+                            },
+                            style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Call to the caretaker',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Icon(
+                                  Icons.call,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Text(
-                                'Scan the QR code',
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.color,
+                          SizedBox(
+                            height: 5,
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => QRScannerScreen(
+                                    licensePlate: widget.license,
+                                    scanTime: widget.scanTime),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Scan the QR code',
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Icon(
-                                Icons.qr_code,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ],
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Icon(
+                                  Icons.qr_code,
+                                  color: Theme.of(context).iconTheme.color,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    if (decodedResponse[0]['wykladowca']) {
+                      debugPrint('LECTURER');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (_) => AddedDataScreen(
+                            name: null,
+                            surname: null,
+                            studentId: null,
+                            licensePlate: widget.license.toString(),
+                            scanTime: widget.scanTime,
+                            isPrivileged: true,
                           ),
                         ),
-                      ],
-                    ),
-                  );
+                      );
+                    } else {
+                      debugPrint('STUDENT');
+                      var studentId = decodedResponse[0]['numer_albumu'];
+                      requestBody = jsonEncode({'numer_albumu': studentId});
+                      response = await http.post(
+                          Uri.parse(
+                              'http://130.61.192.162:8069/api/v1/students/bystudentId'),
+                          headers: {'x-api-key': apiKey},
+                          body: requestBody);
+
+                      decodedResponse = jsonDecode(response.body);
+                      debugPrint(decodedResponse.toString());
+
+                      DateTime date = DateTime.parse('${widget.scanTime}');
+                      debugPrint(date.toString());
+                      var day = DateFormat('yyyy-MM-dd').format(date);
+                      var hour = '${DateFormat.Hms().format(date)}+00';
+
+                      // Send to DB!
+                      requestBody = jsonEncode({
+                        'slice': 'FEB2023',
+                        'rejestracja': '${widget.license}',
+                        'godzinaPrzyjazdu': hour,
+                        'dzien': day
+                      });
+                      debugPrint(requestBody);
+                      response = await http.post(
+                          Uri.parse(
+                            'http://130.61.192.162:8069/api/v1/logs/log/entry',
+                          ),
+                          headers: {'x-api-key': apiKey},
+                          body: requestBody);
+                      // print(response.statusCode);
+                      if (response.statusCode == 200) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (_) => AddedDataScreen(
+                              name: decodedResponse[0]['imie'],
+                              surname: decodedResponse[0]['nazwisko'],
+                              studentId: studentId,
+                              licensePlate: widget.license.toString(),
+                              scanTime: widget.scanTime,
+                              isPrivileged: false,
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  }
                 },
                 child: Text(
                   'Accept',

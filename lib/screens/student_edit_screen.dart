@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class StudentEdit extends StatelessWidget {
   String firstName;
@@ -9,7 +11,6 @@ class StudentEdit extends StatelessWidget {
   int studentId;
   String licensePlate;
   int numberOfVisits;
-  // TODO change below type to DataTime
   String validityOfStudentId;
 
   StudentEdit(
@@ -52,7 +53,6 @@ class StudentEditGenerate extends StatelessWidget {
   int studentId;
   String licensePlate;
   int numberOfVisits;
-  // TODO change below type to DataTime
   String validityOfStudentId;
 
   StudentEditGenerate(
@@ -72,7 +72,7 @@ class StudentEditGenerate extends StatelessWidget {
 
   setAllUpperCase(String text) {
     String res = '';
-    for (int i=0; i<text.length; i++) {
+    for (int i = 0; i < text.length; i++) {
       res += text[i].toUpperCase();
     }
     return res;
@@ -105,10 +105,23 @@ class StudentEditGenerate extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              // TODO Saving dateTime
+            onPressed: () async {
               final isValidForm = formKey.currentState!.validate();
               if (isValidForm) {
+                String apiKey = await DefaultAssetBundle.of(context)
+                    .loadString('assets/api-key.txt');
+                var requestBody = jsonEncode({
+                  'numer_albumu': studentIdController.text,
+                  'imie': setFirstUpperCase(firstNameController.text),
+                  'nazwisko': setFirstUpperCase(lastNameController.text),
+                  'data_waznosci': validityOfStudentIdController.text
+                });
+                await http.post(
+                  Uri.parse(
+                      'http://130.61.192.162:8069/api/v1/students/update/bystudentId'),
+                  headers: {'x-api-key': apiKey},
+                  body: requestBody,
+                );
                 Navigator.of(context).pop({
                   'firstName': setFirstUpperCase(firstNameController.text),
                   'lastName': setFirstUpperCase(lastNameController.text),
@@ -184,9 +197,9 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
-                      ],
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                      // ],
                       validator: (value) {
                         if (value != null && value.length < 1) {
                           return 'Too short value';
@@ -223,9 +236,9 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
-                      ],
+                      // inputFormatters: [
+                      //   FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                      // ],
                       validator: (value) {
                         if (value != null && value.length < 2) {
                           return 'Too short value';
@@ -238,6 +251,7 @@ class StudentEditGenerate extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 9),
                     child: TextFormField(
+                      enabled: false,
                       controller: studentIdController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
@@ -278,6 +292,7 @@ class StudentEditGenerate extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 9),
                     child: TextFormField(
+                      enabled: false,
                       controller: licensePlateController,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color),
@@ -303,10 +318,11 @@ class StudentEditGenerate extends StatelessWidget {
                         ),
                       ),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z0-9]")),
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[A-Za-z0-9]")),
                       ],
                       validator: (value) {
-                        if (value != null && value.length < 1) {
+                        if (value != null && value.length < 4) {
                           return 'Too short value';
                         }
                         if (value != null && value.length > 9) {
@@ -322,6 +338,7 @@ class StudentEditGenerate extends StatelessWidget {
                     child: TextFormField(
                       controller: numberOfVisitsController,
                       keyboardType: TextInputType.number,
+                      enabled: false,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color),
                       decoration: InputDecoration(
@@ -357,11 +374,9 @@ class StudentEditGenerate extends StatelessWidget {
                       textInputAction: TextInputAction.next,
                     ),
                   ),
-                  // TODO - StudentID
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 9),
                     child: TextFormField(
-                      // TODO ADD date
                       controller: validityOfStudentIdController,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color),
@@ -386,7 +401,16 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
-                      textInputAction: TextInputAction.next,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9\-]")),
+                      ],
+                      validator: (value) {
+                        if (value != null && value.length != 10) {
+                          return 'Please type date using DD-MM-YYYY format';
+                        }
+                        return null;
+                      },
+                      textInputAction: TextInputAction.done,
                     ),
                   ),
                 ],
