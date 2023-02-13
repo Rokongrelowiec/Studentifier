@@ -50,13 +50,19 @@ class _GenerateRegisteredLicensePlatesState
 
   TextEditingController licensePlateController = TextEditingController();
 
-  void removeItem(index) {
-    locationIndex = index;
-    removedLicensePlate = registeredLicensePlates[index];
-
-    setState(() {
-      registeredLicensePlates.removeAt(index);
-    });
+  void removeItem(String licencePlate) async {
+    String apiKey =
+        await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
+    print('Removing');
+    print(licencePlate);
+    var body = jsonEncode({"licenseplate": licencePlate});
+    var response = await http.post(
+      Uri.parse(
+          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/delete'),
+      headers: {'x-api-key': apiKey},
+      body: body,
+    );
+    debugPrint('Remove status code: ${response.statusCode}');
   }
 
   void undoOperation() {
@@ -74,7 +80,8 @@ class _GenerateRegisteredLicensePlatesState
       headers: {'x-api-key': apiKey},
     );
     lecturersLicencePlates = jsonDecode(response.body)['vehicles'];
-    // debugPrint('$lecturersLicencePlates'); // [{id: 11, numer_albumu: null, rejestracja: LR33TEE, wykladowca: true}, {id: 17, numer_albumu: null, rejestracja: ABC123, wykladowca: true}]
+    debugPrint(
+        '$lecturersLicencePlates'); // [{id: 11, numer_albumu: null, rejestracja: LR33TEE, wykladowca: true}, {id: 17, numer_albumu: null, rejestracja: ABC123, wykladowca: true}]
   }
 
   @override
@@ -160,9 +167,21 @@ class _GenerateRegisteredLicensePlatesState
                             ),
                           ),
                           trailing: IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               // TODO - remove lecturer license plate and undo operation!
-                              removeItem(index);
+                              String apiKey =
+                                  await DefaultAssetBundle.of(context)
+                                      .loadString('assets/api-key.txt');
+                              var body = jsonEncode({
+                                "licenseplate":
+                                    '${lecturersLicencePlates[index]['rejestracja']}'
+                              });
+                              await http.post(
+                                Uri.parse(
+                                    'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/delete'),
+                                headers: {'x-api-key': apiKey},
+                                body: body,
+                              );
                               final snackBar = SnackBar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 content: Text(
@@ -173,10 +192,11 @@ class _GenerateRegisteredLicensePlatesState
                                 //     textColor: Colors.white,
                                 //     onPressed: () => undoOperation()),
                               );
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
+                              // ScaffoldMessenger.of(context)
+                              //     .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
+                              setState(() {});
                             },
                             icon: Icon(
                               Icons.delete,
@@ -215,14 +235,8 @@ class _GenerateRegisteredLicensePlatesState
                                     headers: {'x-api-key': apiKey},
                                     body: requestBody,
                                   );
-                                  lecturersLicencePlates.add({
-                                    'rejestracja': licensePlateController.text
-                                        .toUpperCase()
-                                  });
                                   licensePlateController.text = '';
-                                  setState(() {
-                                    lecturersLicencePlates;
-                                  });
+                                  setState(() {});
                                 }
                               },
                               icon: Icon(
