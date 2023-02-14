@@ -216,7 +216,7 @@ sendStudentData({
         headers: {'x-api-key': key},
         body: requestBody);
     debugPrint('Third ${response.statusCode}');
-    if (response.statusCode) {
+    if (response.statusCode == 200) {
       controlList[2] = false;
     }
   }
