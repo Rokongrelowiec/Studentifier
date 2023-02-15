@@ -33,7 +33,7 @@ class AddedDataScreen extends StatelessWidget {
           studentId: studentId,
           licensePlate: licensePlate,
           scanTime: scanTime,
-      isPrivileged: isPrivileged,
+          isPrivileged: isPrivileged,
         )
       : SafeArea(
           child: GenerateAddedDataScreen(
@@ -42,7 +42,7 @@ class AddedDataScreen extends StatelessWidget {
             studentId: studentId,
             licensePlate: licensePlate,
             scanTime: scanTime,
-              isPrivileged: isPrivileged,
+            isPrivileged: isPrivileged,
           ),
         );
 }
@@ -71,28 +71,28 @@ class GenerateAddedDataScreen extends StatefulWidget {
 }
 
 class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
-  static const maxSeconds = 10;
-  int seconds = maxSeconds;
-  Timer? timer;
-  bool isPlaying = false;
-  final controller = ConfettiController();
+  // static const maxSeconds = 10;
+  // int seconds = maxSeconds;
+  // Timer? timer;
+  // bool isPlaying = false;
+  // final controller = ConfettiController();
 
-  void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (_) {
-      setState(() {
-        seconds--;
-      });
-      if (seconds < -5) {
-        controller.stop();
-        Navigator.of(context).pushNamedAndRemoveUntil(
-                HomeScreen.routeName, (route) => false);
-      }
-    });
-  }
+  // void startTimer() {
+  //   timer = Timer.periodic(Duration(seconds: 1), (_) {
+  //     setState(() {
+  //       seconds--;
+  //     });
+  //     if (seconds < -5) {
+  //       controller.stop();
+  //       Navigator.of(context).pushNamedAndRemoveUntil(
+  //               HomeScreen.routeName, (route) => false);
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    startTimer();
+    // startTimer();
     return Stack(
       alignment: Alignment.topCenter,
       children: [
@@ -138,14 +138,25 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                     // comment Text widget below -> self data validation
                     Text(
                       'Your data: ${widget.name}, ${widget.surname}, ${widget.studentId},\n'
-                          '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
+                      '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
                       style: TextStyle(
                         color: Theme.of(context).textTheme.headline1?.color,
                       ),
                     ),
-                    buildTimer(),
+                    // buildTimer(),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              HomeScreen.routeName, (route) => false);
+                        },
+                        icon: Icon(
+                          Icons.rocket_launch,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                    iconSize: 180,
+                    ),
                     Text(
-                      'Soon you will return to the home screen',
+                      'Click the icon above to return to the home screen',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -157,49 +168,57 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
             ),
           ),
         ),
-        ConfettiWidget(
-          confettiController: controller,
-          blastDirection: pi / 2,
-          numberOfParticles: 10,
-        ),
+        // ConfettiWidget(
+        //   confettiController: controller,
+        //   blastDirection: pi / 2,
+        //   numberOfParticles: 10,
+        // ),
       ],
     );
   }
 
-  buildTimer() => SizedBox(
-        width: 200,
-        height: 200,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            CircularProgressIndicator(
-              value: seconds / maxSeconds,
-              valueColor:
-                  AlwaysStoppedAnimation(Theme.of(context).iconTheme.color),
-              strokeWidth: 12,
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-            Center(
-              child: buildTime(),
-            ),
-          ],
-        ),
-      );
+// buildTimer() => SizedBox(
+//       width: 200,
+//       height: 200,
+//       child: Stack(
+//         fit: StackFit.expand,
+//         children: [
+//           CircularProgressIndicator(
+//             value: seconds / maxSeconds,
+//             valueColor:
+//                 AlwaysStoppedAnimation(Theme.of(context).iconTheme.color),
+//             strokeWidth: 12,
+//             backgroundColor: Theme.of(context).primaryColor,
+//           ),
+//           Center(
+//             child: buildTime(),
+//           ),
+//         ],
+//       ),
+//     );
 
-  Widget buildTime() {
-    if (seconds <= 0) {
-      controller.play();
-      return Icon(Icons.done,
-          color: Theme.of(context).iconTheme.color, size: 80);
-    } else {
-      return Text(
-        '$seconds',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).textTheme.headline1?.color,
-          fontSize: 80,
-        ),
-      );
-    }
-  }
+// Widget buildTime() {
+//   if (seconds <= 0) {
+//     controller.play();
+//     return Column(
+//       children: [
+//         Icon(Icons.done,
+//             color: Theme.of(context).iconTheme.color, size: 80),
+//         ElevatedButton(onPressed: (){
+//           Navigator.of(context).pushNamedAndRemoveUntil(
+//               HomeScreen.routeName, (route) => false);
+//         }, child: Text('Return'))
+//       ],
+//     );
+//   } else {
+//     return Text(
+//       '$seconds',
+//       style: TextStyle(
+//         fontWeight: FontWeight.bold,
+//         color: Theme.of(context).textTheme.headline1?.color,
+//         fontSize: 80,
+//       ),
+//     );
+//   }
+// }
 }

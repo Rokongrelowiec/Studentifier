@@ -236,7 +236,9 @@ class _GenerateRegisteredLicensePlatesState
                                     body: requestBody,
                                   );
                                   licensePlateController.text = '';
-                                  setState(() {});
+                                  setState(() {
+                                    lecturersLicencePlates;
+                                  });
                                 }
                               },
                               icon: Icon(
