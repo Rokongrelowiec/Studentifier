@@ -33,7 +33,7 @@ class ObjectDetectorPainter extends CustomPainter {
           ui.TextStyle(color: Colors.lightGreenAccent, background: background));
 
       for (final Label label in detectedObject.labels) {
-        builder.addText('${label.text} ${label.confidence}\n');
+        builder.addText('${label.text} ${label.confidence.toStringAsFixed(2)}\n');
       }
 
       builder.pop();

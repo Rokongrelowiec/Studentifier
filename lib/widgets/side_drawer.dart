@@ -13,7 +13,6 @@ import '../screens/about_the_app_screen.dart';
 import '../screens/chart_screen.dart';
 import '../screens/registered_license_plates.dart';
 import '../models/admin_provider.dart';
-import '../screens/home_screen.dart';
 import '../screens/login_screen.dart';
 import '../models/theme_provider.dart';
 
@@ -237,10 +236,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                   ElevatedButton(
                                     onPressed: () {
                                       Provider.of<AdminProvider>(context, listen: false).changePermission(false);
-                                      Navigator.of(context)
-                                          .pushNamedAndRemoveUntil(
-                                              HomeScreen.routeName,
-                                              (route) => false);
+                                      Navigator.of(context).pop();
                                     },
                                     child: const Text('OK'),
                                   ),

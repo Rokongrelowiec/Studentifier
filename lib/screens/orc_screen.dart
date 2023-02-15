@@ -1,5 +1,4 @@
 import 'dart:io' as io;
-import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:image/image.dart' as img;
-import 'package:studentifier/main.dart';
 
 import './license_screen.dart';
 import '../widgets/camera_view.dart';
@@ -25,33 +22,18 @@ class _OCRScreen extends State<OCRScreen> {
   bool _canProcess = false;
   CustomPaint? _customPaint;
   Map licenses = {};
-  late CameraController cameraController;
 
   @override
   void initState() {
     super.initState();
-    initCamera(cameras[0]);
     _initializeDetector();
   }
 
-  Future initCamera(CameraDescription cameraDescription) async {
-    cameraController = CameraController(
-        cameraDescription, ResolutionPreset.medium, imageFormatGroup: io.Platform.isIOS ? ImageFormatGroup.bgra8888 : ImageFormatGroup.yuv420);
-    try {
-      await cameraController.initialize().then((_) {
-        if (!mounted) return;
-        setState(() {});
-      });
-    } on CameraException catch (e) {
-      debugPrint("camera error $e");
-    }
-  }
 
   @override
   void dispose() {
     _canProcess = false;
     _objectDetector.close();
-    cameraController.dispose();
     super.dispose();
   }
 

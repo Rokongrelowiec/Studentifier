@@ -14,8 +14,6 @@ class StudentDetails extends StatelessWidget {
   int studentId;
   String licensePlate;
   int numberOfVisits;
-
-  // TODO change below type to DateTime
   String validityOfStudentId;
 
   StudentDetails({
@@ -56,8 +54,6 @@ class GenerateStudentDetails extends StatefulWidget {
   int studentId;
   String licensePlate;
   int numberOfVisits;
-
-  // TODO change below type to DateTime
   String validityOfStudentId;
 
   GenerateStudentDetails({
