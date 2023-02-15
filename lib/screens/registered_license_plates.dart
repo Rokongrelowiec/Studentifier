@@ -28,25 +28,25 @@ class GenerateRegisteredLicensePlates extends StatefulWidget {
 
 class _GenerateRegisteredLicensePlatesState
     extends State<GenerateRegisteredLicensePlates> {
-  late String removedLicensePlate;
-  late int locationIndex;
+//   late String removedLicensePlate;
+//   late int locationIndex;
   List lecturersLicencePlates = [];
   final formKey = GlobalKey<FormState>();
 
-  List registeredLicensePlates = [
-    'OSPF 1415',
-    'DNS 12X2',
-    'ACL 6542',
-    'VLAN W189',
-    'SQL 54TO',
-    'PHP 1154M',
-    'JS 4FGB',
-    'CPP 63BV',
-    'DART 4312',
-    'JAVA 11WEQ',
-    'JSON OO22',
-    'VIM 58XC',
-  ];
+//   List registeredLicensePlates = [
+//     'OSPF 1415',
+//     'DNS 12X2',
+//     'ACL 6542',
+//     'VLAN W189',
+//     'SQL 54TO',
+//     'PHP 1154M',
+//     'JS 4FGB',
+//     'CPP 63BV',
+//     'DART 4312',
+//     'JAVA 11WEQ',
+//     'JSON OO22',
+//     'VIM 58XC',
+//   ];
 
   TextEditingController licensePlateController = TextEditingController();
 
@@ -65,11 +65,11 @@ class _GenerateRegisteredLicensePlatesState
     debugPrint('Remove status code: ${response.statusCode}');
   }
 
-  void undoOperation() {
-    setState(() {
-      registeredLicensePlates.insert(locationIndex, removedLicensePlate);
-    });
-  }
+//   void undoOperation() {
+//     setState(() {
+//       registeredLicensePlates.insert(locationIndex, removedLicensePlate);
+//     });
+//   }
 
   Future getData() async {
     String apiKey =
@@ -236,9 +236,7 @@ class _GenerateRegisteredLicensePlatesState
                                     body: requestBody,
                                   );
                                   licensePlateController.text = '';
-                                  setState(() {
-                                    lecturersLicencePlates;
-                                  });
+                                  setState(() {});
                                 }
                               },
                               icon: Icon(
