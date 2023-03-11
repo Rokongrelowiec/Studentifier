@@ -5,8 +5,9 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 import './daily_report_screen.dart';
 import './monthly_report_screen.dart';
-import '../widgets/side_drawer.dart';
 import './orc_screen.dart';
+import '../widgets/app_bar_widget.dart';
+import '../widgets/side_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
@@ -33,13 +34,10 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Studentifier',
-          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
-        ),
-        iconTheme: Theme.of(context).iconTheme,
+      appBar: AppBarWidget(
+        title: 'Studentifier',
+        appBar: AppBar(),
+        isBackIcon: false,
       ),
       body: navBarWidgets[activeIndex],
       drawer: SideDrawer(),

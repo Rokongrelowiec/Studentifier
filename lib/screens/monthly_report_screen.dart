@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as  http;
+import 'package:intl/intl.dart';
 
 import './student_details_screen.dart';
 import '../models/admin_provider.dart';
@@ -17,136 +18,18 @@ class MonthlyReport extends StatefulWidget {
 
 class _MonthlyReportState extends State<MonthlyReport> {
 
-  // List firstNames = [
-  //   'James',
-  //   'Robert',
-  //   'Mary',
-  //   'Patricia',
-  //   'John',
-  //   'Jennifer',
-  //   'Michael',
-  //   'Linda',
-  //   'David',
-  //   'Elizabeth',
-  //   'William',
-  //   'Barbara',
-  //   'Richard',
-  //   'Susan',
-  //   'Jessica',
-  // ];
-  //
-  // List lastNames = [
-  //   'Smith',
-  //   'Johnson',
-  //   'Williams',
-  //   'Brown',
-  //   'Jones',
-  //   'Garcia',
-  //   'Miller',
-  //   'Davis',
-  //   'Rodriguez',
-  //   'Martinez',
-  //   'Hernandez',
-  //   'Lopez',
-  //   'Gonzales',
-  //   'Wilson',
-  //   'Anderson',
-  // ];
-  //
-  // List licensePlates = [
-  //   'DAN 13L',
-  //   'S4L 4Z4R',
-  //   'KLG1CA25',
-  //   'OUP 9723',
-  //   'PJY 7231',
-  //   'KA WG123',
-  //   'SW UI3X1',
-  //   'PO W11F5',
-  //   'JEB AK',
-  //   'GD 43212',
-  //   'JP2 GMD',
-  //   'SAL 7231',
-  //   'YRW 1623',
-  //   'WEQ 54231',
-  //   'WICIO <3',
-  // ];
-  //
-  // List scanTime = [
-  //   '07:21',
-  //   '07:43',
-  //   '07:56',
-  //   '08:01',
-  //   '08:12',
-  //   '08:22',
-  //   '08:39',
-  //   '08:42',
-  //   '08:56',
-  //   '09:00',
-  //   '09:28',
-  //   '09:44',
-  //   '10:04',
-  //   '10:23',
-  //   '11:21',
-  // ];
-  //
-  // List studentIndexes = List.generate(15, (index) => index + 27980);
-  // List visitsCount = (List.generate(15, (index) => Random().nextInt(50) + 1));
-  //
-  // late int locationIndex;
-  // late int removedStudentIndex;
-  // late String removedLicensePlate;
-  // late String removedFirstName;
-  // late String removedLastName;
-  // late String removedScanTime;
-  // late int removedVisitsCount;
-
   late List countList;
   late List studentIdList;
   late List nameSurnameList;
   late List licencePlatesList;
   late List studentIdValidityList;
 
-  // void removeItem(index) {
-  //   locationIndex = index; // identify index in lists - used in undoOperation
-  //   removedStudentIndex = studentIndexes[index];
-  //   removedLicensePlate = licensePlates[index];
-  //   removedFirstName = firstNames[index];
-  //   removedLastName = lastNames[index];
-  //   removedScanTime = scanTime[index];
-  //   removedVisitsCount = visitsCount[index];
-  //
-  //   setState(() {
-  //     studentIndexes.removeAt(index);
-  //     licensePlates.removeAt(index);
-  //     firstNames.removeAt(index);
-  //     lastNames.removeAt(index);
-  //     scanTime.removeAt(index);
-  //     visitsCount.removeAt(index);
-  //   });
-  // }
-
-  // void undoOperation() {
-  //   setState(() {
-  //     studentIndexes.insert(locationIndex, removedStudentIndex);
-  //     licensePlates.insert(locationIndex, removedLicensePlate);
-  //     firstNames.insert(locationIndex, removedFirstName);
-  //     lastNames.insert(locationIndex, removedLastName);
-  //     scanTime.insert(locationIndex, removedScanTime);
-  //     visitsCount.insert(locationIndex, removedVisitsCount);
-  //   });
-  // }
-
-  // @override
-  // void initState() {
-  //   visitsCount.sort();
-  //   visitsCount = List.from(visitsCount.reversed);
-  //   super.initState();
-  // }
-
   Future getData() async {
     String apiKey =
     await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    var requestBody = jsonEncode({'scope': 'FEB2023'});
+    String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+    String year = (DateFormat.y().format(DateTime.now())).toString();
+    var requestBody = jsonEncode({'scope': '${month + year}'});
     var response = await http.post(
       Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month/licenseplates'),
       headers: {'x-api-key': apiKey},
@@ -265,7 +148,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                       child: ListTile(
                         key: UniqueKey(),
                         onTap: () async {
-                          final newValues = await Navigator.of(context).push(
+                          await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => StudentDetails(
                                     studentId: studentIdList[index],
@@ -276,17 +159,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                     validityOfStudentId: studentIdValidityList[index],
                                   ),
                                 ),
-                              ) ??
-                              '';
+                              );
                           setState(() {});
-                          // if (newValues.isNotEmpty) {
-                          //   setState(() {
-                          //     studentIndexes[index] = newValues['studentId'];
-                          //     licensePlates[index] = newValues['licensePlate'];
-                          //     firstNames[index] = newValues['firstName'];
-                          //     lastNames[index] = newValues['lastName'];
-                          //   });
-                          // }
                         },
                         leading: Text(
                           countList[index].toString(),

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:studentifier/screens/added_data_screen.dart';
+
+import './added_data_screen.dart';
+import '../widgets/app_bar_widget.dart';
 
 class QRScannerScreen extends StatelessWidget {
   String licensePlate;
@@ -63,13 +64,10 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
       controller!.resumeCamera();
     }
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'QR Scanner',
-          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
-        ),
-        iconTheme: Theme.of(context).iconTheme,
+      appBar: AppBarWidget(
+        title: 'QR Scanner',
+        appBar: AppBar(),
+        backFunction: () => Navigator.of(context).pop(),
       ),
       body: Stack(
         alignment: Alignment.center,
@@ -109,7 +107,7 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
             mapData.containsKey('studentId') &&
             mapData.containsKey('isPrivileged')) {
           printedResult = 'Done!';
-          debugPrint('isPrivileged: ${mapData['isPrivileged']}');
+          // debugPrint('isPrivileged: ${mapData['isPrivileged']}');
           if (mapData['isPrivileged']) {
             sendLecturerData(mapData['isPrivileged'], widget.licensePlate);
           } else {
@@ -161,7 +159,7 @@ sendLecturerData(bool isPrivileged, String licensePlate) async {
           'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
       headers: {'x-api-key': key},
       body: requestBody);
-  debugPrint('Lecturer: ${response.statusCode}');
+  // debugPrint('Lecturer: ${response.statusCode}');
 }
 
 sendStudentData({
@@ -183,7 +181,7 @@ sendStudentData({
             'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/student'),
         headers: {'x-api-key': key},
         body: requestBody);
-    debugPrint('First: ${response.statusCode}');
+    // debugPrint('First: ${response.statusCode}');
     if (response.statusCode == 200) {
       controlList[0] = false;
     }
@@ -192,8 +190,10 @@ sendStudentData({
   DateTime date = DateTime.parse(scanTime);
   var day = DateFormat('yyyy-MM-dd').format(date);
   var hour = '${DateFormat.Hms().format(date)}+00';
+  String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+  String year = (DateFormat.y().format(DateTime.now())).toString();
   requestBody = jsonEncode({
-    'slice': 'FEB2023',
+    'slice': '${month + year}',
     'rejestracja': licensePlate,
     'godzinaPrzyjazdu': hour,
     'dzien': day
@@ -203,7 +203,7 @@ sendStudentData({
         Uri.parse('http://130.61.192.162:8069/api/v1/logs/log/entry'),
         headers: {'x-api-key': key},
         body: requestBody);
-    debugPrint('Second ${response.statusCode}');
+    // debugPrint('Second ${response.statusCode}');
     if (response.statusCode == 200) {
       controlList[1] = false;
     }
@@ -215,7 +215,7 @@ sendStudentData({
         Uri.parse('http://130.61.192.162:8069/api/v1/students/bystudentId'),
         headers: {'x-api-key': key},
         body: requestBody);
-    debugPrint('Third ${response.statusCode}');
+    // debugPrint('Third ${response.statusCode}');
     if (response.statusCode == 200) {
       controlList[2] = false;
     }
@@ -228,7 +228,7 @@ sendStudentData({
           Uri.parse('http://130.61.192.162:8069/api/v1/students/add'),
           headers: {'x-api-key': key},
           body: requestBody);
-      debugPrint('Fourth ${response.statusCode}');
+      // debugPrint('Fourth ${response.statusCode}');
       if (response.statusCode == 200) {
         controlList[3] = false;
       }

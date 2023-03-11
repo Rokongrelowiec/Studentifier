@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import '../widgets/app_bar_widget.dart';
+
 class StudentEdit extends StatelessWidget {
   String firstName;
   String lastName;
@@ -95,15 +97,12 @@ class StudentEditGenerate extends StatelessWidget {
     validityOfStudentIdController.text = validityOfStudentId;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Edit student',
-          style: TextStyle(
-            color: Theme.of(context).textTheme.headline1?.color,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
+      appBar: AppBarWidget(
+        title: 'Edit student',
+        appBar: AppBar(),
+        backFunction: () => Navigator.of(context).pop(),
+        backIcon: Icons.cancel,
+        actionsList: [
           IconButton(
             onPressed: () async {
               final isValidForm = formKey.currentState!.validate();
@@ -138,15 +137,6 @@ class StudentEditGenerate extends StatelessWidget {
             ),
           ),
         ],
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.cancel,
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -197,9 +187,9 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
-                      // inputFormatters: [
-                      //   FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
-                      // ],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                      ],
                       validator: (value) {
                         if (value != null && value.length < 1) {
                           return 'Too short value';
@@ -236,9 +226,9 @@ class StudentEditGenerate extends StatelessWidget {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
-                      // inputFormatters: [
-                      //   FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
-                      // ],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[A-Za-z]")),
+                      ],
                       validator: (value) {
                         if (value != null && value.length < 2) {
                           return 'Too short value';

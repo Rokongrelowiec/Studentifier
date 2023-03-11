@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import '../widgets/app_bar_widget.dart';
+
 class RegisteredLicensePlates extends StatelessWidget {
   static const routeName = '/registered-license-plates';
 
@@ -53,16 +55,18 @@ class _GenerateRegisteredLicensePlatesState
   void removeItem(String licencePlate) async {
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    print('Removing');
-    print(licencePlate);
     var body = jsonEncode({"licenseplate": licencePlate});
-    var response = await http.post(
+    await http.post(
       Uri.parse(
           'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/delete'),
       headers: {'x-api-key': apiKey},
       body: body,
     );
-    debugPrint('Remove status code: ${response.statusCode}');
+    // debugPrint('Remove status code: ${response.statusCode}');
+    setState(() {
+      lecturersLicencePlates.removeWhere((index) =>
+          lecturersLicencePlates[index]['rejestracja'] == licencePlate);
+    });
   }
 
 //   void undoOperation() {
@@ -80,26 +84,16 @@ class _GenerateRegisteredLicensePlatesState
       headers: {'x-api-key': apiKey},
     );
     lecturersLicencePlates = jsonDecode(response.body)['vehicles'];
-    debugPrint(
-        '$lecturersLicencePlates'); // [{id: 11, numer_albumu: null, rejestracja: LR33TEE, wykladowca: true}, {id: 17, numer_albumu: null, rejestracja: ABC123, wykladowca: true}]
+    // debugPrint('$lecturersLicencePlates');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Registered license plates',
-          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ),
+      appBar: AppBarWidget(
+        title: 'Registered license plates',
+        appBar: AppBar(),
+        backFunction: () => Navigator.of(context).pop(),
       ),
       body: FutureBuilder(
           future: getData(),
@@ -168,20 +162,8 @@ class _GenerateRegisteredLicensePlatesState
                           ),
                           trailing: IconButton(
                             onPressed: () async {
-                              // TODO - remove lecturer license plate and undo operation!
-                              String apiKey =
-                                  await DefaultAssetBundle.of(context)
-                                      .loadString('assets/api-key.txt');
-                              var body = jsonEncode({
-                                "licenseplate":
-                                    '${lecturersLicencePlates[index]['rejestracja']}'
-                              });
-                              await http.post(
-                                Uri.parse(
-                                    'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/delete'),
-                                headers: {'x-api-key': apiKey},
-                                body: body,
-                              );
+                              removeItem(
+                                  lecturersLicencePlates[index]['rejestracja']);
                               final snackBar = SnackBar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 content: Text(
@@ -196,7 +178,6 @@ class _GenerateRegisteredLicensePlatesState
                               //     .hideCurrentSnackBar();
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                              setState(() {});
                             },
                             icon: Icon(
                               Icons.delete,

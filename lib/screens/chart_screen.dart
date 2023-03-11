@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+
+import '../widgets/app_bar_widget.dart';
 
 class ChartScreen extends StatelessWidget {
   static const routeName = '/chart';
@@ -47,19 +48,10 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Chart',
-          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ),
+      appBar: AppBarWidget(
+        title: 'Chart',
+        appBar: AppBar(),
+        backFunction: () => Navigator.of(context).pop(),
       ),
       body: FutureBuilder(
           future: getChartData(),
@@ -86,7 +78,6 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                   children: [
                     Container(
                       height: 400,
-                      // width: 400,
                       child: SfCartesianChart(
                         title: ChartTitle(
                           text: 'Visits in last month',
@@ -304,7 +295,9 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 
   getChartData() async {
     String key = await rootBundle.loadString('assets/api-key.txt');
-    var requestBody = jsonEncode({"period": "FEB2023"});
+    String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+    String year = (DateFormat.y().format(DateTime.now())).toString();
+    var requestBody = jsonEncode({"period": "${month + year}"});
     var response = await http.post(
         Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month'),
         headers: {'x-api-key': '$key'},
@@ -328,7 +321,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
         }
       } catch (e) {}
     }
-    debugPrint(decodedResponse.toString()); // day
+    // debugPrint(decodedResponse.toString()); // day
     visitsCounter = 0; // control set
     minVisitsNum = decodedResponse[0]['count'];
     minVisitsDay = "${decodedResponse[0]['dataPrzyjazdu'].substring(8)}"
@@ -357,7 +350,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             "${decodedResponse[index]['dataPrzyjazdu'].substring(8)}-${decodedResponse[index]['dataPrzyjazdu'].substring(5, 7)}",
             decodedResponse[index]['count']));
 
-    requestBody = jsonEncode({"period": "FEB2023"});
+    requestBody = jsonEncode({"period": "${month + year}"});
     response = await http.post(
         Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month/top'),
         headers: {'x-api-key': '$key'},

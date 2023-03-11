@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 
 import './home_screen.dart';
+import '../widgets/app_bar_widget.dart';
 
 class AddedDataScreen extends StatelessWidget {
   String? name;
@@ -97,21 +98,11 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
       alignment: Alignment.topCenter,
       children: [
         Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              'Summary',
-              style: TextStyle(
-                  color: Theme.of(context).textTheme.headline1?.color),
-            ),
-            leading: IconButton(
-              onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                  HomeScreen.routeName, (route) => false),
-              icon: Icon(
-                Icons.arrow_back_ios_rounded,
-                color: Theme.of(context).iconTheme.color,
-              ),
-            ),
+          appBar: AppBarWidget(
+            title: 'Summary',
+            appBar: AppBar(),
+            backFunction: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                HomeScreen.routeName, (route) => false),
           ),
           body: SingleChildScrollView(
             child: ConstrainedBox(
@@ -145,15 +136,15 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                     ),
                     // buildTimer(),
                     IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              HomeScreen.routeName, (route) => false);
-                        },
-                        icon: Icon(
-                          Icons.rocket_launch,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                    iconSize: 180,
+                      onPressed: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            HomeScreen.routeName, (route) => false);
+                      },
+                      icon: Icon(
+                        Icons.rocket_launch,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      iconSize: 180,
                     ),
                     Text(
                       'Click the icon above to return to the home screen',

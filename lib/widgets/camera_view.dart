@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 import '../main.dart';
@@ -77,7 +78,6 @@ class _CameraViewState extends State<CameraView> {
     if (_controller?.value.isInitialized == false) {
       return Container();
     }
-
     final size = MediaQuery.of(context).size;
     // calculate scale depending on screen and camera ratios
     // this is actually size.aspectRatio / (1 / camera.aspectRatio)
@@ -111,16 +111,17 @@ class _CameraViewState extends State<CameraView> {
       enableAudio: false,
     );
     _controller?.initialize().then((_) {
+      _controller?.lockCaptureOrientation(DeviceOrientation.portraitUp);
       if (!mounted) {
         return;
       }
-      _controller?.getMinZoomLevel().then((value) {
-        zoomLevel = value;
-        minZoomLevel = value;
-      });
-      _controller?.getMaxZoomLevel().then((value) {
-        maxZoomLevel = value;
-      });
+      // _controller?.getMinZoomLevel().then((value) {
+      //   zoomLevel = value;
+      //   minZoomLevel = value;
+      // });
+      // _controller?.getMaxZoomLevel().then((value) {
+      //   maxZoomLevel = value;
+      // });
       _controller?.startImageStream(_processCameraImage);
       setState(() {});
     });
