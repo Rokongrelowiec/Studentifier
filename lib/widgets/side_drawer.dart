@@ -41,7 +41,7 @@ class _SideDrawerState extends State<SideDrawer> {
         // this.image = imagePermanent;
       });
     } on PlatformException catch (e) {
-      debugPrint('Failed to pick image: $e');
+      // debugPrint('Failed to pick image: $e');
     }
   }
 

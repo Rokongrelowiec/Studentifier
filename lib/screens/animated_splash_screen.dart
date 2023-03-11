@@ -33,7 +33,7 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
         splash: Column(
           children: [
             Icon(
-              Icons.layers,
+              Icons.select_all_rounded,
               color: Colors.white,
               size: 90,
             ),
@@ -47,7 +47,7 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
           ],
         ),
         nextScreen: HomeScreen(),
-        duration: 1500,
+        duration: 500,
         splashTransition: ASS.SplashTransition.sizeTransition,
         pageTransitionType: PageTransitionType.rightToLeft,
       ),

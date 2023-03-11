@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 
 import './screens/about_the_app_screen.dart';
 import './screens/chart_screen.dart';
@@ -35,6 +36,10 @@ Future<void> main() async {
       ),
     );
   };
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
   runApp(
     MultiProvider(
       providers: [

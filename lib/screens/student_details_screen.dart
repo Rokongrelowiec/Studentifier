@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/admin_provider.dart';
 import './student_edit_screen.dart';
+import '../widgets/app_bar_widget.dart';
 
 class StudentDetails extends StatelessWidget {
   static const routeName = '/student-details';
@@ -76,15 +77,16 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
     final bool isAdmin = Provider.of<AdminProvider>(context).isAdmin;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Student details',
-          style: TextStyle(
-            color: Theme.of(context).textTheme.headline1?.color,
-          ),
-        ),
-        centerTitle: true,
-        actions: isAdmin
+      appBar: AppBarWidget(
+        title: 'Student details',
+        appBar: AppBar(),
+        backFunction: () => Navigator.of(context).pop({
+          'studentId': widget.studentId,
+          'licensePlate': widget.licensePlate,
+          'firstName': widget.firstName,
+          'lastName': widget.lastName,
+        }),
+        actionsList: isAdmin
             ? [
                 IconButton(
                   onPressed: () async {
@@ -121,20 +123,6 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                 ),
               ]
             : null,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop({
-              'studentId': widget.studentId,
-              'licensePlate': widget.licensePlate,
-              'firstName': widget.firstName,
-              'lastName': widget.lastName,
-            });
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Center(

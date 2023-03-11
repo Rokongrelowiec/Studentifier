@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../widgets/app_bar_widget.dart';
+
 class AboutApp extends StatelessWidget {
   static const routeName = '/about-app';
 
@@ -21,26 +23,17 @@ class GenerateAboutApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'About the App',
-          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ),
+      appBar: AppBarWidget(
+        title: 'About the App',
+        appBar: AppBar(),
+        backFunction: () => Navigator.of(context).pop(),
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                padding: const EdgeInsets.only(top: 20, bottom: 10),
                 child: Text(
                   'Studentifier',
                   style: TextStyle(
@@ -106,7 +99,7 @@ class GenerateAboutApp extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: Text(
                   'If belongs - open a gate, but if not - ask for student ID'
-                      ' card.',
+                  ' card.',
                   style: TextStyle(
                       fontSize: 18,
                       color: Theme.of(context).textTheme.headline1?.color),

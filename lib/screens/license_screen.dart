@@ -6,10 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:studentifier/screens/added_data_screen.dart';
 
+import './added_data_screen.dart';
 import './home_screen.dart';
 import './qr_scanner_screen.dart';
+import '../widgets/app_bar_widget.dart';
 
 class LicenseScreen extends StatefulWidget {
   String license;
@@ -95,22 +96,12 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'License Plate',
-          style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-          },
-        ),
-        actions: [
+      appBar: AppBarWidget(
+        title: 'License Plate',
+        appBar: AppBar(),
+        backFunction: () =>
+            Navigator.of(context).pushReplacementNamed(HomeScreen.routeName),
+        actionsList: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(
@@ -243,7 +234,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                       headers: {'x-api-key': apiKey},
                       body: requestBody);
                   var decodedResponse = jsonDecode(response.body);
-                  debugPrint(decodedResponse.toString());
+                  // debugPrint(decodedResponse.toString());
                   if (decodedResponse.isEmpty) {
                     showDialog(
                       context: context,
@@ -269,8 +260,9 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                   '+48730724858');
                             },
                             style: OutlinedButton.styleFrom(
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor)),
+                              side: BorderSide(
+                                  color: Theme.of(context).primaryColor),
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -330,7 +322,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                     );
                   } else {
                     if (decodedResponse[0]['wykladowca']) {
-                      debugPrint('LECTURER');
+                      // debugPrint('LECTURER');
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (_) => AddedDataScreen(
@@ -344,7 +336,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                         ),
                       );
                     } else {
-                      debugPrint('STUDENT');
+                      // debugPrint('STUDENT');
                       var studentId = decodedResponse[0]['numer_albumu'];
                       requestBody = jsonEncode({'numer_albumu': studentId});
                       response = await http.post(
@@ -354,28 +346,31 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                           body: requestBody);
 
                       decodedResponse = jsonDecode(response.body);
-                      debugPrint(decodedResponse.toString());
+                      // debugPrint(decodedResponse.toString());
 
                       DateTime date = DateTime.parse('${widget.scanTime}');
-                      debugPrint(date.toString());
+                      // debugPrint(date.toString());
                       var day = DateFormat('yyyy-MM-dd').format(date);
                       var hour = '${DateFormat.Hms().format(date)}+00';
 
                       // Send to DB!
+                      String month = (DateFormat.MMM().format(DateTime.now()))
+                          .toUpperCase();
+                      String year =
+                          (DateFormat.y().format(DateTime.now())).toString();
                       requestBody = jsonEncode({
-                        'slice': 'FEB2023',
+                        'slice': '${month + year}',
                         'rejestracja': '${widget.license}',
                         'godzinaPrzyjazdu': hour,
                         'dzien': day
                       });
-                      debugPrint(requestBody);
+                      // debugPrint(requestBody);
                       response = await http.post(
                           Uri.parse(
                             'http://130.61.192.162:8069/api/v1/logs/log/entry',
                           ),
                           headers: {'x-api-key': apiKey},
                           body: requestBody);
-                      // print(response.statusCode);
                       if (response.statusCode == 200) {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(

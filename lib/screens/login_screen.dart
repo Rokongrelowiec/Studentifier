@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/admin_provider.dart';
 import './home_screen.dart';
+import '../models/admin_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login-screen';
@@ -280,7 +280,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                           'http://130.61.192.162:8069/api/v1/admin/login'),
                                       headers: {'x-api-key': key},
                                       body: requestBody);
-                                  debugPrint('First: ${response.statusCode}');
+                                  // debugPrint('First: ${response.statusCode}');
                                   if (response.statusCode == 200) {
                                     Provider.of<AdminProvider>(context, listen: false)
                                         .changePermission(true);
