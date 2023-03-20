@@ -20,6 +20,7 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -29,19 +30,19 @@ class GenerateAnimatedSplashScreen extends StatelessWidget {
       ),
       child: ASS.AnimatedSplashScreen(
         backgroundColor: Colors.transparent,
-        splashIconSize: 250,
+        splashIconSize: sizeHeight * 31,
         splash: Column(
           children: [
             Icon(
               Icons.select_all_rounded,
               color: Colors.white,
-              size: 90,
+              size: sizeHeight * 12.5,
             ),
             Text(
               "Studentifier",
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 40,
+                  fontSize: sizeHeight * 5,
                   fontWeight: FontWeight.bold),
             )
           ],

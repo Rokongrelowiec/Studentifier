@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -96,6 +97,8 @@ class StudentEditGenerate extends StatelessWidget {
         TextEditingController();
     validityOfStudentIdController.text = validityOfStudentId;
 
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+
     return Scaffold(
       appBar: AppBarWidget(
         title: 'Edit student',
@@ -103,37 +106,41 @@ class StudentEditGenerate extends StatelessWidget {
         backFunction: () => Navigator.of(context).pop(),
         backIcon: Icons.cancel,
         actionsList: [
-          IconButton(
-            onPressed: () async {
-              final isValidForm = formKey.currentState!.validate();
-              if (isValidForm) {
-                String apiKey = await DefaultAssetBundle.of(context)
-                    .loadString('assets/api-key.txt');
-                var requestBody = jsonEncode({
-                  'numer_albumu': studentIdController.text,
-                  'imie': setFirstUpperCase(firstNameController.text),
-                  'nazwisko': setFirstUpperCase(lastNameController.text),
-                  'data_waznosci': validityOfStudentIdController.text
-                });
-                await http.post(
-                  Uri.parse(
-                      'http://130.61.192.162:8069/api/v1/students/update/bystudentId'),
-                  headers: {'x-api-key': apiKey},
-                  body: requestBody,
-                );
-                Navigator.of(context).pop({
-                  'firstName': setFirstUpperCase(firstNameController.text),
-                  'lastName': setFirstUpperCase(lastNameController.text),
-                  'studentId': studentIdController.text,
-                  'licensePlate': setAllUpperCase(licensePlateController.text),
-                  'numberOfVisits': numberOfVisitsController.text,
-                  'validityOfStudentId': validityOfStudentIdController.text,
-                });
-              }
-            },
-            icon: Icon(
-              Icons.save,
-              color: Theme.of(context).iconTheme.color,
+          Padding(
+            padding: EdgeInsets.only(right: sizeHeight),
+            child: IconButton(
+              onPressed: () async {
+                final isValidForm = formKey.currentState!.validate();
+                if (isValidForm) {
+                  String apiKey = await DefaultAssetBundle.of(context)
+                      .loadString('assets/api-key.txt');
+                  var requestBody = jsonEncode({
+                    'numer_albumu': studentIdController.text,
+                    'imie': setFirstUpperCase(firstNameController.text),
+                    'nazwisko': setFirstUpperCase(lastNameController.text),
+                    'data_waznosci': validityOfStudentIdController.text
+                  });
+                  await http.post(
+                    Uri.parse(
+                        'http://130.61.192.162:8069/api/v1/students/update/bystudentId'),
+                    headers: {'x-api-key': apiKey},
+                    body: requestBody,
+                  );
+                  Navigator.of(context).pop({
+                    'firstName': setFirstUpperCase(firstNameController.text),
+                    'lastName': setFirstUpperCase(lastNameController.text),
+                    'studentId': studentIdController.text,
+                    'licensePlate': setAllUpperCase(licensePlateController.text),
+                    'numberOfVisits': numberOfVisitsController.text,
+                    'validityOfStudentId': validityOfStudentIdController.text,
+                  });
+                }
+              },
+              icon: Icon(
+                Icons.save,
+                color: Theme.of(context).iconTheme.color,
+                size: sizeHeight * 4,
+              ),
             ),
           ),
         ],
@@ -149,35 +156,39 @@ class StudentEditGenerate extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 15),
+                    padding: EdgeInsets.only(top: sizeHeight),
                     child: CircleAvatar(
                       backgroundColor: Colors.grey.withOpacity(0.9),
-                      radius: 80,
+                      radius: sizeHeight * 10,
                       child: Icon(
                         color: Colors.white,
                         Icons.person,
-                        size: 100,
+                        size: sizeHeight * 12.5,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 9),
+                    padding: EdgeInsets.symmetric(vertical: sizeHeight),
                     child: TextFormField(
                       controller: firstNameController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2.4
+                      ),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.person,
-                          size: 30,
+                          size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
                         labelText: "First name",
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color),
+                                Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.3,
+                        ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -200,23 +211,27 @@ class StudentEditGenerate extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9),
+                    padding: EdgeInsets.symmetric(vertical: sizeHeight),
                     child: TextFormField(
                       controller: lastNameController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2.4
+                      ),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.person_outlined,
-                          size: 30,
+                          size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
                         labelText: "Last name",
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color),
+                                Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 2.3,
+                        ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -239,25 +254,29 @@ class StudentEditGenerate extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9),
+                    padding: EdgeInsets.symmetric(vertical: sizeHeight),
                     child: TextFormField(
                       enabled: false,
                       controller: studentIdController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2.4,
+                      ),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.key,
-                          size: 30,
+                          size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
                         labelText: "Student ID",
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color),
+                                Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.3,
+                        ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -280,24 +299,28 @@ class StudentEditGenerate extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9),
+                    padding: EdgeInsets.symmetric(vertical: sizeHeight),
                     child: TextFormField(
                       enabled: false,
                       controller: licensePlateController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                      fontSize: sizeHeight * 2.4,
+                      ),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.drive_eta,
-                          size: 30,
+                          size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
                         labelText: "License plate",
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color),
+                                Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.3
+                        ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -324,25 +347,29 @@ class StudentEditGenerate extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9),
+                    padding: EdgeInsets.symmetric(vertical: sizeHeight),
                     child: TextFormField(
                       controller: numberOfVisitsController,
                       keyboardType: TextInputType.number,
                       enabled: false,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 2.4,
+                      ),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.place,
-                          size: 30,
+                          size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
                         labelText: "Number of visits",
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color),
+                                Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.3,
+                        ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -365,23 +392,27 @@ class StudentEditGenerate extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 9),
+                    padding: EdgeInsets.symmetric(vertical: sizeHeight),
                     child: TextFormField(
                       controller: validityOfStudentIdController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 2.4,
+                      ),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.credit_card_rounded,
-                          size: 30,
+                          size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
                         labelText: "Validity of ID",
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color),
+                                Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.3,
+                        ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.only(top: 15, bottom: 15),
+                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -394,8 +425,10 @@ class StudentEditGenerate extends StatelessWidget {
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp("[0-9\-]")),
                       ],
+                      keyboardType: TextInputType.number,
                       validator: (value) {
-                        if (value != null && value.length != 10) {
+                        // TODO: better validation
+                        if (value == null || value.length != 10) {
                           return 'Please type date using DD-MM-YYYY format';
                         }
                         return null;

@@ -2,15 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import './added_data_screen.dart';
 import './home_screen.dart';
 import './qr_scanner_screen.dart';
 import '../widgets/app_bar_widget.dart';
+import '../models/theme_provider.dart';
 
 class LicenseScreen extends StatefulWidget {
   String license;
@@ -95,6 +98,8 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
       }
     }
 
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+
     return Scaffold(
       appBar: AppBarWidget(
         title: 'License Plate',
@@ -109,13 +114,15 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
+                      contentPadding: EdgeInsets.all(sizeHeight * 2),
+                      buttonPadding: EdgeInsets.all(sizeHeight),
                       backgroundColor:
                           Theme.of(context).drawerTheme.backgroundColor,
                       title: Text(
                         'Edit scanned license plate:',
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
-                        ),
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.5),
                       ),
                       content: Form(
                         key: formKey,
@@ -125,13 +132,21 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                           controller: controller,
                           style: TextStyle(
                             color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2.5,
                           ),
                           decoration: InputDecoration(
-                              prefix: Padding(
-                                padding: const EdgeInsets.only(right: 3),
-                                child: Icon(Icons.type_specimen),
+                              prefixIcon: Icon(
+                                Icons.edit_note,
+                                color: Theme.of(context).iconTheme.color,
+                                size: sizeHeight * 5,
                               ),
                               labelText: 'License plate',
+                              labelStyle: TextStyle(
+                                fontSize: sizeHeight * 3,
+                              ),
+                              contentPadding: EdgeInsets.all(
+                                sizeHeight * 2,
+                              ),
                               border: OutlineInputBorder()),
                           validator: (value) {
                             if (value != null && value.length < 4) {
@@ -153,7 +168,12 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                             controller.text = widget.license;
                             Navigator.of(context).pop();
                           },
-                          child: const Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -163,7 +183,12 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                               editLicense();
                             }
                           },
-                          child: const Text('OK'),
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -172,6 +197,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                 icon: Icon(
                   Icons.edit,
                   color: Theme.of(context).iconTheme.color,
+                  size: sizeHeight * 4,
                 )),
           )
         ],
@@ -179,27 +205,37 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            SizedBox(
+              height: sizeHeight,
+            ),
             Image(
-              image: AssetImage('assets/images/ocr_logo.jpg'),
-              height: 300,
-              width: 300,
+              image: AssetImage(
+                  Theme.of(context).scaffoldBackgroundColor == Colors.grey[900]
+                      ? 'assets/images/ocr_white.png'
+                      : 'assets/images/ocr_black.png'),
+              height: MediaQuery.of(context).size.width * 0.6,
+              width: MediaQuery.of(context).size.width * 0.6,
+            ),
+            SizedBox(
+              height: sizeHeight * 0.5,
             ),
             Text(
               'Found license plate:',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: sizeHeight * 3,
                 color: Theme.of(context).textTheme.headline1?.color,
               ),
               textAlign: TextAlign.center,
             ),
             SizedBox(
-              height: 5,
+              height: sizeHeight,
             ),
             Text(
               widget.license,
               style: TextStyle(
-                fontSize: 25,
+                fontSize: sizeHeight * 4,
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).textTheme.headline1?.color,
               ),
@@ -212,7 +248,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                 'If you are registered - the gate will be open.\n'
                 'If you are not registered - you will be ask to scan the QR code.\n',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: sizeHeight * 2.5,
                   color: Theme.of(context).textTheme.headline1?.color,
                 ),
                 textAlign: TextAlign.center,
@@ -241,16 +277,20 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                       builder: (BuildContext context) => AlertDialog(
                         backgroundColor:
                             Theme.of(context).drawerTheme.backgroundColor,
+                        contentPadding: EdgeInsets.all(sizeHeight * 2),
+                        buttonPadding: EdgeInsets.all(sizeHeight),
                         title: Text(
                           'License plate does not exist in database',
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
-                          ),
+                              color:
+                                  Theme.of(context).textTheme.headline1?.color,
+                              fontSize: sizeHeight * 3),
                         ),
                         content: Text(
                           'What do you want to do?',
                           style: TextStyle(
                             color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 3,
                           ),
                         ),
                         actions: <Widget>[
@@ -264,7 +304,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                   color: Theme.of(context).primaryColor),
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   'Call to the caretaker',
@@ -273,14 +313,13 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                         .textTheme
                                         .headline1
                                         ?.color,
+                                    fontSize: sizeHeight * 2.5,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 2,
                                 ),
                                 Icon(
                                   Icons.call,
                                   color: Theme.of(context).iconTheme.color,
+                                  size: sizeHeight * 4,
                                 ),
                               ],
                             ),
@@ -297,6 +336,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                               ),
                             ),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   'Scan the QR code',
@@ -305,14 +345,13 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                         .textTheme
                                         .headline1
                                         ?.color,
+                                    fontSize: sizeHeight * 2.5,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 2,
                                 ),
                                 Icon(
                                   Icons.qr_code,
                                   color: Theme.of(context).iconTheme.color,
+                                  size: sizeHeight * 4,
                                 ),
                               ],
                             ),
@@ -390,16 +429,22 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                 },
                 child: Text(
                   'Accept',
+                  style: TextStyle(fontSize: sizeHeight * 2.5),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 15),
               child: TextButton(
                 onPressed: () async {
                   await FlutterPhoneDirectCaller.callNumber('+48730724858');
                 },
-                child: Text('Call to the caretaker'),
+                child: Text(
+                  'Call to the caretaker',
+                  style: TextStyle(
+                    fontSize: sizeHeight * 2.5,
+                  ),
+                ),
               ),
             ),
           ],

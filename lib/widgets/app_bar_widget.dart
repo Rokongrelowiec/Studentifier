@@ -20,11 +20,14 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return AppBar(
       title: Text(
-        // 'About the App',
         title,
-        style: TextStyle(color: Theme.of(context).textTheme.headline1?.color),
+        style: TextStyle(
+          color: Theme.of(context).textTheme.headline1?.color,
+          fontSize: sizeHeight * 3,
+        ),
       ),
       iconTheme: Theme.of(context).iconTheme,
       flexibleSpace: Container(
@@ -41,6 +44,7 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
               icon: Icon(
                 backIcon,
                 color: Theme.of(context).iconTheme.color,
+                size: sizeHeight * 4,
               ),
             )
           : null,

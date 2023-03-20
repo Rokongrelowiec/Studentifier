@@ -9,6 +9,8 @@ import './orc_screen.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/side_drawer.dart';
 
+import './license_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';
 
@@ -31,13 +33,19 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
   List navBarWidgets = [OCRScreen(), DailyReport(), MonthlyReport()];
   int activeIndex = 0;
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBarWidget(
         title: 'Studentifier',
         appBar: AppBar(),
-        isBackIcon: false,
+        isBackIcon: true,
+        backIcon: Icons.menu,
+        backFunction: () => scaffoldKey.currentState?.openDrawer(),
       ),
       body: navBarWidgets[activeIndex],
       drawer: SideDrawer(),
@@ -54,7 +62,8 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
             activeColor: Colors.white,
             tabBackgroundColor:
                 Theme.of(context).navigationBarTheme.indicatorColor as Color,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: EdgeInsets.symmetric(
+                horizontal: sizeHeight * 1.15, vertical: sizeHeight * 2),
             gap: 8,
             onTabChange: (tabIndex) {
               setState(() {
@@ -78,6 +87,12 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
           ),
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.orangeAccent,
+      //   onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //       builder: (ctx) => LicenseScreen(license: "VIPET"))),
+      //   child: Icon(Icons.arrow_forward),
+      // ),
     );
   }
 }

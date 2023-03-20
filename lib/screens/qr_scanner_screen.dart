@@ -102,19 +102,18 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
       (barcode) => setState(() {
         this.barcode = barcode;
         Map mapData = json.decode(barcode.code as String);
-        if (mapData.containsKey('name') &&
-            mapData.containsKey('surname') &&
-            mapData.containsKey('studentId') &&
+        if (mapData.containsKey('imie') &&
+            mapData.containsKey('nazwisko') &&
+            mapData.containsKey('numer_indeksu') &&
             mapData.containsKey('isPrivileged')) {
           printedResult = 'Done!';
-          // debugPrint('isPrivileged: ${mapData['isPrivileged']}');
           if (mapData['isPrivileged']) {
             sendLecturerData(mapData['isPrivileged'], widget.licensePlate);
           } else {
             sendStudentData(
-                name: mapData['name'],
-                surname: mapData['surname'],
-                studentId: mapData['studentId'],
+                name: mapData['imie'],
+                surname: mapData['nazwisko'],
+                studentId: mapData['numer_indeksu'],
                 isPrivileged: mapData['isPrivileged'],
                 licensePlate: widget.licensePlate,
                 scanTime: widget.scanTime);
@@ -122,9 +121,9 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (_) => AddedDataScreen(
-                name: mapData['name'],
-                surname: mapData['surname'],
-                studentId: mapData['studentId'],
+                name: mapData['imie'],
+                surname: mapData['nazwisko'],
+                studentId: mapData['numer_indeksu'],
                 licensePlate: widget.licensePlate,
                 scanTime: widget.scanTime,
                 isPrivileged: mapData['isPrivileged'],

@@ -12,7 +12,6 @@ import '../widgets/camera_view.dart';
 import '../widgets/object_detector_painter.dart';
 
 class OCRScreen extends StatefulWidget {
-
   @override
   State<OCRScreen> createState() => _OCRScreen();
 }
@@ -22,13 +21,13 @@ class _OCRScreen extends State<OCRScreen> {
   bool _canProcess = false;
   CustomPaint? _customPaint;
   Map licenses = {};
+  bool allowAdding = true;
 
   @override
   void initState() {
     super.initState();
     _initializeDetector();
   }
-
 
   @override
   void dispose() {
@@ -70,7 +69,7 @@ class _OCRScreen extends State<OCRScreen> {
     List<DetectedObject> carRelatedObjects = <DetectedObject>[];
     for (DetectedObject detectedObject in objects) {
       for (Label label in detectedObject.labels) {
-        if(label.text == "Car" || label.text == "License plate") {
+        if (label.text == "Car" || label.text == "License plate") {
           carRelatedObjects.add(detectedObject);
         } else {
           continue;
@@ -89,37 +88,46 @@ class _OCRScreen extends State<OCRScreen> {
     for (DetectedObject detectedObject in carRelatedObjects) {
       for (Label label in detectedObject.labels) {
         // print('${label.text} ${label.confidence}');
-        if ((label.text == 'Car' && label.confidence > 0.5) || (label.text == 'License plate' && label.confidence > 0.5)) {
-          final textDetector = GoogleMlKit.vision.textRecognizer(script: TextRecognitionScript.latin);
+        if ((label.text == 'Car' && label.confidence > 0.5) ||
+            (label.text == 'License plate' && label.confidence > 0.5)) {
+          final textDetector = GoogleMlKit.vision
+              .textRecognizer(script: TextRecognitionScript.latin);
           final recognisedText = await textDetector.processImage(inputImage);
           setState(() {
+            String licensePlateText;
+            bool checked = true;
             for (TextBlock block in recognisedText.blocks) {
-              final String text = block.text;
-              bool checked = true;
-              if(!detectedObject.boundingBox.overlaps(block.boundingBox)){
-                continue;
-              }
-              if (text.length < 4) {
-                continue;
-              }
-              for (int i = 0; i < text.length; i++) {
-                if (text[i].toUpperCase() != text[i]) {
-                  checked = false;
-                  break;
+              if (allowAdding) {
+                licensePlateText = block.text;
+                checked = true;
+                if (!detectedObject.boundingBox.overlaps(block.boundingBox)) {
+                  continue;
                 }
-              }
-              if (checked) {
-                // print('licenses: $licenses');
-                if (licenses.containsKey(text)) {
-                  licenses[text] += 1;
-                } else {
-                  licenses[text] = 1;
+                if (licensePlateText.length < 4) {
+                  continue;
                 }
-                if (licenses[text] > 3) {
-                  licenses = {};
-                  dispose();
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (ctx) => LicenseScreen(license: text)));
+                for (int i = 0; i < licensePlateText.length; i++) {
+                  if (licensePlateText[i].toUpperCase() !=
+                      licensePlateText[i]) {
+                    checked = false;
+                    break;
+                  }
+                }
+                if (checked) {
+                  // print('licenses: $licenses');
+                  if (licenses.containsKey(licensePlateText)) {
+                    licenses[licensePlateText] += 1;
+                  } else {
+                    licenses[licensePlateText] = 1;
+                  }
+                  if (licenses[licensePlateText] > 3) {
+                    allowAdding = false;
+                    licenses = {};
+                    dispose();
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (ctx) =>
+                            LicenseScreen(license: licensePlateText)));
+                  }
                 }
               }
             }
