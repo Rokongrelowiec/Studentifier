@@ -76,7 +76,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
   // int seconds = maxSeconds;
   // Timer? timer;
   // bool isPlaying = false;
-  // final controller = ConfettiController();
+  final controller = ConfettiController();
 
   // void startTimer() {
   //   timer = Timer.periodic(Duration(seconds: 1), (_) {
@@ -93,6 +93,8 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+    controller.play();
     // startTimer();
     return Stack(
       alignment: Alignment.topCenter,
@@ -106,8 +108,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
           ),
           body: SingleChildScrollView(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.9),
+              constraints: BoxConstraints(maxHeight: sizeHeight * 85),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -117,21 +118,26 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
-                          fontSize: 28),
+                          fontSize: sizeHeight * 4),
                     ),
                     Text(
                       'Thank you for scan!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
-                          fontSize: 25),
+                          fontSize: sizeHeight * 3.5),
                     ),
                     // comment Text widget below -> self data validation
-                    Text(
-                      'Your data: ${widget.name}, ${widget.surname}, ${widget.studentId},\n'
-                      '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1?.color,
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: sizeHeight),
+                      child: Text(
+                        'Your data: ${widget.name} ${widget.surname} ${widget.studentId},\n'
+                        '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 3,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     // buildTimer(),
@@ -141,17 +147,17 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                             HomeScreen.routeName, (route) => false);
                       },
                       icon: Icon(
-                        Icons.rocket_launch,
+                        Icons.check_circle_outline_outlined,
                         color: Theme.of(context).primaryColor,
                       ),
-                      iconSize: 180,
+                      iconSize: sizeHeight * 25,
                     ),
                     Text(
                       'Click the icon above to return to the home screen',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
-                          fontSize: 22),
+                          fontSize: sizeHeight * 3),
                     ),
                   ],
                 ),
@@ -159,11 +165,11 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
             ),
           ),
         ),
-        // ConfettiWidget(
-        //   confettiController: controller,
-        //   blastDirection: pi / 2,
-        //   numberOfParticles: 10,
-        // ),
+        ConfettiWidget(
+          confettiController: controller,
+          blastDirection: pi / 2,
+          numberOfParticles: 10,
+        ),
       ],
     );
   }

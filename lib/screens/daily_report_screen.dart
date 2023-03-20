@@ -16,7 +16,6 @@ class DailyReport extends StatefulWidget {
 }
 
 class _DailyReportState extends State<DailyReport> {
-
   late List licenseAndHourList;
   late List studentIdList;
   late List nameSurnameList;
@@ -138,14 +137,18 @@ class _DailyReportState extends State<DailyReport> {
   @override
   Widget build(BuildContext context) {
     final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
-
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return FutureBuilder(
         future: getData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Center(child: CircularProgressIndicator()),
+              padding: EdgeInsets.only(top: sizeHeight * 2),
+              child: Center(
+                  child: SizedBox(
+                      width: sizeHeight * 25,
+                      height: sizeHeight * 25,
+                      child: CircularProgressIndicator())),
             );
           }
           if (snapshot.hasError) {
@@ -154,7 +157,7 @@ class _DailyReportState extends State<DailyReport> {
                 'Sorry\nCould not fetch the data',
                 style: TextStyle(
                     color: Theme.of(context).textTheme.headline1?.color,
-                    fontSize: 30,
+                    fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -166,12 +169,12 @@ class _DailyReportState extends State<DailyReport> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 10,
+                    height: sizeHeight * 1.15,
                   ),
                   Text(
                     "Daily Report",
                     style: TextStyle(
-                      fontSize: 40,
+                      fontSize: sizeHeight * 5,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).textTheme.headline1?.color,
                     ),
@@ -182,7 +185,7 @@ class _DailyReportState extends State<DailyReport> {
                   Text(
                     'License Plates',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: sizeHeight * 3,
                       color: Theme.of(context).textTheme.headline1?.color,
                     ),
                   ),
@@ -192,8 +195,8 @@ class _DailyReportState extends State<DailyReport> {
                   Text(
                     'Found: ${licenseAndHourList.length} elements!',
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
-                    ),
+                        color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2),
                   ),
                   SizedBox(
                     height: 5,
@@ -205,7 +208,7 @@ class _DailyReportState extends State<DailyReport> {
                     itemBuilder: (ctx, index) => Card(
                       color: Theme.of(context).drawerTheme.backgroundColor,
                       child: ListTile(
-                          key: UniqueKey(),
+                          key: ValueKey(licenseAndHourList[index]),
                           onTap: () async {
                             await Navigator.of(context).push(
                               MaterialPageRoute(
@@ -234,11 +237,10 @@ class _DailyReportState extends State<DailyReport> {
                                             .length -
                                         6),
                             style: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color),
+                              fontSize: sizeHeight * 3,
+                              color:
+                                  Theme.of(context).textTheme.headline1?.color,
+                            ),
                           ),
                           title: Row(
                             children: [
@@ -249,6 +251,7 @@ class _DailyReportState extends State<DailyReport> {
                                       .textTheme
                                       .headline1
                                       ?.color,
+                                  fontSize: sizeHeight * 2,
                                 ),
                               ),
                               Text(
@@ -271,10 +274,11 @@ class _DailyReportState extends State<DailyReport> {
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
-                                        ?.color),
+                                        ?.color,
+                                    fontSize: sizeHeight * 2),
                               ),
                               Container(
-                                width: 180,
+                                width: sizeHeight * 19,
                                 child: Text(
                                   '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
                                   style: TextStyle(
@@ -283,6 +287,7 @@ class _DailyReportState extends State<DailyReport> {
                                         .textTheme
                                         .headline1
                                         ?.color,
+                                    fontSize: sizeHeight * 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -298,7 +303,10 @@ class _DailyReportState extends State<DailyReport> {
                                       backgroundColor:
                                           Theme.of(context).primaryColor,
                                       content: Text(
-                                        'Removed index: ${studentIdList[index]}',
+                                        'Removed index: ${studentIdList[index]}; '
+                                        'Hour: ${(licenseAndHourList[index]['godzinaPrzyjazdu']).toString().substring(0, 5)}',
+                                        style:
+                                            TextStyle(fontSize: sizeHeight * 2),
                                       ),
                                     );
                                     ScaffoldMessenger.of(context)

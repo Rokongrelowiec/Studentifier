@@ -30,25 +30,8 @@ class GenerateRegisteredLicensePlates extends StatefulWidget {
 
 class _GenerateRegisteredLicensePlatesState
     extends State<GenerateRegisteredLicensePlates> {
-//   late String removedLicensePlate;
-//   late int locationIndex;
   List lecturersLicencePlates = [];
   final formKey = GlobalKey<FormState>();
-
-//   List registeredLicensePlates = [
-//     'OSPF 1415',
-//     'DNS 12X2',
-//     'ACL 6542',
-//     'VLAN W189',
-//     'SQL 54TO',
-//     'PHP 1154M',
-//     'JS 4FGB',
-//     'CPP 63BV',
-//     'DART 4312',
-//     'JAVA 11WEQ',
-//     'JSON OO22',
-//     'VIM 58XC',
-//   ];
 
   TextEditingController licensePlateController = TextEditingController();
 
@@ -69,12 +52,6 @@ class _GenerateRegisteredLicensePlatesState
     });
   }
 
-//   void undoOperation() {
-//     setState(() {
-//       registeredLicensePlates.insert(locationIndex, removedLicensePlate);
-//     });
-//   }
-
   Future getData() async {
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
@@ -89,11 +66,119 @@ class _GenerateRegisteredLicensePlatesState
 
   @override
   Widget build(BuildContext context) {
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       appBar: AppBarWidget(
         title: 'Registered license plates',
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
+        actionsList: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    contentPadding: EdgeInsets.all(sizeHeight * 2),
+                    buttonPadding: EdgeInsets.all(sizeHeight),
+                    backgroundColor:
+                        Theme.of(context).drawerTheme.backgroundColor,
+                    title: Text(
+                      'Add lecturer license plate',
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 2.5),
+                    ),
+                    content: Form(
+                      key: formKey,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        autofocus: true,
+                        controller: licensePlateController,
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 2.5,
+                        ),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.directions_car,
+                              color: Theme.of(context).iconTheme.color,
+                              size: sizeHeight * 4,
+                            ),
+                            labelText: 'License plate',
+                            labelStyle: TextStyle(
+                              fontSize: sizeHeight * 3,
+                            ),
+                            contentPadding: EdgeInsets.all(
+                              sizeHeight * 2,
+                            ),
+                            border: OutlineInputBorder()),
+                        validator: (value) {
+                          if (value != null && value.length < 4) {
+                            return 'Too short value';
+                          }
+                          if (value != null && value.length > 8)
+                            return 'Too long value';
+                          return null;
+                        },
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                              RegExp("[A-Za-z0-9]")),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: sizeHeight * 2,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final isValidForm = formKey.currentState!.validate();
+                          if (isValidForm) {
+                            String apiKey = await DefaultAssetBundle.of(context)
+                                .loadString('assets/api-key.txt');
+                            var requestBody = jsonEncode({
+                              'licenseplate':
+                                  licensePlateController.text.toUpperCase()
+                            });
+                            await http.post(
+                              Uri.parse(
+                                  'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
+                              headers: {'x-api-key': apiKey},
+                              body: requestBody,
+                            );
+                            licensePlateController.text = '';
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          'OK',
+                          style: TextStyle(
+                            fontSize: sizeHeight * 2,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).iconTheme.color,
+                size: sizeHeight * 4.8,
+              ),
+            ),
+          )
+        ],
       ),
       body: FutureBuilder(
           future: getData(),
@@ -101,7 +186,11 @@ class _GenerateRegisteredLicensePlatesState
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Padding(
                 padding: const EdgeInsets.only(top: 15),
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(
+                    child: SizedBox(
+                        width: sizeHeight * 25,
+                        height: sizeHeight * 25,
+                        child: CircularProgressIndicator())),
               );
             }
             if (snapshot.hasError) {
@@ -110,7 +199,7 @@ class _GenerateRegisteredLicensePlatesState
                   'Sorry\nCould not fetch the data',
                   style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
-                      fontSize: 30,
+                      fontSize: sizeHeight * 4,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -122,28 +211,28 @@ class _GenerateRegisteredLicensePlatesState
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight * 2,
                     ),
                     Text(
                       'Lecturers license plates',
                       style: TextStyle(
-                        fontSize: 40,
+                        fontSize: sizeHeight * 5,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).textTheme.headline1?.color,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight * 1.15,
                     ),
                     Text(
                       'Found: ${lecturersLicencePlates.length} elements!',
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1?.color,
-                      ),
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 3),
                     ),
                     SizedBox(
-                      height: 5,
+                      height: sizeHeight * 2,
                     ),
                     ListView.builder(
                       shrinkWrap: true,
@@ -152,13 +241,15 @@ class _GenerateRegisteredLicensePlatesState
                       itemBuilder: (ctx, index) => Card(
                         color: Theme.of(context).drawerTheme.backgroundColor,
                         child: ListTile(
-                          key: UniqueKey(),
+                          key: ValueKey(lecturersLicencePlates[index]),
                           title: Text(
                             lecturersLicencePlates[index]['rejestracja'],
                             style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color,
-                            ),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.color,
+                                fontSize: sizeHeight * 3),
                           ),
                           trailing: IconButton(
                             onPressed: () async {
@@ -168,6 +259,9 @@ class _GenerateRegisteredLicensePlatesState
                                 backgroundColor: Theme.of(context).primaryColor,
                                 content: Text(
                                   'Removed licence plate: ${lecturersLicencePlates[index]['rejestracja']}',
+                                  style: TextStyle(
+                                    fontSize: sizeHeight * 2,
+                                  ),
                                 ),
                                 // action: SnackBarAction(
                                 //     label: 'Undo',
@@ -182,90 +276,11 @@ class _GenerateRegisteredLicensePlatesState
                             icon: Icon(
                               Icons.delete,
                               color: Theme.of(context).iconTheme.color,
+                              size: sizeHeight * 4,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Form(
-                        key: formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: TextFormField(
-                          controller: licensePlateController,
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color),
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              onPressed: () async {
-                                final isValidForm =
-                                    formKey.currentState!.validate();
-                                if (isValidForm) {
-                                  String apiKey =
-                                      await DefaultAssetBundle.of(context)
-                                          .loadString('assets/api-key.txt');
-                                  var requestBody = jsonEncode({
-                                    'licenseplate': licensePlateController.text
-                                        .toUpperCase()
-                                  });
-                                  await http.post(
-                                    Uri.parse(
-                                        'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
-                                    headers: {'x-api-key': apiKey},
-                                    body: requestBody,
-                                  );
-                                  licensePlateController.text = '';
-                                  setState(() {});
-                                }
-                              },
-                              icon: Icon(
-                                Icons.check,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.drive_eta_sharp,
-                              size: 30,
-                              color: Colors.grey,
-                            ),
-                            labelText: "License plate",
-                            labelStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color),
-                            hintStyle: TextStyle(color: Colors.grey),
-                            contentPadding:
-                                EdgeInsets.only(top: 15, bottom: 15),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFFE0E0E0), width: 2),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFFDD9246), width: 1),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value != null && value.length < 4) {
-                              return 'Too short value';
-                            }
-                            if (value != null && value.length > 8)
-                              return 'Too long value';
-                            return null;
-                          },
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp("[A-Za-z0-9]")),
-                          ],
-                          textInputAction: TextInputAction.done,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
                     ),
                   ],
                 ),

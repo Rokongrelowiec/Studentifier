@@ -47,6 +47,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       appBar: AppBarWidget(
         title: 'Chart',
@@ -59,7 +60,10 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Padding(
                 padding: const EdgeInsets.only(top: 15),
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(child: SizedBox(
+                  height: sizeHeight * 25,
+                    width: sizeHeight * 25,
+                    child: CircularProgressIndicator())),
               );
             }
             if (snapshot.hasError) {
@@ -68,7 +72,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                 'Sorry\nCould not fetch the data',
                 style: TextStyle(
                     color: Theme.of(context).textTheme.headline1?.color,
-                    fontSize: 30,
+                    fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ));
@@ -77,14 +81,14 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                 child: Column(
                   children: [
                     Container(
-                      height: 400,
+                      height: sizeHeight * 50,
                       child: SfCartesianChart(
                         title: ChartTitle(
                           text: 'Visits in last month',
                           textStyle: TextStyle(
                               color:
                                   Theme.of(context).textTheme.headline1?.color,
-                              fontSize: 20),
+                              fontSize: sizeHeight * 3),
                         ),
                         tooltipBehavior: _tooltipBehavior,
                         series: <ChartSeries>[
@@ -102,26 +106,26 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                     Text(
                       'Data Sheet',
                       style: TextStyle(
-                          fontSize: 22,
+                          fontSize: sizeHeight * 3,
                           color: Theme.of(context).textTheme.headline1?.color),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
                         color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5, vertical: sizeHeight * 0.6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Most visits - license plate:',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -130,7 +134,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 mostVisitsLicensePlate,
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -142,22 +146,22 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
                         color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5, vertical: sizeHeight * 0.6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Most visits - index:',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -166,7 +170,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 mostVisitsStudentId.toString(),
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -178,22 +182,22 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
                         color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5, vertical: sizeHeight * 0.6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Most visits - day:',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -202,7 +206,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 maxVisitsDay,
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -214,22 +218,22 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
                         color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5, vertical: sizeHeight * 0.6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Least visits - day:',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -238,7 +242,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 minVisitsDay,
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -250,22 +254,22 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: sizeHeight,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Card(
                         color: Theme.of(context).drawerTheme.backgroundColor,
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 5, vertical: 5),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 5, vertical: sizeHeight * 0.6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 'Average of visits per day:',
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -274,7 +278,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 average.toStringAsFixed(2),
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -306,6 +310,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
     var endDate = DateFormat('dd').format(DateTime.now());
     var startDate = DateFormat('dd').format(
         DateTime.now().subtract(Duration(days: DateTime.now().day - 1)));
+    debugPrint(decodedResponse.toString());
     for (int i = int.parse(startDate); i <= int.parse(endDate); i++) {
       try {
         if (int.parse(decodedResponse[i - 1]['dataPrzyjazdu'].substring(8)) !=

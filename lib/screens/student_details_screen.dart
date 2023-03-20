@@ -75,6 +75,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
   @override
   Widget build(BuildContext context) {
     final bool isAdmin = Provider.of<AdminProvider>(context).isAdmin;
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -88,37 +89,41 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
         }),
         actionsList: isAdmin
             ? [
-                IconButton(
-                  onPressed: () async {
-                    final editedValues = await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => StudentEdit(
-                              firstName: widget.firstName,
-                              lastName: widget.lastName,
-                              studentId: widget.studentId,
-                              licensePlate: widget.licensePlate,
-                              numberOfVisits: widget.numberOfVisits,
-                              validityOfStudentId: widget.validityOfStudentId,
+                Padding(
+                  padding: EdgeInsets.only(right: sizeHeight),
+                  child: IconButton(
+                    onPressed: () async {
+                      final editedValues = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => StudentEdit(
+                                firstName: widget.firstName,
+                                lastName: widget.lastName,
+                                studentId: widget.studentId,
+                                licensePlate: widget.licensePlate,
+                                numberOfVisits: widget.numberOfVisits,
+                                validityOfStudentId: widget.validityOfStudentId,
+                              ),
                             ),
-                          ),
-                        ) ??
-                        '';
-                    if (editedValues.isNotEmpty) {
-                      setState(() {
-                        widget.firstName = editedValues['firstName'];
-                        widget.lastName = editedValues['lastName'];
-                        widget.studentId = int.parse(editedValues['studentId']);
-                        widget.licensePlate = editedValues['licensePlate'];
-                        widget.numberOfVisits =
-                            int.parse(editedValues['numberOfVisits']);
-                        widget.validityOfStudentId =
-                            editedValues['validityOfStudentId'];
-                      });
-                    }
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    color: Theme.of(context).iconTheme.color,
+                          ) ??
+                          '';
+                      if (editedValues.isNotEmpty) {
+                        setState(() {
+                          widget.firstName = editedValues['firstName'];
+                          widget.lastName = editedValues['lastName'];
+                          widget.studentId = int.parse(editedValues['studentId']);
+                          widget.licensePlate = editedValues['licensePlate'];
+                          widget.numberOfVisits =
+                              int.parse(editedValues['numberOfVisits']);
+                          widget.validityOfStudentId =
+                              editedValues['validityOfStudentId'];
+                        });
+                      }
+                    },
+                    icon: Icon(
+                      Icons.edit,
+                      size: sizeHeight * 4,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
                   ),
                 ),
               ]
@@ -132,40 +137,40 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 15),
+                  padding: EdgeInsets.only(top: sizeHeight),
                   child: CircleAvatar(
                     backgroundColor: Colors.grey.withOpacity(0.9),
-                    radius: 80,
+                    radius: sizeHeight * 10,
                     child: Icon(
                       color: Colors.white,
                       Icons.person,
-                      size: 100,
+                      size: sizeHeight * 12.5,
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: sizeHeight * 2,
                 ),
                 Divider(
                   thickness: 2,
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'First name',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
                       Text(
                         widget.firstName,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
@@ -177,21 +182,21 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Last name',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
                       Text(
                         widget.lastName,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
@@ -203,21 +208,21 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Index',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
                       Text(
                         widget.studentId.toString(),
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
@@ -229,21 +234,21 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'License plate',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
                       Text(
                         widget.licensePlate,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
@@ -255,21 +260,21 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Number of visits\n in last month',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
                       Text(
                         widget.numberOfVisits.toString(),
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
@@ -281,21 +286,21 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                   color: Colors.grey,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Validity of student ID',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
                       Text(
                         widget.validityOfStudentId,
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),

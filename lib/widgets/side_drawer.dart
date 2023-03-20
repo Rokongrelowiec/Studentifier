@@ -17,7 +17,6 @@ import '../screens/login_screen.dart';
 import '../models/theme_provider.dart';
 
 class SideDrawer extends StatefulWidget {
-
   SideDrawer({Key? key}) : super(key: key);
 
   @override
@@ -60,14 +59,24 @@ class _SideDrawerState extends State<SideDrawer> {
         builder: (ctx) => CupertinoActionSheet(
           actions: [
             CupertinoActionSheetAction(
-              child: const Text('Gallery'),
+              child: Text(
+                'Gallery',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.025,
+                ),
+              ),
               onPressed: () {
                 pickImage(ImageSource.gallery);
                 Navigator.of(context).pop();
               },
             ),
             CupertinoActionSheetAction(
-              child: Text('Camera'),
+              child: Text(
+                'Camera',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.025,
+                ),
+              ),
               onPressed: () {
                 pickImage(ImageSource.camera);
                 Navigator.of(context).pop();
@@ -76,7 +85,13 @@ class _SideDrawerState extends State<SideDrawer> {
           ],
           cancelButton: CupertinoActionSheetAction(
             isDestructiveAction: true,
-            child: const Text('Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: MediaQuery.of(context).size.height * 0.025,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -90,16 +105,32 @@ class _SideDrawerState extends State<SideDrawer> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.image),
-              title: Text('Gallery'),
+              leading: Icon(
+                Icons.image,
+                size: MediaQuery.of(context).size.height * 0.04,
+              ),
+              title: Text(
+                'Gallery',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.02,
+                ),
+              ),
               onTap: () {
                 pickImage(ImageSource.gallery);
                 Navigator.of(context).pop();
               },
             ),
             ListTile(
-              leading: Icon(Icons.camera),
-              title: Text('Camera'),
+              leading: Icon(
+                Icons.camera_alt,
+                size: MediaQuery.of(context).size.height * 0.04,
+              ),
+              title: Text(
+                'Camera',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.02,
+                ),
+              ),
               onTap: () {
                 pickImage(ImageSource.camera);
                 Navigator.of(context).pop();
@@ -107,10 +138,17 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
             Divider(thickness: 1, color: Colors.grey),
             ListTile(
-              leading: Icon(Icons.close),
+              leading: Icon(
+                Icons.close,
+                size: MediaQuery.of(context).size.height * 0.04,
+                color: Color.fromRGBO(255, 55, 55, 1),
+              ),
               title: Text(
                 'Cancel',
-                style: TextStyle(color: Color.fromRGBO(255, 55, 55, 1)),
+                style: TextStyle(
+                    color: Color.fromRGBO(255, 55, 55, 1),
+                    fontSize: MediaQuery.of(context).size.height * 0.02,
+                    fontWeight: FontWeight.bold),
               ),
               onTap: () {
                 Navigator.of(context).pop();
@@ -125,6 +163,7 @@ class _SideDrawerState extends State<SideDrawer> {
   @override
   Widget build(BuildContext context) {
     final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return OrientationBuilder(
       builder: (ctx, orientation) => Drawer(
         elevation: 0,
@@ -135,8 +174,8 @@ class _SideDrawerState extends State<SideDrawer> {
           children: [
             Container(
               height: orientation == Orientation.portrait
-                  ? MediaQuery.of(context).size.height * 0.25
-                  : MediaQuery.of(context).size.height * 0.35,
+                  ? sizeHeight * 25
+                  : sizeHeight * 35,
               padding: EdgeInsets.symmetric(vertical: 15),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,17 +190,17 @@ class _SideDrawerState extends State<SideDrawer> {
                             ? ClipOval(
                                 child: Image.file(
                                   image!,
-                                  width: 200,
-                                  height: 200,
+                                  width: sizeHeight * 25,
+                                  height: sizeHeight * 25,
                                   fit: BoxFit.cover,
                                 ),
                               )
                             : Icon(
                                 Icons.tag_faces_outlined,
-                                size: 60,
+                                size: sizeHeight * 8,
                                 color: Colors.white,
                               ),
-                        radius: 50,
+                        radius: sizeHeight * 6,
                       ),
                     ),
                   ),
@@ -172,23 +211,23 @@ class _SideDrawerState extends State<SideDrawer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 14,
+                          height: sizeHeight * 1.6,
                         ),
                         Text('Hi',
                             style: TextStyle(
-                                fontSize: 20,
+                                fontSize: sizeHeight * 3,
                                 color: Theme.of(context)
                                     .textTheme
                                     .headline1
                                     ?.color)),
                         SizedBox(
-                          height: 22,
+                          height: sizeHeight * 2,
                         ),
                         Container(
-                          width: 100,
+                          width: sizeHeight * 11,
                           child: Text(isAdmin ? 'admin!' : 'there!',
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: sizeHeight * 3,
                                   color: Theme.of(context)
                                       .textTheme
                                       .headline1
@@ -201,57 +240,73 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                   Spacer(),
                   isAdmin
-                      ? IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                backgroundColor: Theme.of(context)
-                                    .drawerTheme
-                                    .backgroundColor,
-                                title: Text(
-                                  'Sing out',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        ?.color,
+                      ? Padding(
+                          padding: EdgeInsets.only(right: sizeHeight),
+                          child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  backgroundColor: Theme.of(context)
+                                      .drawerTheme
+                                      .backgroundColor,
+                                  title: Text(
+                                    'Sing out',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .headline1
+                                            ?.color,
+                                        fontSize: sizeHeight * 3.5),
                                   ),
+                                  content: Text(
+                                    'Are you sure you want to sign out?',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .headline1
+                                            ?.color,
+                                        fontSize: sizeHeight * 3),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                            fontSize: sizeHeight * 2.5),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Provider.of<AdminProvider>(context,
+                                                listen: false)
+                                            .changePermission(false);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            fontSize: sizeHeight * 2.5),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                content: Text(
-                                  'Are you sure you want to sign out?',
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .headline1
-                                        ?.color,
-                                  ),
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Provider.of<AdminProvider>(context, listen: false).changePermission(false);
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.power_settings_new_outlined),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.power_settings_new_outlined,
+                              size: sizeHeight * 4,
+                            ),
+                          ),
                         )
                       : Container(),
                 ],
               ),
             ),
             Divider(
-              thickness: 1,
+              thickness: sizeHeight / 8,
               color: Colors.grey,
             ),
             Column(
@@ -260,8 +315,8 @@ class _SideDrawerState extends State<SideDrawer> {
                   title: Text(
                     'Select mode',
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
-                    ),
+                        color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2),
                   ),
                   trailing: Consumer<ThemeProvider>(
                       builder: (context, provider, child) {
@@ -269,7 +324,10 @@ class _SideDrawerState extends State<SideDrawer> {
                       dropdownColor:
                           Theme.of(context).drawerTheme.backgroundColor,
                       value: provider.currentTheme,
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: sizeHeight * 4,
+                      ),
                       elevation: 16,
                       style: TextStyle(color: Colors.orange.withOpacity(0.7)),
                       underline: Container(
@@ -282,15 +340,30 @@ class _SideDrawerState extends State<SideDrawer> {
                       },
                       items: [
                         DropdownMenuItem(
-                          child: Text('Light'),
+                          child: Text(
+                            'Light',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
                           value: 'light',
                         ),
                         DropdownMenuItem(
-                          child: Text('Dark'),
+                          child: Text(
+                            'Dark',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
                           value: 'dark',
                         ),
                         DropdownMenuItem(
-                          child: Text('System'),
+                          child: Text(
+                            'System',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
                           value: 'system',
                         ),
                       ],
@@ -298,21 +371,23 @@ class _SideDrawerState extends State<SideDrawer> {
                   }),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: sizeHeight),
                   child: Divider(
-                    thickness: 0.5,
+                    thickness: sizeHeight * 0.1,
                     color: Colors.black,
                   ),
                 ),
                 ListTile(
                   trailing: Icon(
                     Icons.ssid_chart,
+                    size: sizeHeight * 3.5,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
                     'Chart',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
+                      fontSize: sizeHeight * 2,
                     ),
                   ),
                   onTap: () {
@@ -322,7 +397,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Divider(
-                    thickness: 0.5,
+                    thickness: sizeHeight * 0.1,
                     color: Colors.black,
                   ),
                 ),
@@ -330,11 +405,13 @@ class _SideDrawerState extends State<SideDrawer> {
                   trailing: Icon(
                     Icons.text_snippet,
                     color: Theme.of(context).iconTheme.color,
+                    size: sizeHeight * 3.5,
                   ),
                   title: Text(
                     'About the app',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
+                      fontSize: sizeHeight * 2,
                     ),
                   ),
                   onTap: () {
@@ -344,60 +421,69 @@ class _SideDrawerState extends State<SideDrawer> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Divider(
-                    thickness: 0.5,
+                    thickness: sizeHeight * 0.1,
                     color: Colors.black,
                   ),
                 ),
                 ListTile(
                   trailing: Icon(
                     isAdmin ? Icons.drive_eta : Icons.settings,
+                    size: sizeHeight * 3.5,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
                     isAdmin ? 'Registered license plates' : 'Setting',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
+                      fontSize: sizeHeight * 2,
                     ),
                   ),
                   onTap: () {
                     if (!isAdmin)
                       Navigator.of(context).pushNamed(LoginScreen.routeName);
                     else
-                      Navigator.of(context).pushNamed(RegisteredLicensePlates.routeName);
+                      Navigator.of(context)
+                          .pushNamed(RegisteredLicensePlates.routeName);
                   },
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Divider(
-                    thickness: 0.5,
+                    thickness: sizeHeight * 0.1,
                     color: Colors.black,
                   ),
                 ),
-
-                isAdmin ? ListTile(
-                  trailing: Icon(
-                    Icons.code,
-                    color: Theme.of(context).iconTheme.color,
-                  ),
-                  title: Text(
-                    'Source code',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
-                    ),
-                  ),
-                  onTap: () async {
-                    final Uri url = Uri.parse("https://github.com/Rokongrelowiec/Studentifier");
-                    if (!await launchUrl(url))
-                      throw 'Could not launch $url';
-                  },
-                ) : Container(),
-                isAdmin ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Divider(
-                    thickness: 0.5,
-                    color: Colors.black,
-                  ),
-                ) : Container()
+                isAdmin
+                    ? ListTile(
+                        trailing: Icon(
+                          Icons.code,
+                          size: sizeHeight * 3.5,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        title: Text(
+                          'Source code',
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2,
+                          ),
+                        ),
+                        onTap: () async {
+                          final Uri url = Uri.parse(
+                              "https://github.com/Rokongrelowiec/Studentifier");
+                          if (!await launchUrl(url))
+                            throw 'Could not launch $url';
+                        },
+                      )
+                    : Container(),
+                isAdmin
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Divider(
+                          thickness: sizeHeight * 0.1,
+                          color: Colors.black,
+                        ),
+                      )
+                    : Container()
               ],
             ),
           ],
