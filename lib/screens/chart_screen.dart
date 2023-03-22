@@ -307,26 +307,34 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
         headers: {'x-api-key': '$key'},
         body: requestBody);
     var decodedResponse = jsonDecode(response.body);
-    var endDate = DateFormat('dd').format(DateTime.now());
+    int endDate = DateTime.now().day;
     var startDate = DateFormat('dd').format(
         DateTime.now().subtract(Duration(days: DateTime.now().day - 1)));
     debugPrint(decodedResponse.toString());
-    for (int i = int.parse(startDate); i <= int.parse(endDate); i++) {
+    String formattedDay;
+    String formattedMonth;
+    for (int i = int.parse(startDate); i <= endDate; i++) {
       try {
-        if (int.parse(decodedResponse[i - 1]['dataPrzyjazdu'].substring(8)) !=
-            i) {
-          var day = i.toString().length == 1 ? '0$i' : i.toString();
-          var month = DateTime.now().month.toString().length == 1
+        if (int.parse(decodedResponse[i - 1]['dataPrzyjazdu'].substring(8)) != i) {
+          formattedDay = i.toString().length == 1 ? '0$i' : i.toString();
+          formattedMonth = DateTime.now().month.toString().length == 1
               ? '0${DateTime.now().month}'
               : DateTime.now().month.toString();
           decodedResponse.insert(i - 1, {
-            'dataPrzyjazdu': '${DateTime.now().year}-$month-$day',
+            'dataPrzyjazdu': '${DateTime.now().year}-$formattedMonth-$formattedDay',
             'count': 0
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        formattedDay = i.toString().length == 1 ? '0$i' : i.toString();
+        formattedMonth = DateTime.now().month.toString().length == 1
+            ? '0${DateTime.now().month}'
+            : DateTime.now().month.toString();
+        decodedResponse.add({'dataPrzyjazdu': '${DateTime.now().year}-$formattedMonth-$formattedDay',
+          'count': 0});
+      }
     }
-    // debugPrint(decodedResponse.toString()); // day
+    debugPrint(decodedResponse.toString());
     visitsCounter = 0; // control set
     minVisitsNum = decodedResponse[0]['count'];
     minVisitsDay = "${decodedResponse[0]['dataPrzyjazdu'].substring(8)}"
@@ -347,8 +355,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             "-${decodedResponse[i]['dataPrzyjazdu'].substring(0, 4)}";
       }
     }
-    int date = DateTime.now().day;
-    average = visitsCounter / date;
+    average = visitsCounter / endDate;
     chartData = List.generate(
         decodedResponse.length,
         (index) => Visits(
