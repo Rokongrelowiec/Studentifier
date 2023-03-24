@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studentifier/models/language_provider.dart';
 
 import './screens/about_the_app_screen.dart';
 import './screens/chart_screen.dart';
@@ -11,6 +14,8 @@ import './models/theme_provider.dart';
 import './screens/animated_splash_screen.dart';
 import './screens/home_screen.dart';
 import './screens/login_screen.dart';
+import './screens/contact_admin_screen.dart';
+import './l10n/l10n.dart';
 
 late List<CameraDescription> cameras;
 
@@ -36,10 +41,8 @@ Future<void> main() async {
       ),
     );
   };
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(
     MultiProvider(
       providers: [
@@ -48,6 +51,9 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => AdminProvider()..initialize(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LocaleProvider(),
         ),
       ],
       child: const MyApp(),
@@ -60,8 +66,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, provider, child) {
+    return Consumer2<ThemeProvider, LocaleProvider>(
+      builder: (context, provider1, provider2, child) {
         return MaterialApp(
           initialRoute: '/',
           routes: {
@@ -70,10 +76,19 @@ class MyApp extends StatelessWidget {
             ChartScreen.routeName: (_) => ChartScreen(),
             AboutApp.routeName: (_) => AboutApp(),
             RegisteredLicensePlates.routeName: (_) => RegisteredLicensePlates(),
+            ContactAdminScreen.routeName: (_) => ContactAdminScreen(),
           },
           debugShowCheckedModeBanner: false,
+          supportedLocales: L10n.all,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          locale: provider2.locale,
           title: 'Studentifier',
-          themeMode: provider.themeMode,
+          themeMode: provider1.themeMode,
           theme: ThemeData(
             primarySwatch: Colors.orange,
             navigationBarTheme: NavigationBarThemeData(

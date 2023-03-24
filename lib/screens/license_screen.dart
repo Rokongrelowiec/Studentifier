@@ -2,18 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 import './added_data_screen.dart';
 import './home_screen.dart';
 import './qr_scanner_screen.dart';
 import '../widgets/app_bar_widget.dart';
-import '../models/theme_provider.dart';
 
 class LicenseScreen extends StatefulWidget {
   String license;

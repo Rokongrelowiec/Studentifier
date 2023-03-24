@@ -7,8 +7,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:studentifier/l10n/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../models/language_provider.dart';
 import '../screens/about_the_app_screen.dart';
 import '../screens/chart_screen.dart';
 import '../screens/registered_license_plates.dart';
@@ -164,6 +167,27 @@ class _SideDrawerState extends State<SideDrawer> {
   Widget build(BuildContext context) {
     final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+
+    _title(String val) {
+      switch (val) {
+        case 'en':
+          return Text(
+            'English',
+            style: TextStyle(fontSize: sizeHeight * 2),
+          );
+        case 'pl':
+          return Text(
+            'Polski',
+            style: TextStyle(fontSize: sizeHeight * 2),
+          );
+        default:
+          return Text(
+            'English',
+            style: TextStyle(fontSize: sizeHeight * 2),
+          );
+      }
+    }
+
     return OrientationBuilder(
       builder: (ctx, orientation) => Drawer(
         elevation: 0,
@@ -336,7 +360,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       ),
                       onChanged: (String? value) {
                         provider.changeTheme(value ?? 'system');
-                        Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
                       },
                       items: [
                         DropdownMenuItem(
@@ -378,13 +402,57 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                 ),
                 ListTile(
+                  title: Text(
+                    AppLocalizations.of(context)!.language,
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2),
+                  ),
+                  trailing: Consumer<LocaleProvider>(
+                      builder: (context, provider, child) {
+                    var lang =
+                        provider.locale ?? Localizations.localeOf(context);
+                    return DropdownButton(
+                      dropdownColor:
+                          Theme.of(context).drawerTheme.backgroundColor,
+                      value: lang,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: sizeHeight * 4,
+                      ),
+                      elevation: 16,
+                      style: TextStyle(color: Colors.orange.withOpacity(0.7)),
+                      underline: Container(
+                        height: 1,
+                        color: Colors.orangeAccent,
+                      ),
+                      onChanged: (Locale? val) {
+                        provider.setLocale(val!);
+                      },
+                      items: L10n.all
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: _title(e.languageCode),
+                              ))
+                          .toList(),
+                    );
+                  }),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: sizeHeight),
+                  child: Divider(
+                    thickness: sizeHeight * 0.1,
+                    color: Colors.black,
+                  ),
+                ),
+                ListTile(
                   trailing: Icon(
                     Icons.ssid_chart,
                     size: sizeHeight * 3.5,
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
-                    'Chart',
+                    AppLocalizations.of(context)!.chart,
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                       fontSize: sizeHeight * 2,
@@ -394,6 +462,33 @@ class _SideDrawerState extends State<SideDrawer> {
                     Navigator.of(context).pushNamed(ChartScreen.routeName);
                   },
                 ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: sizeHeight),
+                //   child: Divider(
+                //     thickness: sizeHeight * 0.1,
+                //     color: Colors.black,
+                //   ),
+                // ),
+                // ListTile(
+                //   trailing: Icon(
+                //     Icons.language,
+                //     size: sizeHeight * 3.5,
+                //     color: Theme.of(context).iconTheme.color,
+                //   ),
+                //   title: Text(
+                //     AppLocalizations.of(context)!.language,
+                //     style: TextStyle(
+                //       color: Theme.of(context).textTheme.headline1?.color,
+                //       fontSize: sizeHeight * 2,
+                //     ),
+                //   ),
+                //   onTap: () {
+                //     // if (AppLocalizations.of(context)!.language == 'English') {
+                //     // }
+                //     // Navigator.of(context).pushNamed(ChartScreen.routeName);
+                //
+                //   },
+                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Divider(
