@@ -1,0 +1,7 @@
+{
+    "language": "Language",
+    "@language": {
+        "description": "The current Language"
+    },
+    "chart": "Chart"
+}

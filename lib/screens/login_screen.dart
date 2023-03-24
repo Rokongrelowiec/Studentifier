@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:studentifier/screens/contact_admin_screen.dart';
 
 import './home_screen.dart';
 import '../models/admin_provider.dart';
@@ -178,14 +179,21 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 if (invalidRequest) {
                                   return "Invalid email or password";
                                 }
-                                if (val?.length == 0) {
+                                if (val == null || val.length == 0) {
                                   return "Please enter email";
-                                } else if (val != null && !val.contains('@') ||
-                                    val != null && !val.contains('.')) {
+                                } else if (!val.contains('@') ||
+                                    !val.contains('.') ||
+                                    val.length < 6 ||
+                                    val.startsWith('@') ||
+                                    val.startsWith('.')) {
                                   return "Please enter valid email";
                                 }
                                 return null;
                               },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[A-Za-z0-9]|[@~!\$%^&*_=+}{'\.?-]"))
+                              ],
                               controller: emailController,
                               textInputAction: TextInputAction.next,
                             ),
@@ -365,9 +373,8 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            setState(() {
-                              // TODO Send email to Admin?
-                            });
+                            Navigator.of(context)
+                                .pushNamed(ContactAdminScreen.routeName);
                           },
                           child: Text(
                             "Contact the Administrator",
