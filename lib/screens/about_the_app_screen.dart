@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -25,7 +26,7 @@ class GenerateAboutApp extends StatelessWidget {
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'About the App',
+        title: AppLocalizations.of(context)!.about_the_app,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
       ),
@@ -44,10 +45,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'The Studentifier App was created to provide better'
-                  ' verification of incoming cars.',
+                 AppLocalizations.of(context)!.app_description1,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.7,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -55,9 +55,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'Also this app can help lecturers to find free parking spaces.',
+                    AppLocalizations.of(context)!.app_description2,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.4,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -67,7 +67,7 @@ class GenerateAboutApp extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: sizeHeight * 2),
                 child: Text(
-                  'How it works?',
+                  AppLocalizations.of(context)!.how_works,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                       fontSize: sizeHeight * 2.8,
@@ -76,10 +76,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'The application scans the license plate of the oncoming car'
-                  ' and verify it.',
+                  AppLocalizations.of(context)!.app_description3,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -87,10 +86,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'After approval - the application checks if this license plate'
-                  ' belongs to lecturer.',
+                  AppLocalizations.of(context)!.app_description4,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -98,10 +96,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'If belongs - open a gate, but if not - ask for student ID'
-                  ' card.',
+                  AppLocalizations.of(context)!.app_description5,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -109,10 +106,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'If student is approved then the gate will open and his data'
-                  ' will be added into Data Base.',
+                  AppLocalizations.of(context)!.app_description6,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -120,10 +116,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 5, horizontal: sizeHeight * 2),
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: sizeHeight * 2),
                 child: Text(
-                  'But if not verified - then student has access to call to'
-                  ' the care taker.',
+                  AppLocalizations.of(context)!.app_description7,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.4,
                       color: Theme.of(context).textTheme.headline1?.color),
@@ -131,9 +126,9 @@ class GenerateAboutApp extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: sizeHeight),
+                padding: EdgeInsets.only(top: sizeHeight, bottom: sizeHeight + 5),
                 child: Text(
-                  'Simple, right?',
+                  AppLocalizations.of(context)!.simple_right,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
                       color: Theme.of(context).textTheme.headline1?.color,

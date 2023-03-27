@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../models/admin_provider.dart';
 import './student_edit_screen.dart';
@@ -79,7 +80,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
 
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'Student details',
+        title: AppLocalizations.of(context)!.student_details,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop({
           'studentId': widget.studentId,
@@ -161,7 +162,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'First name',
+                        AppLocalizations.of(context)!.first_name,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -187,7 +188,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Last name',
+                        AppLocalizations.of(context)!.last_name,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -213,7 +214,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Index',
+                      AppLocalizations.of(context)!.index,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -239,7 +240,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'License plate',
+                        AppLocalizations.of(context)!.license_plate4,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -265,7 +266,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Number of visits\n in last month',
+                        AppLocalizations.of(context)!.num_of_visits_month,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -291,7 +292,7 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Validity of student ID',
+                        AppLocalizations.of(context)!.student_id_val,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
                           color: Theme.of(context).textTheme.headline1?.color,

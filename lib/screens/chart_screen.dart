@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -50,7 +51,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'Chart',
+        title: AppLocalizations.of(context)!.chart,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
       ),
@@ -69,7 +70,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             if (snapshot.hasError) {
               return Center(
                   child: Text(
-                'Sorry\nCould not fetch the data',
+                AppLocalizations.of(context)!.fetch_failed,
                 style: TextStyle(
                     color: Theme.of(context).textTheme.headline1?.color,
                     fontSize: sizeHeight * 4,
@@ -84,7 +85,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       height: sizeHeight * 50,
                       child: SfCartesianChart(
                         title: ChartTitle(
-                          text: 'Visits in last month',
+                          text: AppLocalizations.of(context)!.last_month_visits,
                           textStyle: TextStyle(
                               color:
                                   Theme.of(context).textTheme.headline1?.color,
@@ -93,7 +94,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                         tooltipBehavior: _tooltipBehavior,
                         series: <ChartSeries>[
                           LineSeries<Visits, String>(
-                              name: 'Visits',
+                              name: AppLocalizations.of(context)!.visits,
                               dataSource: chartData,
                               xValueMapper: (Visits visits, _) => visits.day,
                               yValueMapper: (Visits visits, _) => visits.visits,
@@ -104,7 +105,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       ),
                     ),
                     Text(
-                      'Data Sheet',
+                      AppLocalizations.of(context)!.data_sheet,
                       style: TextStyle(
                           fontSize: sizeHeight * 3,
                           color: Theme.of(context).textTheme.headline1?.color),
@@ -123,7 +124,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Most visits - license plate:',
+                                '${AppLocalizations.of(context)!.most_visits} - ${AppLocalizations.of(context)!.license_plate}:',
                                 style: TextStyle(
                                     fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
@@ -159,7 +160,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Most visits - index:',
+                                '${AppLocalizations.of(context)!.most_visits} - ${AppLocalizations.of(context)!.index.toLowerCase()}:',
                                 style: TextStyle(
                                     fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
@@ -195,7 +196,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Most visits - day:',
+                                '${AppLocalizations.of(context)!.most_visits} - ${AppLocalizations.of(context)!.day}:',
                                 style: TextStyle(
                                     fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
@@ -231,7 +232,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Least visits - day:',
+                                '${AppLocalizations.of(context)!.least_visits} - ${AppLocalizations.of(context)!.day}:',
                                 style: TextStyle(
                                     fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)
@@ -267,7 +268,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Average of visits per day:',
+                                '${AppLocalizations.of(context)!.avg_per_day}:',
                                 style: TextStyle(
                                     fontSize: sizeHeight * 2.3,
                                     color: Theme.of(context)

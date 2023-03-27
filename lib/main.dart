@@ -53,7 +53,7 @@ Future<void> main() async {
           create: (_) => AdminProvider()..initialize(),
         ),
         ChangeNotifierProvider(
-          create: (_) => LocaleProvider(),
+          create: (_) => LocaleProvider()..initialize(),
         ),
       ],
       child: const MyApp(),

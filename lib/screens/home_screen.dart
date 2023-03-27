@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './daily_report_screen.dart';
 import './monthly_report_screen.dart';
@@ -77,11 +78,11 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
               ),
               GButton(
                 icon: Icons.find_in_page,
-                text: 'Daily Report',
+                text: AppLocalizations.of(context)!.daily_report,
               ),
               GButton(
                 icon: Icons.calendar_month,
-                text: 'Monthly Report',
+                text: AppLocalizations.of(context)!.monthly_report,
               ),
             ],
           ),

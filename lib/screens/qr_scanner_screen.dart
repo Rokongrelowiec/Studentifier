@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './added_data_screen.dart';
 import '../widgets/app_bar_widget.dart';
@@ -46,7 +47,7 @@ class GenerateQRScannerScreen extends StatefulWidget {
 
 class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
   final qrKey = GlobalKey(debugLabel: 'QR');
-  String printedResult = 'Scan a code!';
+  var printedResult;
 
   Barcode? barcode;
   QRViewController? controller;
@@ -59,13 +60,14 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    printedResult = AppLocalizations.of(context)!.scan_code;
     if (controller != null && mounted) {
       controller!.pauseCamera();
       controller!.resumeCamera();
     }
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'QR Scanner',
+        title: AppLocalizations.of(context)!.qr_scanner,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
       ),
@@ -106,7 +108,7 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
             mapData.containsKey('nazwisko') &&
             mapData.containsKey('numer_indeksu') &&
             mapData.containsKey('isPrivileged')) {
-          printedResult = 'Done!';
+          printedResult = AppLocalizations.of(context)!.done;
           if (mapData['isPrivileged']) {
             sendLecturerData(mapData['isPrivileged'], widget.licensePlate);
           } else {

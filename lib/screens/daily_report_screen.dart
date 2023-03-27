@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './student_details_screen.dart';
 import '../models/admin_provider.dart';
@@ -154,7 +155,7 @@ class _DailyReportState extends State<DailyReport> {
           if (snapshot.hasError) {
             return Center(
               child: Text(
-                'Sorry\nCould not fetch the data',
+                AppLocalizations.of(context)!.fetch_failed,
                 style: TextStyle(
                     color: Theme.of(context).textTheme.headline1?.color,
                     fontSize: sizeHeight * 4,
@@ -172,7 +173,7 @@ class _DailyReportState extends State<DailyReport> {
                     height: sizeHeight * 1.15,
                   ),
                   Text(
-                    "Daily Report",
+                    AppLocalizations.of(context)!.daily_report,
                     style: TextStyle(
                       fontSize: sizeHeight * 5,
                       fontWeight: FontWeight.bold,
@@ -183,7 +184,8 @@ class _DailyReportState extends State<DailyReport> {
                     height: 2,
                   ),
                   Text(
-                    'License Plates',
+                    // 'License Plates',
+                    AppLocalizations.of(context)!.license_plates,
                     style: TextStyle(
                       fontSize: sizeHeight * 3,
                       color: Theme.of(context).textTheme.headline1?.color,
@@ -193,7 +195,7 @@ class _DailyReportState extends State<DailyReport> {
                     height: 5,
                   ),
                   Text(
-                    'Found: ${licenseAndHourList.length} elements!',
+                    '${AppLocalizations.of(context)!.found}: ${licenseAndHourList.length} ${AppLocalizations.of(context)!.elements}!',
                     style: TextStyle(
                         color: Theme.of(context).textTheme.headline1?.color,
                         fontSize: sizeHeight * 2),
@@ -245,7 +247,7 @@ class _DailyReportState extends State<DailyReport> {
                           title: Row(
                             children: [
                               Text(
-                                'Index: ',
+                                '${AppLocalizations.of(context)!.index}: ',
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
@@ -269,7 +271,7 @@ class _DailyReportState extends State<DailyReport> {
                           subtitle: Row(
                             children: [
                               Text(
-                                'Name: ',
+                                '${AppLocalizations.of(context)!.scan_name}: ',
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -100,7 +101,7 @@ class StudentEditGenerate extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'Edit student',
+        title: AppLocalizations.of(context)!.edit_student,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
         backIcon: Icons.cancel,
@@ -180,7 +181,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: "First name",
+                        labelText: AppLocalizations.of(context)!.first_name,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -202,7 +203,7 @@ class StudentEditGenerate extends StatelessWidget {
                       ],
                       validator: (value) {
                         if (value != null && value.length < 1) {
-                          return 'Too short value';
+                          return AppLocalizations.of(context)!.too_short_val;
                         }
                         return null;
                       },
@@ -223,7 +224,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: "Last name",
+                        labelText: AppLocalizations.of(context)!.last_name,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -245,7 +246,7 @@ class StudentEditGenerate extends StatelessWidget {
                       ],
                       validator: (value) {
                         if (value != null && value.length < 2) {
-                          return 'Too short value';
+                          return AppLocalizations.of(context)!.too_short_val;
                         }
                         return null;
                       },
@@ -268,7 +269,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: "Student ID",
+                        labelText: AppLocalizations.of(context)!.index,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -290,7 +291,7 @@ class StudentEditGenerate extends StatelessWidget {
                       ],
                       validator: (value) {
                         if (value != null && value.length < 1) {
-                          return 'Too short value';
+                          return AppLocalizations.of(context)!.too_short_val;
                         }
                         return null;
                       },
@@ -312,7 +313,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: "License plate",
+                        labelText: AppLocalizations.of(context)!.license_plate4,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -335,10 +336,10 @@ class StudentEditGenerate extends StatelessWidget {
                       ],
                       validator: (value) {
                         if (value != null && value.length < 4) {
-                          return 'Too short value';
+                          return AppLocalizations.of(context)!.too_short_val;
                         }
                         if (value != null && value.length > 9) {
-                          return 'Too long value';
+                          return AppLocalizations.of(context)!.too_long_val;
                         }
                         return null;
                       },
@@ -361,7 +362,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: "Number of visits",
+                        labelText: AppLocalizations.of(context)!.num_of_visits,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -383,7 +384,7 @@ class StudentEditGenerate extends StatelessWidget {
                       ],
                       validator: (value) {
                         if (value != null && value.length < 1) {
-                          return 'Too short value';
+                          return AppLocalizations.of(context)!.too_short_val;
                         }
                         return null;
                       },
@@ -404,7 +405,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: "Validity of ID",
+                        labelText: AppLocalizations.of(context)!.student_id_val2,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -428,7 +429,7 @@ class StudentEditGenerate extends StatelessWidget {
                       validator: (value) {
                         // TODO: better validation
                         if (value == null || value.length != 10) {
-                          return 'Please type date using DD-MM-YYYY format';
+                          return AppLocalizations.of(context)!.enter_dd_mm_yyyy;
                         }
                         return null;
                       },
