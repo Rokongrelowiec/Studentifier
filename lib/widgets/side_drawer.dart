@@ -63,7 +63,7 @@ class _SideDrawerState extends State<SideDrawer> {
           actions: [
             CupertinoActionSheetAction(
               child: Text(
-                'Gallery',
+                AppLocalizations.of(context)!.gallery,
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.height * 0.025,
                 ),
@@ -75,7 +75,7 @@ class _SideDrawerState extends State<SideDrawer> {
             ),
             CupertinoActionSheetAction(
               child: Text(
-                'Camera',
+                AppLocalizations.of(context)!.camera,
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.height * 0.025,
                 ),
@@ -89,7 +89,7 @@ class _SideDrawerState extends State<SideDrawer> {
           cancelButton: CupertinoActionSheetAction(
             isDestructiveAction: true,
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.cancel,
               style: TextStyle(
                 fontSize: MediaQuery.of(context).size.height * 0.025,
                 fontWeight: FontWeight.bold,
@@ -113,7 +113,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 size: MediaQuery.of(context).size.height * 0.04,
               ),
               title: Text(
-                'Gallery',
+                AppLocalizations.of(context)!.gallery,
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.height * 0.02,
                 ),
@@ -129,7 +129,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 size: MediaQuery.of(context).size.height * 0.04,
               ),
               title: Text(
-                'Camera',
+                AppLocalizations.of(context)!.camera,
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.height * 0.02,
                 ),
@@ -147,7 +147,7 @@ class _SideDrawerState extends State<SideDrawer> {
                 color: Color.fromRGBO(255, 55, 55, 1),
               ),
               title: Text(
-                'Cancel',
+                AppLocalizations.of(context)!.cancel,
                 style: TextStyle(
                     color: Color.fromRGBO(255, 55, 55, 1),
                     fontSize: MediaQuery.of(context).size.height * 0.02,
@@ -237,7 +237,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         SizedBox(
                           height: sizeHeight * 1.6,
                         ),
-                        Text('Hi',
+                        Text(AppLocalizations.of(context)!.hi,
                             style: TextStyle(
                                 fontSize: sizeHeight * 3,
                                 color: Theme.of(context)
@@ -248,8 +248,8 @@ class _SideDrawerState extends State<SideDrawer> {
                           height: sizeHeight * 2,
                         ),
                         Container(
-                          width: sizeHeight * 11,
-                          child: Text(isAdmin ? 'admin!' : 'there!',
+                          width: sizeHeight * 12,
+                          child: Text(isAdmin ? "admin!" : '${AppLocalizations.of(context)!.guest}!',
                               style: TextStyle(
                                   fontSize: sizeHeight * 3,
                                   color: Theme.of(context)
@@ -275,7 +275,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                       .drawerTheme
                                       .backgroundColor,
                                   title: Text(
-                                    'Sing out',
+                                    AppLocalizations.of(context)!.sing_out,
                                     style: TextStyle(
                                         color: Theme.of(context)
                                             .textTheme
@@ -284,7 +284,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                         fontSize: sizeHeight * 3.5),
                                   ),
                                   content: Text(
-                                    'Are you sure you want to sign out?',
+                                    AppLocalizations.of(context)!.sing_out_msg,
                                     style: TextStyle(
                                         color: Theme.of(context)
                                             .textTheme
@@ -297,7 +297,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                       onPressed: () =>
                                           Navigator.of(context).pop(),
                                       child: Text(
-                                        'Cancel',
+                                        AppLocalizations.of(context)!.cancel,
                                         style: TextStyle(
                                             fontSize: sizeHeight * 2.5),
                                       ),
@@ -337,7 +337,7 @@ class _SideDrawerState extends State<SideDrawer> {
               children: [
                 ListTile(
                   title: Text(
-                    'Select mode',
+                    AppLocalizations.of(context)!.mode,
                     style: TextStyle(
                         color: Theme.of(context).textTheme.headline1?.color,
                         fontSize: sizeHeight * 2),
@@ -365,7 +365,7 @@ class _SideDrawerState extends State<SideDrawer> {
                       items: [
                         DropdownMenuItem(
                           child: Text(
-                            'Light',
+                            AppLocalizations.of(context)!.light,
                             style: TextStyle(
                               fontSize: sizeHeight * 2,
                             ),
@@ -374,7 +374,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         ),
                         DropdownMenuItem(
                           child: Text(
-                            'Dark',
+                            AppLocalizations.of(context)!.dark,
                             style: TextStyle(
                               fontSize: sizeHeight * 2,
                             ),
@@ -383,7 +383,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         ),
                         DropdownMenuItem(
                           child: Text(
-                            'System',
+                            AppLocalizations.of(context)!.system,
                             style: TextStyle(
                               fontSize: sizeHeight * 2,
                             ),
@@ -410,8 +410,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                   trailing: Consumer<LocaleProvider>(
                       builder: (context, provider, child) {
-                    var lang =
-                        provider.locale ?? Localizations.localeOf(context);
+                    var lang = provider.currentLang;
                     return DropdownButton(
                       dropdownColor:
                           Theme.of(context).drawerTheme.backgroundColor,
@@ -426,12 +425,12 @@ class _SideDrawerState extends State<SideDrawer> {
                         height: 1,
                         color: Colors.orangeAccent,
                       ),
-                      onChanged: (Locale? val) {
-                        provider.setLocale(val!);
+                      onChanged: (String? val) {
+                        provider.changeLang(val ?? 'en');
                       },
                       items: L10n.all
                           .map((e) => DropdownMenuItem(
-                                value: e,
+                                value: e.toString(),
                                 child: _title(e.languageCode),
                               ))
                           .toList(),
@@ -462,33 +461,6 @@ class _SideDrawerState extends State<SideDrawer> {
                     Navigator.of(context).pushNamed(ChartScreen.routeName);
                   },
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: sizeHeight),
-                //   child: Divider(
-                //     thickness: sizeHeight * 0.1,
-                //     color: Colors.black,
-                //   ),
-                // ),
-                // ListTile(
-                //   trailing: Icon(
-                //     Icons.language,
-                //     size: sizeHeight * 3.5,
-                //     color: Theme.of(context).iconTheme.color,
-                //   ),
-                //   title: Text(
-                //     AppLocalizations.of(context)!.language,
-                //     style: TextStyle(
-                //       color: Theme.of(context).textTheme.headline1?.color,
-                //       fontSize: sizeHeight * 2,
-                //     ),
-                //   ),
-                //   onTap: () {
-                //     // if (AppLocalizations.of(context)!.language == 'English') {
-                //     // }
-                //     // Navigator.of(context).pushNamed(ChartScreen.routeName);
-                //
-                //   },
-                // ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Divider(
@@ -503,7 +475,7 @@ class _SideDrawerState extends State<SideDrawer> {
                     size: sizeHeight * 3.5,
                   ),
                   title: Text(
-                    'About the app',
+                    AppLocalizations.of(context)!.about_the_app,
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                       fontSize: sizeHeight * 2,
@@ -527,7 +499,7 @@ class _SideDrawerState extends State<SideDrawer> {
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
-                    isAdmin ? 'Registered license plates' : 'Setting',
+                    isAdmin ? AppLocalizations.of(context)!.registered_license_plates : AppLocalizations.of(context)!.settings,
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                       fontSize: sizeHeight * 2,
@@ -556,7 +528,7 @@ class _SideDrawerState extends State<SideDrawer> {
                           color: Theme.of(context).iconTheme.color,
                         ),
                         title: Text(
-                          'Source code',
+                          AppLocalizations.of(context)!.source_code,
                           style: TextStyle(
                             color: Theme.of(context).textTheme.headline1?.color,
                             fontSize: sizeHeight * 2,

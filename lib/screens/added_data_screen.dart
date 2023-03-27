@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './home_screen.dart';
 import '../widgets/app_bar_widget.dart';
@@ -101,7 +102,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
       children: [
         Scaffold(
           appBar: AppBarWidget(
-            title: 'Summary',
+            title: AppLocalizations.of(context)!.summary,
             appBar: AppBar(),
             backFunction: () => Navigator.of(context).pushNamedAndRemoveUntil(
                 HomeScreen.routeName, (route) => false),
@@ -114,14 +115,14 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
-                      'The gate has been opened!',
+                      AppLocalizations.of(context)!.open_gate,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
                           fontSize: sizeHeight * 4),
                     ),
                     Text(
-                      'Thank you for scan!',
+                      AppLocalizations.of(context)!.scan_succeeded,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -131,7 +132,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: sizeHeight),
                       child: Text(
-                        'Your data: ${widget.name} ${widget.surname} ${widget.studentId},\n'
+                        '${AppLocalizations.of(context)!.your_data}: ${widget.name} ${widget.surname} ${widget.studentId},\n'
                         '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
                         style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
@@ -153,7 +154,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                       iconSize: sizeHeight * 25,
                     ),
                     Text(
-                      'Click the icon above to return to the home screen',
+                      AppLocalizations.of(context)!.summary_icon,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,

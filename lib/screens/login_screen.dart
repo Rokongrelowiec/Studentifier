@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:studentifier/screens/contact_admin_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './home_screen.dart';
 import '../models/admin_provider.dart';
@@ -93,7 +94,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       Padding(
                         padding: Platform.isIOS
                             ? EdgeInsets.only(
-                                top: sizeHeight * 5, left: sizeHeight)
+                                top: sizeHeight * 6, left: sizeHeight * 2)
                             : EdgeInsets.only(
                                 top: sizeHeight, left: sizeHeight),
                         child: IconButton(
@@ -121,7 +122,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       Padding(
                         padding: EdgeInsets.only(left: sizeHeight * 5),
                         child: Text(
-                          "Login",
+                          AppLocalizations.of(context)!.login,
                           style: TextStyle(
                               fontSize: sizeHeight * 4,
                               color: Colors.white,
@@ -150,7 +151,8 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                       size: sizeHeight * 4,
                                     ),
                                   ),
-                                  labelText: "E-mail Address",
+                                  labelText:
+                                      AppLocalizations.of(context)!.email,
                                   labelStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
@@ -177,16 +179,19 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                               },
                               validator: (String? val) {
                                 if (invalidRequest) {
-                                  return "Invalid email or password";
+                                  return AppLocalizations.of(context)!
+                                      .invalid_email_pass;
                                 }
                                 if (val == null || val.length == 0) {
-                                  return "Please enter email";
+                                  return AppLocalizations.of(context)!
+                                      .enter_email;
                                 } else if (!val.contains('@') ||
                                     !val.contains('.') ||
                                     val.length < 6 ||
                                     val.startsWith('@') ||
                                     val.startsWith('.')) {
-                                  return "Please enter valid email";
+                                  return AppLocalizations.of(context)!
+                                      .enter_valid_email;
                                 }
                                 return null;
                               },
@@ -236,7 +241,8 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                     size: sizeHeight * 4,
                                   ),
                                 ),
-                                labelText: "Password",
+                                labelText:
+                                    AppLocalizations.of(context)!.password,
                                 labelStyle: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
@@ -263,12 +269,14 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             },
                             validator: (String? val) {
                               if (invalidRequest) {
-                                return "Invalid email or password";
+                                return AppLocalizations.of(context)!
+                                    .invalid_email_pass;
                               }
                               if (val?.length == 0) {
-                                return "Please enter password";
+                                return AppLocalizations.of(context)!.enter_pass;
                               } else if (val != null && val.length < 6) {
-                                return "Enter min. 6 characters";
+                                return AppLocalizations.of(context)!
+                                    .enter_pass_min6;
                               }
                               return null;
                             },
@@ -288,7 +296,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 //TODO Forgot Password
                               },
                               child: Text(
-                                "forgot password?".toUpperCase(),
+                                AppLocalizations.of(context)!.forgot_pass,
                                 style: TextStyle(
                                     fontSize: sizeHeight * 2,
                                     color: Color(0xFFDD9746),
@@ -303,7 +311,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                           padding: EdgeInsets.only(top: sizeHeight * 4),
                           child: Container(
                             height: sizeHeight * 6,
-                            width: sizeHeight * 17,
+                            width: sizeHeight * 19,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
@@ -345,7 +353,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 }
                               },
                               child: Text(
-                                'Login',
+                                AppLocalizations.of(context)!.login_btn,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -360,7 +368,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       ),
                       Center(
                         child: Text(
-                          "Don't have an account?",
+                          AppLocalizations.of(context)!.not_have_account,
                           style: TextStyle(
                               fontSize: sizeHeight * 3,
                               color: Colors.grey[400],
@@ -377,11 +385,13 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 .pushNamed(ContactAdminScreen.routeName);
                           },
                           child: Text(
-                            "Contact the Administrator",
+                            AppLocalizations.of(context)!.admin_contact,
                             style: TextStyle(
-                                fontSize: sizeHeight * 3,
-                                color: Color(0xFFDD9246),
-                                fontWeight: FontWeight.w700),
+                              fontSize: sizeHeight * 3,
+                              color: Color(0xFFDD9246),
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ),

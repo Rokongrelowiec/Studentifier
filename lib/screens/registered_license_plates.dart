@@ -4,7 +4,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
+import '../models/language_provider.dart';
 import '../widgets/app_bar_widget.dart';
 
 class RegisteredLicensePlates extends StatelessWidget {
@@ -66,10 +69,13 @@ class _GenerateRegisteredLicensePlatesState
 
   @override
   Widget build(BuildContext context) {
+    var addLicense = Provider.of<LocaleProvider>(context).currentLang == 'en'
+        ? '${AppLocalizations.of(context)!.add} ${AppLocalizations.of(context)!.lecturer2} ${AppLocalizations.of(context)!.license_plate2}'
+        : '${AppLocalizations.of(context)!.add} ${AppLocalizations.of(context)!.license_plate2} ${AppLocalizations.of(context)!.lecturer2}';
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'Registered license plates',
+        title: AppLocalizations.of(context)!.registered_license_plates,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
         actionsList: [
@@ -85,7 +91,7 @@ class _GenerateRegisteredLicensePlatesState
                     backgroundColor:
                         Theme.of(context).drawerTheme.backgroundColor,
                     title: Text(
-                      'Add lecturer license plate',
+                      addLicense,
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
                           fontSize: sizeHeight * 2.5),
@@ -106,7 +112,8 @@ class _GenerateRegisteredLicensePlatesState
                               color: Theme.of(context).iconTheme.color,
                               size: sizeHeight * 4,
                             ),
-                            labelText: 'License plate',
+                            labelText:
+                                AppLocalizations.of(context)!.license_plate,
                             labelStyle: TextStyle(
                               fontSize: sizeHeight * 3,
                             ),
@@ -116,10 +123,10 @@ class _GenerateRegisteredLicensePlatesState
                             border: OutlineInputBorder()),
                         validator: (value) {
                           if (value != null && value.length < 4) {
-                            return 'Too short value';
+                            return AppLocalizations.of(context)!.too_short_val;
                           }
                           if (value != null && value.length > 8)
-                            return 'Too long value';
+                            return AppLocalizations.of(context)!.too_long_val;
                           return null;
                         },
                         inputFormatters: [
@@ -134,7 +141,7 @@ class _GenerateRegisteredLicensePlatesState
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          'Cancel',
+                          AppLocalizations.of(context)!.cancel,
                           style: TextStyle(
                             fontSize: sizeHeight * 2,
                           ),
@@ -196,7 +203,7 @@ class _GenerateRegisteredLicensePlatesState
             if (snapshot.hasError) {
               return Center(
                 child: Text(
-                  'Sorry\nCould not fetch the data',
+                  AppLocalizations.of(context)!.fetch_failed,
                   style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                       fontSize: sizeHeight * 4,
@@ -214,7 +221,7 @@ class _GenerateRegisteredLicensePlatesState
                       height: sizeHeight * 2,
                     ),
                     Text(
-                      'Lecturers license plates',
+                      '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
                       style: TextStyle(
                         fontSize: sizeHeight * 5,
                         fontWeight: FontWeight.bold,
@@ -226,7 +233,7 @@ class _GenerateRegisteredLicensePlatesState
                       height: sizeHeight * 1.15,
                     ),
                     Text(
-                      'Found: ${lecturersLicencePlates.length} elements!',
+                      '${AppLocalizations.of(context)!.found}: ${lecturersLicencePlates.length} ${AppLocalizations.of(context)!.elements}!',
                       style: TextStyle(
                           color: Theme.of(context).textTheme.headline1?.color,
                           fontSize: sizeHeight * 3),
@@ -258,7 +265,7 @@ class _GenerateRegisteredLicensePlatesState
                               final snackBar = SnackBar(
                                 backgroundColor: Theme.of(context).primaryColor,
                                 content: Text(
-                                  'Removed licence plate: ${lecturersLicencePlates[index]['rejestracja']}',
+                                  '${AppLocalizations.of(context)!.removed} ${AppLocalizations.of(context)!.license_plate}: ${lecturersLicencePlates[index]['rejestracja']}',
                                   style: TextStyle(
                                     fontSize: sizeHeight * 2,
                                   ),

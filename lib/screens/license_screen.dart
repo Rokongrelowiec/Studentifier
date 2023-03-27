@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './added_data_screen.dart';
 import './home_screen.dart';
@@ -99,7 +100,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
 
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'License Plate',
+        title: AppLocalizations.of(context)!.license_plate3,
         appBar: AppBar(),
         backFunction: () =>
             Navigator.of(context).pushReplacementNamed(HomeScreen.routeName),
@@ -116,7 +117,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                       backgroundColor:
                           Theme.of(context).drawerTheme.backgroundColor,
                       title: Text(
-                        'Edit scanned license plate:',
+                        '${AppLocalizations.of(context)!.edit} ${AppLocalizations.of(context)!.scanned} ${AppLocalizations.of(context)!.license_plate2}',
                         style: TextStyle(
                             color: Theme.of(context).textTheme.headline1?.color,
                             fontSize: sizeHeight * 2.5),
@@ -137,7 +138,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                 color: Theme.of(context).iconTheme.color,
                                 size: sizeHeight * 5,
                               ),
-                              labelText: 'License plate',
+                              labelText: AppLocalizations.of(context)!.license_plate3.toLowerCase(),
                               labelStyle: TextStyle(
                                 fontSize: sizeHeight * 3,
                               ),
@@ -147,10 +148,10 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                               border: OutlineInputBorder()),
                           validator: (value) {
                             if (value != null && value.length < 4) {
-                              return 'Too short value';
+                              return AppLocalizations.of(context)!.too_long_val;
                             }
                             if (value != null && value.length > 8)
-                              return 'Too long value';
+                              return AppLocalizations.of(context)!.too_long_val;
                             return null;
                           },
                           inputFormatters: [
@@ -166,7 +167,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                             Navigator.of(context).pop();
                           },
                           child: Text(
-                            'Cancel',
+                            AppLocalizations.of(context)!.cancel,
                             style: TextStyle(
                               fontSize: sizeHeight * 2,
                             ),
@@ -219,7 +220,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
               height: sizeHeight * 0.5,
             ),
             Text(
-              'Found license plate:',
+              '${AppLocalizations.of(context)!.found} ${AppLocalizations.of(context)!.license_plate2}:',
               style: TextStyle(
                 fontSize: sizeHeight * 3,
                 color: Theme.of(context).textTheme.headline1?.color,
@@ -241,9 +242,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
               child: Text(
-                'Click Accept Button to verify existence of your license plate in the database.\n'
-                'If you are registered - the gate will be open.\n'
-                'If you are not registered - you will be ask to scan the QR code.\n',
+                AppLocalizations.of(context)!.text_below_license_plate,
                 style: TextStyle(
                   fontSize: sizeHeight * 2.5,
                   color: Theme.of(context).textTheme.headline1?.color,
@@ -277,14 +276,14 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                         contentPadding: EdgeInsets.all(sizeHeight * 2),
                         buttonPadding: EdgeInsets.all(sizeHeight),
                         title: Text(
-                          'License plate does not exist in database',
+                          '${AppLocalizations.of(context)!.license_plate4} ${AppLocalizations.of(context)!.not_exist_in_db}',
                           style: TextStyle(
                               color:
                                   Theme.of(context).textTheme.headline1?.color,
                               fontSize: sizeHeight * 3),
                         ),
                         content: Text(
-                          'What do you want to do?',
+                          AppLocalizations.of(context)!.what_wanna_do,
                           style: TextStyle(
                             color: Theme.of(context).textTheme.headline1?.color,
                             fontSize: sizeHeight * 3,
@@ -304,7 +303,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Call to the caretaker',
+                                  AppLocalizations.of(context)!.call_caretaker,
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
@@ -336,7 +335,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Scan the QR code',
+                                  AppLocalizations.of(context)!.scan_qr,
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
@@ -425,7 +424,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                   }
                 },
                 child: Text(
-                  'Accept',
+                  AppLocalizations.of(context)!.accept,
                   style: TextStyle(fontSize: sizeHeight * 2.5),
                 ),
               ),
@@ -437,7 +436,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                   await FlutterPhoneDirectCaller.callNumber('+48730724858');
                 },
                 child: Text(
-                  'Call to the caretaker',
+                  AppLocalizations.of(context)!.call_caretaker,
                   style: TextStyle(
                     fontSize: sizeHeight * 2.5,
                   ),

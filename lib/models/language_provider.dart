@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
-
-import '../l10n/l10n.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocaleProvider with ChangeNotifier {
-  Locale? _locale;
-  Locale? get locale => _locale;
+  String currentLang = 'en';
 
-  void setLocale(Locale locale) {
-    if (!L10n.all.contains(locale)) return;
+  Locale? get locale {
+    if (currentLang == 'en') {
+      return Locale('en');
+    } else if (currentLang == 'pl') {
+      return Locale('pl');
+    } else {
+      return Locale('en');
+    }
+  }
 
-    _locale = locale;
+  changeLang(String locale) async {
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    await _prefs.setString('language', locale);
+    currentLang = locale;
+    notifyListeners();
+  }
+
+  initialize() async {
+    final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    currentLang = _prefs.getString('language') ?? 'en';
     notifyListeners();
   }
 }

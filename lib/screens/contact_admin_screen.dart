@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -66,7 +67,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return Scaffold(
       appBar: AppBarWidget(
-        title: 'Send Email',
+        title: AppLocalizations.of(context)!.send_email,
         appBar: AppBar(),
         backFunction: () => Navigator.of(context).pop(),
       ),
@@ -153,7 +154,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                                 color: Theme.of(context).primaryColor,
                                 size: sizeHeight * 4,
                               ),
-                              labelText: 'Name',
+                              labelText: AppLocalizations.of(context)!.sender_name,
                               labelStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
@@ -177,7 +178,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                           ],
                           validator: (String? val) {
                             if (val?.length == 0) {
-                              return "Please enter name";
+                              return AppLocalizations.of(context)!.enter_name;
                             }
                             return null;
                           },
@@ -199,7 +200,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                                 color: Theme.of(context).primaryColor,
                                 size: sizeHeight * 4,
                               ),
-                              labelText: 'E-mail Address',
+                              labelText: AppLocalizations.of(context)!.email,
                               labelStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
@@ -218,13 +219,13 @@ class GenerateContactAdminScreen extends StatelessWidget {
                               errorStyle: TextStyle(fontSize: sizeHeight * 2)),
                           validator: (String? val) {
                             if (val == null || val.length == 0) {
-                              return "Please enter email";
+                              return AppLocalizations.of(context)!.enter_email;
                             } else if (!val.contains('@') ||
                                 !val.contains('.') ||
                                 val.length < 6 ||
                                 val.startsWith('@') ||
                                 val.startsWith('.')) {
-                              return "Please enter valid email";
+                              return AppLocalizations.of(context)!.enter_valid_email;
                             }
                             return null;
                           },
@@ -250,7 +251,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                                 color: Theme.of(context).primaryColor,
                                 size: sizeHeight * 4,
                               ),
-                              labelText: 'Subject',
+                              labelText: AppLocalizations.of(context)!.subject,
                               labelStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
@@ -269,7 +270,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                               errorStyle: TextStyle(fontSize: sizeHeight * 2)),
                           validator: (String? val) {
                             if (val?.length == 0) {
-                              return "Please enter subject";
+                              return AppLocalizations.of(context)!.enter_subject;
                             }
                             return null;
                           },
@@ -292,7 +293,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                                 color: Theme.of(context).primaryColor,
                                 size: sizeHeight * 4,
                               ),
-                              labelText: 'Message',
+                              labelText: AppLocalizations.of(context)!.message,
                               labelStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
@@ -311,7 +312,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                               errorStyle: TextStyle(fontSize: sizeHeight * 2)),
                           validator: (String? val) {
                             if (val?.length == 0) {
-                              return "Please enter message";
+                              return AppLocalizations.of(context)!.enter_message;
                             }
                             return null;
                           },
@@ -335,7 +336,6 @@ class GenerateContactAdminScreen extends StatelessWidget {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                  titlePadding: EdgeInsets.all(20),
                                   backgroundColor: Theme.of(context)
                                       .drawerTheme
                                       .backgroundColor,
@@ -348,7 +348,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(60))),
                                   title: Text(
-                                    'Send successfully',
+                                    AppLocalizations.of(context)!.sent_successfully,
                                     style: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
@@ -368,7 +368,7 @@ class GenerateContactAdminScreen extends StatelessWidget {
                           }
                         },
                         child: Text(
-                          'Send',
+                          AppLocalizations.of(context)!.send,
                           style: TextStyle(
                             fontSize: sizeHeight * 3,
                           ),
