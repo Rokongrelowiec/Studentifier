@@ -95,5 +95,7 @@
     "sent_successfully": "Wysłano pomyślnie!",
     "enter_message": "Wprowadź wiadomość",
     "enter_subject": "Wprowadź temat",
-    "enter_name": "Wprowadź nazwę"
+    "enter_name": "Wprowadź nazwę",
+    "camera_permission_req": "Wymagane pozwolenie na kamerę",
+    "request_camera": "Zezwolenie na kamerę"
 }

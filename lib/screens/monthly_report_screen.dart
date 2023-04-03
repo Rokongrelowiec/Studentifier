@@ -106,162 +106,169 @@ class _MonthlyReportState extends State<MonthlyReport> {
               ),
             );
           } else {
-            return SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: sizeHeight * 1.15,
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.monthly_report,
-                    style: TextStyle(
-                      fontSize: sizeHeight * 4,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.headline1?.color,
+            return RefreshIndicator(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              onRefresh: getData,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: sizeHeight * 1.15,
                     ),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.license_plates,
-                    style: TextStyle(
-                      fontSize: sizeHeight * 3,
-                      color: Theme.of(context).textTheme.headline1?.color,
+                    Text(
+                      AppLocalizations.of(context)!.monthly_report,
+                      style: TextStyle(
+                        fontSize: sizeHeight * 5,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.headline1?.color,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '${AppLocalizations.of(context)!.found}: ${licencePlatesList.length} ${AppLocalizations.of(context)!.elements}!',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
-                      fontSize: sizeHeight * 2,
+                    SizedBox(
+                      height: 2,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: licencePlatesList.length,
-                    itemBuilder: (ctx, index) => Card(
-                      color: Theme.of(context).drawerTheme.backgroundColor,
-                      child: ListTile(
-                        key: UniqueKey(),
-                        onTap: () async {
-                          await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => StudentDetails(
-                                studentId: studentIdList[index],
-                                licensePlate: licencePlatesList[index],
-                                firstName:
-                                    nameSurnameList[index].keys.elementAt(0),
-                                lastName:
-                                    nameSurnameList[index].values.elementAt(0),
-                                numberOfVisits: countList[index],
-                                validityOfStudentId:
-                                    studentIdValidityList[index],
+                    Text(
+                      AppLocalizations.of(context)!.license_plates,
+                      style: TextStyle(
+                        fontSize: sizeHeight * 3,
+                        color: Theme.of(context).textTheme.headline1?.color,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      '${AppLocalizations.of(context)!.found}: ${licencePlatesList.length} ${AppLocalizations.of(context)!.elements}!',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline1?.color,
+                        fontSize: sizeHeight * 2,
+                      ),
+                    ),
+                    SizedBox(
+                      height: sizeHeight * 4,
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: licencePlatesList.length,
+                      itemBuilder: (ctx, index) => Card(
+                        color: Theme.of(context).drawerTheme.backgroundColor,
+                        child: ListTile(
+                          key: UniqueKey(),
+                          onTap: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => StudentDetails(
+                                  studentId: studentIdList[index],
+                                  licensePlate: licencePlatesList[index],
+                                  firstName:
+                                      nameSurnameList[index].keys.elementAt(0),
+                                  lastName: nameSurnameList[index]
+                                      .values
+                                      .elementAt(0),
+                                  numberOfVisits: countList[index],
+                                  validityOfStudentId:
+                                      studentIdValidityList[index],
+                                ),
                               ),
-                            ),
-                          );
-                          setState(() {});
-                        },
-                        leading: Text(
-                          countList[index].toString(),
-                          style: TextStyle(
-                              fontSize: sizeHeight * 3,
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color),
-                        ),
-                        title: Row(
-                          children: [
-                            Text(
-                              '${AppLocalizations.of(context)!.index}: ',
-                              style: TextStyle(
+                            );
+                            setState(() {});
+                          },
+                          leading: Text(
+                            countList[index].toString(),
+                            style: TextStyle(
+                                fontSize: sizeHeight * 3,
                                 color: Theme.of(context)
                                     .textTheme
                                     .headline1
-                                    ?.color,
-                                fontSize: sizeHeight * 2,
-                              ),
-                            ),
-                            Text(
-                              studentIdList[index].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: sizeHeight * 2,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color,
-                              ),
-                            ),
-                          ],
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              '${AppLocalizations.of(context)!.scan_name}: ' ,
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color,
-                                fontSize: sizeHeight * 2,
-                              ),
-                            ),
-                            Container(
-                              width: sizeHeight * 19,
-                              child: Text(
-                                '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
+                                    ?.color),
+                          ),
+                          title: Row(
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context)!.index}: ',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
                                   color: Theme.of(context)
                                       .textTheme
                                       .headline1
                                       ?.color,
                                   fontSize: sizeHeight * 2,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                            ),
-                          ],
+                              Text(
+                                studentIdList[index].toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: sizeHeight * 2,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      ?.color,
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                '${AppLocalizations.of(context)!.scan_name}: ',
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      ?.color,
+                                  fontSize: sizeHeight * 2,
+                                ),
+                              ),
+                              Container(
+                                width: sizeHeight * 19,
+                                child: Text(
+                                  '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .headline1
+                                        ?.color,
+                                    fontSize: sizeHeight * 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // trailing: isAdmin
+                          //     ? IconButton(
+                          //         onPressed: () {
+                          //           removeItem(index);
+                          //           final snackBar = SnackBar(
+                          //             backgroundColor:
+                          //                 Theme.of(context).primaryColor,
+                          //             content: Text(
+                          //               'Removed item number: ${index + 1}',
+                          //             ),
+                          //             // action: SnackBarAction(
+                          //             //     label: 'Undo',
+                          //             //     textColor: Colors.white,
+                          //             //     onPressed: () => undoOperation()),
+                          //           );
+                          //           ScaffoldMessenger.of(context)
+                          //               .hideCurrentSnackBar();
+                          //           ScaffoldMessenger.of(context)
+                          //               .showSnackBar(snackBar);
+                          //         },
+                          //         icon: Icon(
+                          //           Icons.delete,
+                          //           color: Theme.of(context).iconTheme.color,
+                          //         ),
+                          //       )
+                          //     : null,
                         ),
-                        // trailing: isAdmin
-                        //     ? IconButton(
-                        //         onPressed: () {
-                        //           removeItem(index);
-                        //           final snackBar = SnackBar(
-                        //             backgroundColor:
-                        //                 Theme.of(context).primaryColor,
-                        //             content: Text(
-                        //               'Removed item number: ${index + 1}',
-                        //             ),
-                        //             // action: SnackBarAction(
-                        //             //     label: 'Undo',
-                        //             //     textColor: Colors.white,
-                        //             //     onPressed: () => undoOperation()),
-                        //           );
-                        //           ScaffoldMessenger.of(context)
-                        //               .hideCurrentSnackBar();
-                        //           ScaffoldMessenger.of(context)
-                        //               .showSnackBar(snackBar);
-                        //         },
-                        //         icon: Icon(
-                        //           Icons.delete,
-                        //           color: Theme.of(context).iconTheme.color,
-                        //         ),
-                        //       )
-                        //     : null,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }

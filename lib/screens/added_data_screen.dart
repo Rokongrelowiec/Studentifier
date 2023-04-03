@@ -1,4 +1,4 @@
-import 'dart:async';
+// import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -10,12 +10,12 @@ import './home_screen.dart';
 import '../widgets/app_bar_widget.dart';
 
 class AddedDataScreen extends StatelessWidget {
-  String? name;
-  String? surname;
-  int? studentId;
-  String licensePlate;
-  String scanTime;
-  bool isPrivileged;
+  final String? name;
+  final String? surname;
+  final int? studentId;
+  final String licensePlate;
+  final String scanTime;
+  final bool isPrivileged;
 
   AddedDataScreen({
     Key? key,
@@ -50,12 +50,12 @@ class AddedDataScreen extends StatelessWidget {
 }
 
 class GenerateAddedDataScreen extends StatefulWidget {
-  String? name;
-  String? surname;
-  int? studentId;
-  String licensePlate;
-  String scanTime;
-  bool isPrivileged;
+  final String? name;
+  final String? surname;
+  final int? studentId;
+  final String licensePlate;
+  final String scanTime;
+  final bool isPrivileged;
 
   GenerateAddedDataScreen({
     Key? key,
