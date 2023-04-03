@@ -24,7 +24,7 @@ class _DailyReportState extends State<DailyReport> {
   late List studentIdValidityList;
 
   void removeItem(String licencePlate) async {
-    print('Removing $licencePlate');
+    // debugPrint('Removing $licencePlate');
     final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
@@ -40,7 +40,7 @@ class _DailyReportState extends State<DailyReport> {
     var data;
     var decodedResponse = jsonDecode(response.body);
     for (int i = 0; i < decodedResponse.length; i++) {
-      print(decodedResponse[i]['rejestracja']);
+      // debugPrint(decodedResponse[i]['rejestracja'].toString());
       if (decodedResponse[i]['rejestracja'] == licencePlate) {
         data = decodedResponse[i];
         break;
@@ -164,165 +164,168 @@ class _DailyReportState extends State<DailyReport> {
               ),
             );
           } else {
-            return SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: sizeHeight * 1.15,
-                  ),
-                  Text(
-                    AppLocalizations.of(context)!.daily_report,
-                    style: TextStyle(
-                      fontSize: sizeHeight * 5,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.headline1?.color,
+            return RefreshIndicator(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              onRefresh: getData,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: sizeHeight * 1.15,
                     ),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    // 'License Plates',
-                    AppLocalizations.of(context)!.license_plates,
-                    style: TextStyle(
-                      fontSize: sizeHeight * 3,
-                      color: Theme.of(context).textTheme.headline1?.color,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '${AppLocalizations.of(context)!.found}: ${licenseAndHourList.length} ${AppLocalizations.of(context)!.elements}!',
-                    style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.daily_report,
+                      style: TextStyle(
+                        fontSize: sizeHeight * 5,
+                        fontWeight: FontWeight.bold,
                         color: Theme.of(context).textTheme.headline1?.color,
-                        fontSize: sizeHeight * 2),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: licenseAndHourList.length,
-                    itemBuilder: (ctx, index) => Card(
-                      color: Theme.of(context).drawerTheme.backgroundColor,
-                      child: ListTile(
-                          key: ValueKey(licenseAndHourList[index]),
-                          onTap: () async {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => StudentDetails(
-                                  studentId: studentIdList[index],
-                                  licensePlate: licenseAndHourList[index]
-                                      ['rejestracja'],
-                                  firstName:
-                                      nameSurnameList[index].keys.elementAt(0),
-                                  lastName: nameSurnameList[index]
-                                      .values
-                                      .elementAt(0),
-                                  numberOfVisits: countList[index],
-                                  validityOfStudentId:
-                                      studentIdValidityList[index],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.license_plates,
+                      style: TextStyle(
+                        fontSize: sizeHeight * 3,
+                        color: Theme.of(context).textTheme.headline1?.color,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      '${AppLocalizations.of(context)!.found}: ${licenseAndHourList.length} ${AppLocalizations.of(context)!.elements}!',
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 2),
+                    ),
+                    SizedBox(
+                      height: sizeHeight * 4,
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: licenseAndHourList.length,
+                      itemBuilder: (ctx, index) => Card(
+                        color: Theme.of(context).drawerTheme.backgroundColor,
+                        child: ListTile(
+                            key: ValueKey(licenseAndHourList[index]),
+                            onTap: () async {
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => StudentDetails(
+                                    studentId: studentIdList[index],
+                                    licensePlate: licenseAndHourList[index]
+                                        ['rejestracja'],
+                                    firstName:
+                                        nameSurnameList[index].keys.elementAt(0),
+                                    lastName: nameSurnameList[index]
+                                        .values
+                                        .elementAt(0),
+                                    numberOfVisits: countList[index],
+                                    validityOfStudentId:
+                                        studentIdValidityList[index],
+                                  ),
                                 ),
+                              );
+                            },
+                            leading: Text(
+                              licenseAndHourList[index]['godzinaPrzyjazdu']
+                                  .substring(
+                                      0,
+                                      licenseAndHourList[index]
+                                                  ['godzinaPrzyjazdu']
+                                              .length -
+                                          6),
+                              style: TextStyle(
+                                fontSize: sizeHeight * 3,
+                                color:
+                                    Theme.of(context).textTheme.headline1?.color,
                               ),
-                            );
-                          },
-                          leading: Text(
-                            licenseAndHourList[index]['godzinaPrzyjazdu']
-                                .substring(
-                                    0,
-                                    licenseAndHourList[index]
-                                                ['godzinaPrzyjazdu']
-                                            .length -
-                                        6),
-                            style: TextStyle(
-                              fontSize: sizeHeight * 3,
-                              color:
-                                  Theme.of(context).textTheme.headline1?.color,
                             ),
-                          ),
-                          title: Row(
-                            children: [
-                              Text(
-                                '${AppLocalizations.of(context)!.index}: ',
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.color,
-                                  fontSize: sizeHeight * 2,
-                                ),
-                              ),
-                              Text(
-                                studentIdList[index].toString(),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.color,
-                                ),
-                              ),
-                            ],
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Text(
-                                '${AppLocalizations.of(context)!.scan_name}: ',
-                                style: TextStyle(
+                            title: Row(
+                              children: [
+                                Text(
+                                  '${AppLocalizations.of(context)!.index}: ',
+                                  style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color,
-                                    fontSize: sizeHeight * 2),
-                              ),
-                              Container(
-                                width: sizeHeight * 19,
-                                child: Text(
-                                  '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
+                                    fontSize: sizeHeight * 2,
+                                  ),
+                                ),
+                                Text(
+                                  studentIdList[index].toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
                                         ?.color,
-                                    fontSize: sizeHeight * 2,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          trailing: isAdmin
-                              ? IconButton(
-                                  onPressed: () {
-                                    removeItem(licenseAndHourList[index]
-                                        ['rejestracja']);
-                                    final snackBar = SnackBar(
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                      content: Text(
-                                        'Removed index: ${studentIdList[index]}; '
-                                        'Hour: ${(licenseAndHourList[index]['godzinaPrzyjazdu']).toString().substring(0, 5)}',
-                                        style:
-                                            TextStyle(fontSize: sizeHeight * 2),
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                    setState(() {});
-                                  },
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ))
-                              : null),
-                    ),
-                  )
-                ],
+                              ],
+                            ),
+                            subtitle: Row(
+                              children: [
+                                Text(
+                                  '${AppLocalizations.of(context)!.scan_name}: ',
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.color,
+                                      fontSize: sizeHeight * 2),
+                                ),
+                                Container(
+                                  width: sizeHeight * 19,
+                                  child: Text(
+                                    '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .headline1
+                                          ?.color,
+                                      fontSize: sizeHeight * 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: isAdmin
+                                ? IconButton(
+                                    onPressed: () {
+                                      removeItem(licenseAndHourList[index]
+                                          ['rejestracja']);
+                                      final snackBar = SnackBar(
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                        content: Text(
+                                          'Removed index: ${studentIdList[index]}; '
+                                          'Hour: ${(licenseAndHourList[index]['godzinaPrzyjazdu']).toString().substring(0, 5)}',
+                                          style:
+                                              TextStyle(fontSize: sizeHeight * 2),
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ))
+                                : null),
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           }

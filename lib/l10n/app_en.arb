@@ -100,5 +100,7 @@
     "sent_successfully": "Sent successfully!",
     "enter_message": "Enter message",
     "enter_subject": "Enter subject",
-    "enter_name": "Enter name"
+    "enter_name": "Enter name",
+    "camera_permission_req": "Camera permission required",
+    "request_camera": "Request camera permission"
 }

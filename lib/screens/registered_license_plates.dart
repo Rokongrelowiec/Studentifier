@@ -212,84 +212,88 @@ class _GenerateRegisteredLicensePlatesState
                 ),
               );
             } else {
-              return SingleChildScrollView(
-                physics: ScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: sizeHeight * 2,
-                    ),
-                    Text(
-                      '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
-                      style: TextStyle(
-                        fontSize: sizeHeight * 5,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.headline1?.color,
+              return RefreshIndicator(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                onRefresh: getData,
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: sizeHeight * 2,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: sizeHeight * 1.15,
-                    ),
-                    Text(
-                      '${AppLocalizations.of(context)!.found}: ${lecturersLicencePlates.length} ${AppLocalizations.of(context)!.elements}!',
-                      style: TextStyle(
+                      Text(
+                        '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
+                        style: TextStyle(
+                          fontSize: sizeHeight * 4,
+                          fontWeight: FontWeight.bold,
                           color: Theme.of(context).textTheme.headline1?.color,
-                          fontSize: sizeHeight * 3),
-                    ),
-                    SizedBox(
-                      height: sizeHeight * 2,
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: lecturersLicencePlates.length,
-                      itemBuilder: (ctx, index) => Card(
-                        color: Theme.of(context).drawerTheme.backgroundColor,
-                        child: ListTile(
-                          key: ValueKey(lecturersLicencePlates[index]),
-                          title: Text(
-                            lecturersLicencePlates[index]['rejestracja'],
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline1
-                                    ?.color,
-                                fontSize: sizeHeight * 3),
-                          ),
-                          trailing: IconButton(
-                            onPressed: () async {
-                              removeItem(
-                                  lecturersLicencePlates[index]['rejestracja']);
-                              final snackBar = SnackBar(
-                                backgroundColor: Theme.of(context).primaryColor,
-                                content: Text(
-                                  '${AppLocalizations.of(context)!.removed} ${AppLocalizations.of(context)!.license_plate}: ${lecturersLicencePlates[index]['rejestracja']}',
-                                  style: TextStyle(
-                                    fontSize: sizeHeight * 2,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: sizeHeight * 2,
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context)!.found}: ${lecturersLicencePlates.length} ${AppLocalizations.of(context)!.elements}!',
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 3),
+                      ),
+                      SizedBox(
+                        height: sizeHeight * 5,
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: lecturersLicencePlates.length,
+                        itemBuilder: (ctx, index) => Card(
+                          color: Theme.of(context).drawerTheme.backgroundColor,
+                          child: ListTile(
+                            key: ValueKey(lecturersLicencePlates[index]),
+                            title: Text(
+                              lecturersLicencePlates[index]['rejestracja'],
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      ?.color,
+                                  fontSize: sizeHeight * 3),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () async {
+                                removeItem(
+                                    lecturersLicencePlates[index]['rejestracja']);
+                                final snackBar = SnackBar(
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  content: Text(
+                                    '${AppLocalizations.of(context)!.removed} ${AppLocalizations.of(context)!.license_plate}: ${lecturersLicencePlates[index]['rejestracja']}',
+                                    style: TextStyle(
+                                      fontSize: sizeHeight * 2,
+                                    ),
                                   ),
-                                ),
-                                // action: SnackBarAction(
-                                //     label: 'Undo',
-                                //     textColor: Colors.white,
-                                //     onPressed: () => undoOperation()),
-                              );
-                              // ScaffoldMessenger.of(context)
-                              //     .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: Theme.of(context).iconTheme.color,
-                              size: sizeHeight * 4,
+                                  // action: SnackBarAction(
+                                  //     label: 'Undo',
+                                  //     textColor: Colors.white,
+                                  //     onPressed: () => undoOperation()),
+                                );
+                                // ScaffoldMessenger.of(context)
+                                //     .hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                color: Theme.of(context).iconTheme.color,
+                                size: sizeHeight * 4,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }

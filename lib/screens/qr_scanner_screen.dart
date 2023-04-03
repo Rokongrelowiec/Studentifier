@@ -12,8 +12,8 @@ import './added_data_screen.dart';
 import '../widgets/app_bar_widget.dart';
 
 class QRScannerScreen extends StatelessWidget {
-  String licensePlate;
-  String scanTime;
+  final String licensePlate;
+  final String scanTime;
 
   QRScannerScreen(
       {Key? key, required this.licensePlate, required this.scanTime})
@@ -33,8 +33,8 @@ class QRScannerScreen extends StatelessWidget {
 }
 
 class GenerateQRScannerScreen extends StatefulWidget {
-  String licensePlate;
-  String scanTime;
+  final String licensePlate;
+  final String scanTime;
 
   GenerateQRScannerScreen(
       {Key? key, required this.licensePlate, required this.scanTime})
@@ -155,12 +155,11 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
 sendLecturerData(bool isPrivileged, String licensePlate) async {
   String key = await rootBundle.loadString('assets/api-key.txt');
   var requestBody = jsonEncode({"licenseplate": licensePlate});
-  var response = await http.post(
+  await http.post(
       Uri.parse(
           'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
       headers: {'x-api-key': key},
       body: requestBody);
-  // debugPrint('Lecturer: ${response.statusCode}');
 }
 
 sendStudentData({

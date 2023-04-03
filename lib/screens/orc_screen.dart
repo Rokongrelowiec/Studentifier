@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './license_screen.dart';
 import '../widgets/camera_view.dart';
@@ -22,10 +24,12 @@ class _OCRScreen extends State<OCRScreen> {
   CustomPaint? _customPaint;
   Map licenses = {};
   bool allowAdding = true;
+  PermissionStatus _permissionStatus = PermissionStatus.denied;
 
   @override
   void initState() {
     super.initState();
+    _requestCameraPermission();
     _initializeDetector();
   }
 
@@ -38,15 +42,63 @@ class _OCRScreen extends State<OCRScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CameraView(
-      title: 'Object Detector',
-      customPaint: _customPaint,
-      onImage: (inputImage) {
-        processImage(inputImage, context);
-      },
-      onScreenModeChanged: _initializeDetector,
-      initialDirection: CameraLensDirection.back,
-    );
+    final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+    if (_permissionStatus == PermissionStatus.granted) {
+      return CameraView(
+        title: 'Object Detector',
+        customPaint: _customPaint,
+        onImage: (inputImage) {
+          processImage(inputImage, context);
+        },
+        onScreenModeChanged: _initializeDetector,
+        initialDirection: CameraLensDirection.back,
+      );
+    } else {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.no_photography_outlined,
+              color: Theme.of(context).primaryColor,
+              size: sizeHeight * 20,
+            ),
+            Text(
+              AppLocalizations.of(context)!.camera_permission_req,
+              style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1?.color,
+                  fontSize: sizeHeight * 3),
+            ),
+            SizedBox(
+              height: sizeHeight * 2,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_permissionStatus == PermissionStatus.denied) {
+                  await _requestCameraPermission();
+                } else {
+                  await openAppSettings();
+                }
+              },
+              child: Text(
+                AppLocalizations.of(context)!.request_camera,
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.headline1?.color,
+                    fontSize: sizeHeight * 2),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _requestCameraPermission() async {
+    final status = await Permission.camera.request();
+    print(status);
+    setState(() {
+      _permissionStatus = status;
+    });
   }
 
   void _initializeDetector() async {
@@ -87,7 +139,7 @@ class _OCRScreen extends State<OCRScreen> {
 
     for (DetectedObject detectedObject in carRelatedObjects) {
       for (Label label in detectedObject.labels) {
-        // print('${label.text} ${label.confidence}');
+        // debugPrint('${label.text} ${label.confidence}');
         if ((label.text == 'Car' && label.confidence > 0.5) ||
             (label.text == 'License plate' && label.confidence > 0.5)) {
           final textDetector = GoogleMlKit.vision
@@ -114,7 +166,7 @@ class _OCRScreen extends State<OCRScreen> {
                   }
                 }
                 if (checked) {
-                  // print('licenses: $licenses');
+                  // debugPrint('licenses: $licenses');
                   if (licenses.containsKey(licensePlateText)) {
                     licenses[licensePlateText] += 1;
                   } else {
