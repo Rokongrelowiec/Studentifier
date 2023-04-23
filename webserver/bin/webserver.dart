@@ -153,9 +153,56 @@ Future<shelf.Response> _echoRequest(shelf.Request request) async {
     case 'api/v1/logs/entries/delete': return _echoRemoveEntryInADay(request);
     case 'api/v1/logs/log/entry': return _echoLogEntry(request);
     case 'api/v1/admin/login': return _echoLoginAdmin(request);
+    case 'api/v1/parking_spots/set': return _echoSetLimit(request);
+    case 'api/v1/parking_spots': return _echoGetLimit(request);
     case 'healthcheck': return _echoHealthcheck(request);
     default : return shelf.Response.badRequest(body: 'Invalid method - check your URL. Not related to POST/GET methods.');
   }
+}
+
+Future<shelf.Response> _echoSetLimit(shelf.Request request) async{
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.POST]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  var requestBodyAwaited = await request.readAsString();
+  var decoded = jsonDecode(requestBodyAwaited);
+
+  try {
+    final response = await dbClient
+        .from('parking_limit')
+        .update({'limit': decoded['limit']})
+        .match({'id':'1'});
+  } catch (e) {
+    return shelf.Response.badRequest(body: "Couldn't update the limit");
+  }
+  return shelf.Response.ok("Limit changed.");
+
+}
+
+Future<shelf.Response> _echoGetLimit(shelf.Request request) async{
+  final dbClient = DatabaseConnector(dbCredentials).client;
+
+  if(! await isUserAuthenticated(request.headers, dbClient)) {
+    return shelf.Response.forbidden("Bad authorization key.");
+  }
+
+  if(!isRequestTheTypeSameAsProvided(request.method, requestMethodMap[RequestMethod.GET]!)) {
+    return shelf.Response.badRequest(body:"Wrong Method.");
+  }
+
+  final response = await dbClient
+      .from('parking_limit')
+      .select('limit')
+      .match({'id':'1'});
+
+  return shelf.Response.ok(jsonEncode(response));
 }
 
 Future<shelf.Response> _echoCheckIfActiveByStudentId(shelf.Request request) async{
