@@ -126,7 +126,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 '${AppLocalizations.of(context)!.most_visits} - ${AppLocalizations.of(context)!.license_plate}:',
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -135,7 +135,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 mostVisitsLicensePlate,
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -162,7 +162,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 '${AppLocalizations.of(context)!.most_visits} - ${AppLocalizations.of(context)!.index.toLowerCase()}:',
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -171,7 +171,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 mostVisitsStudentId.toString(),
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -198,7 +198,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 '${AppLocalizations.of(context)!.most_visits} - ${AppLocalizations.of(context)!.day}:',
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -207,7 +207,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 maxVisitsDay,
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -234,7 +234,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 '${AppLocalizations.of(context)!.least_visits} - ${AppLocalizations.of(context)!.day}:',
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -243,7 +243,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 minVisitsDay,
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -270,7 +270,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 '${AppLocalizations.of(context)!.avg_per_day}:',
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -279,7 +279,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                               Text(
                                 average.toStringAsFixed(2),
                                 style: TextStyle(
-                                    fontSize: sizeHeight * 2.3,
+                                    fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
                                         .headline1
@@ -311,7 +311,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
     int endDate = DateTime.now().day;
     var startDate = DateFormat('dd').format(
         DateTime.now().subtract(Duration(days: DateTime.now().day - 1)));
-    debugPrint(decodedResponse.toString());
+    // debugPrint(decodedResponse.toString());
     String formattedDay;
     String formattedMonth;
     for (int i = int.parse(startDate); i <= endDate; i++) {
@@ -335,7 +335,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
           'count': 0});
       }
     }
-    debugPrint(decodedResponse.toString());
+    // debugPrint(decodedResponse.toString());
     visitsCounter = 0; // control set
     minVisitsNum = decodedResponse[0]['count'];
     minVisitsDay = "${decodedResponse[0]['dataPrzyjazdu'].substring(8)}"

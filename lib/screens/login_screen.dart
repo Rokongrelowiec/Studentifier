@@ -96,7 +96,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             ? EdgeInsets.only(
                                 top: sizeHeight * 6, left: sizeHeight * 2)
                             : EdgeInsets.only(
-                                top: sizeHeight, left: sizeHeight),
+                                top: sizeHeight, left: sizeHeight * 2),
                         child: IconButton(
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -110,7 +110,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: sizeHeight * 5, top: sizeHeight * 4),
+                            left: sizeHeight * 4, top: sizeHeight * 2),
                         child: Text(
                           "Administrator",
                           style: TextStyle(
@@ -120,7 +120,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: sizeHeight * 5),
+                        padding: EdgeInsets.only(left: sizeHeight * 4),
                         child: Text(
                           AppLocalizations.of(context)!.login,
                           style: TextStyle(
@@ -345,6 +345,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                         .pushNamedAndRemoveUntil(
                                             HomeScreen.routeName,
                                             (route) => false);
+                                    // debugPrint('Logged!');
                                   } else {
                                     setState(() {
                                       invalidRequest = true;
@@ -357,7 +358,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: sizeHeight * 3.5),
+                                    fontSize: sizeHeight * 3),
                               ),
                             ),
                           ),

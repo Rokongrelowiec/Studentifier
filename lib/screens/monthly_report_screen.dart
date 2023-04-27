@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 import './student_details_screen.dart';
 
@@ -20,11 +21,12 @@ class _MonthlyReportState extends State<MonthlyReport> {
   late List nameSurnameList;
   late List licencePlatesList;
   late List studentIdValidityList;
+  DateTime selectedDate = DateTime.now();
 
   Future getData() async {
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+    String month = (DateFormat.MMM().format(selectedDate)).toUpperCase();
     String year = (DateFormat.y().format(DateTime.now())).toString();
     var requestBody = jsonEncode({'scope': '${month + year}'});
     var response = await http.post(
@@ -76,6 +78,10 @@ class _MonthlyReportState extends State<MonthlyReport> {
       decodedResponse = jsonDecode(response.body);
       studentIdValidityList.add(decodedResponse[0]['data_waznosci']);
     }
+    final dateFormat = DateFormat('dd-MM-yyyy');
+    for (int i = 0; i < studentIdValidityList.length; i++) {
+      studentIdValidityList[i] = (dateFormat.format(DateTime.parse(studentIdValidityList[i]))).toString();
+    }
   }
 
   @override
@@ -120,7 +126,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                     Text(
                       AppLocalizations.of(context)!.monthly_report,
                       style: TextStyle(
-                        fontSize: sizeHeight * 5,
+                        fontSize: sizeHeight * 4,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).textTheme.headline1?.color,
                       ),
@@ -145,8 +151,44 @@ class _MonthlyReportState extends State<MonthlyReport> {
                         fontSize: sizeHeight * 2,
                       ),
                     ),
-                    SizedBox(
-                      height: sizeHeight * 4,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.selected_date,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            DateTime? newDate = await showMonthPicker(
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime(2023, 02),
+                              lastDate: DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                              ),
+                            );
+                            if (newDate == null) {
+                              return;
+                            } else {
+                              setState(() {
+                                selectedDate = newDate;
+                              });
+                            }
+                          },
+                          child: Text(
+                            '${DateFormat.yM().format(selectedDate)}',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     ListView.builder(
                       shrinkWrap: true,

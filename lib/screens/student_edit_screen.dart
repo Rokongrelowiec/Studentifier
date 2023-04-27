@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -48,9 +49,7 @@ class StudentEdit extends StatelessWidget {
         );
 }
 
-class StudentEditGenerate extends StatelessWidget {
-  final formKey = GlobalKey<FormState>();
-
+class StudentEditGenerate extends StatefulWidget {
   String firstName;
   String lastName;
   int studentId;
@@ -68,6 +67,13 @@ class StudentEditGenerate extends StatelessWidget {
       Key? key})
       : super(key: key);
 
+  @override
+  State<StudentEditGenerate> createState() => _StudentEditGenerateState();
+}
+
+class _StudentEditGenerateState extends State<StudentEditGenerate> {
+  final formKey = GlobalKey<FormState>();
+
   setFirstUpperCase(String text) {
     final res = text.substring(0, 1).toUpperCase() + text.substring(1);
     return res;
@@ -81,23 +87,33 @@ class StudentEditGenerate extends StatelessWidget {
     return res;
   }
 
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController studentIdController = TextEditingController();
+  TextEditingController licensePlateController = TextEditingController();
+  TextEditingController numberOfVisitsController = TextEditingController();
+  TextEditingController validityOfStudentIdController = TextEditingController();
+
+  @override
+  void initState() {
+    firstNameController.text = widget.firstName;
+    lastNameController.text = widget.lastName;
+    studentIdController.text = widget.studentId.toString();
+    licensePlateController.text = widget.licensePlate;
+    numberOfVisitsController.text = widget.numberOfVisits.toString();
+    validityOfStudentIdController.text = widget.validityOfStudentId;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    TextEditingController firstNameController = TextEditingController();
-    firstNameController.text = firstName;
-    TextEditingController lastNameController = TextEditingController();
-    lastNameController.text = lastName;
-    TextEditingController studentIdController = TextEditingController();
-    studentIdController.text = studentId.toString();
-    TextEditingController licensePlateController = TextEditingController();
-    licensePlateController.text = licensePlate;
-    TextEditingController numberOfVisitsController = TextEditingController();
-    numberOfVisitsController.text = numberOfVisits.toString();
-    TextEditingController validityOfStudentIdController =
-        TextEditingController();
-    validityOfStudentIdController.text = validityOfStudentId;
-
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+
+    final regExp = RegExp(r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|'
+    r'30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:'
+    r'29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579]'
+    r'[26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])'
+    r'(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -110,6 +126,8 @@ class StudentEditGenerate extends StatelessWidget {
             padding: EdgeInsets.only(right: sizeHeight),
             child: IconButton(
               onPressed: () async {
+                var date = DateFormat('dd-MM-yyyy').parse(validityOfStudentIdController.text);
+                var formattedDate = DateFormat('yyyy-MM-dd').format(date);
                 final isValidForm = formKey.currentState!.validate();
                 if (isValidForm) {
                   String apiKey = await DefaultAssetBundle.of(context)
@@ -118,7 +136,7 @@ class StudentEditGenerate extends StatelessWidget {
                     'numer_albumu': studentIdController.text,
                     'imie': setFirstUpperCase(firstNameController.text),
                     'nazwisko': setFirstUpperCase(lastNameController.text),
-                    'data_waznosci': validityOfStudentIdController.text
+                    'data_waznosci': formattedDate,
                   });
                   await http.post(
                     Uri.parse(
@@ -362,7 +380,7 @@ class StudentEditGenerate extends StatelessWidget {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: AppLocalizations.of(context)!.num_of_visits,
+                        labelText: AppLocalizations.of(context)!.num_of_visits_month,
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.headline1?.color,
@@ -427,9 +445,11 @@ class StudentEditGenerate extends StatelessWidget {
                       ],
                       keyboardType: TextInputType.number,
                       validator: (value) {
-                        // TODO: better validation
                         if (value == null || value.length != 10) {
                           return AppLocalizations.of(context)!.enter_dd_mm_yyyy;
+                        }
+                        if (!regExp.hasMatch(value)) {
+                          return AppLocalizations.of(context)!.enter_correct_date;
                         }
                         return null;
                       },

@@ -88,12 +88,12 @@ class _GenerateHomeScreenState extends State<GenerateHomeScreen> {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: Colors.orangeAccent,
-      //   onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-      //       builder: (ctx) => LicenseScreen(license: "VIPET"))),
-      //   child: Icon(Icons.arrow_forward),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orangeAccent,
+        onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (ctx) => LicenseScreen(license: "VIPET"))),
+        child: Icon(Icons.arrow_forward),
+      ),
     );
   }
 }
