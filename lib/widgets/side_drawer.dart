@@ -18,6 +18,7 @@ import '../screens/registered_license_plates.dart';
 import '../models/admin_provider.dart';
 import '../screens/login_screen.dart';
 import '../models/theme_provider.dart';
+import '../screens/parking_limit_screen.dart';
 
 class SideDrawer extends StatefulWidget {
   SideDrawer({Key? key}) : super(key: key);
@@ -249,7 +250,10 @@ class _SideDrawerState extends State<SideDrawer> {
                         ),
                         Container(
                           width: sizeHeight * 12,
-                          child: Text(isAdmin ? "admin!" : '${AppLocalizations.of(context)!.guest}!',
+                          child: Text(
+                              isAdmin
+                                  ? "admin!"
+                                  : '${AppLocalizations.of(context)!.guest}!',
                               style: TextStyle(
                                   fontSize: sizeHeight * 3,
                                   color: Theme.of(context)
@@ -281,7 +285,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                             .textTheme
                                             .headline1
                                             ?.color,
-                                        fontSize: sizeHeight * 3.5),
+                                        fontSize: sizeHeight * 3),
                                   ),
                                   content: Text(
                                     AppLocalizations.of(context)!.sing_out_msg,
@@ -290,7 +294,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                             .textTheme
                                             .headline1
                                             ?.color,
-                                        fontSize: sizeHeight * 3),
+                                        fontSize: sizeHeight * 2.5),
                                   ),
                                   actions: <Widget>[
                                     TextButton(
@@ -298,8 +302,8 @@ class _SideDrawerState extends State<SideDrawer> {
                                           Navigator.of(context).pop(),
                                       child: Text(
                                         AppLocalizations.of(context)!.cancel,
-                                        style: TextStyle(
-                                            fontSize: sizeHeight * 2.5),
+                                        style:
+                                            TextStyle(fontSize: sizeHeight * 2),
                                       ),
                                     ),
                                     ElevatedButton(
@@ -311,8 +315,8 @@ class _SideDrawerState extends State<SideDrawer> {
                                       },
                                       child: Text(
                                         'OK',
-                                        style: TextStyle(
-                                            fontSize: sizeHeight * 2.5),
+                                        style:
+                                            TextStyle(fontSize: sizeHeight * 2),
                                       ),
                                     ),
                                   ],
@@ -499,7 +503,10 @@ class _SideDrawerState extends State<SideDrawer> {
                     color: Theme.of(context).iconTheme.color,
                   ),
                   title: Text(
-                    isAdmin ? AppLocalizations.of(context)!.registered_license_plates : AppLocalizations.of(context)!.settings,
+                    isAdmin
+                        ? AppLocalizations.of(context)!
+                            .registered_license_plates
+                        : AppLocalizations.of(context)!.settings,
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1?.color,
                       fontSize: sizeHeight * 2,
@@ -520,6 +527,35 @@ class _SideDrawerState extends State<SideDrawer> {
                     color: Colors.black,
                   ),
                 ),
+                isAdmin
+                    ? ListTile(
+                        trailing: Icon(
+                          Icons.local_parking,
+                          size: sizeHeight * 3.5,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        title: Text(
+                          AppLocalizations.of(context)!.parking_limit,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(ParkingLimitScreen.routeName);
+                        },
+                      )
+                    : Container(),
+                isAdmin
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Divider(
+                          thickness: sizeHeight * 0.1,
+                          color: Colors.black,
+                        ),
+                      )
+                    : Container(),
                 isAdmin
                     ? ListTile(
                         trailing: Icon(

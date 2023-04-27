@@ -67,6 +67,26 @@ class _GenerateRegisteredLicensePlatesState
     // debugPrint('$lecturersLicencePlates');
   }
 
+  void addLicensePlate() async {
+    final isValidForm = formKey.currentState!.validate();
+    if (isValidForm) {
+      String apiKey = await DefaultAssetBundle.of(context)
+          .loadString('assets/api-key.txt');
+      var requestBody = jsonEncode({
+        'licenseplate':
+        licensePlateController.text.toUpperCase()
+      });
+      await http.post(
+        Uri.parse(
+            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
+        headers: {'x-api-key': apiKey},
+        body: requestBody,
+      );
+      licensePlateController.text = '';
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var addLicense = Provider.of<LocaleProvider>(context).currentLang == 'en'
@@ -121,6 +141,7 @@ class _GenerateRegisteredLicensePlatesState
                               sizeHeight * 2,
                             ),
                             border: OutlineInputBorder()),
+                            onFieldSubmitted: (_) => addLicensePlate(),
                         validator: (value) {
                           if (value != null && value.length < 4) {
                             return AppLocalizations.of(context)!.too_short_val;
@@ -148,25 +169,7 @@ class _GenerateRegisteredLicensePlatesState
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () async {
-                          final isValidForm = formKey.currentState!.validate();
-                          if (isValidForm) {
-                            String apiKey = await DefaultAssetBundle.of(context)
-                                .loadString('assets/api-key.txt');
-                            var requestBody = jsonEncode({
-                              'licenseplate':
-                                  licensePlateController.text.toUpperCase()
-                            });
-                            await http.post(
-                              Uri.parse(
-                                  'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
-                              headers: {'x-api-key': apiKey},
-                              body: requestBody,
-                            );
-                            licensePlateController.text = '';
-                            Navigator.of(context).pop();
-                          }
-                        },
+                        onPressed: () => addLicensePlate(),
                         child: Text(
                           'OK',
                           style: TextStyle(
@@ -223,14 +226,17 @@ class _GenerateRegisteredLicensePlatesState
                       SizedBox(
                         height: sizeHeight * 2,
                       ),
-                      Text(
-                        '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
-                        style: TextStyle(
-                          fontSize: sizeHeight * 4,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: Text(
+                          '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
+                          style: TextStyle(
+                            fontSize: sizeHeight * 4,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).textTheme.headline1?.color,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                         height: sizeHeight * 2,

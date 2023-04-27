@@ -40,7 +40,7 @@ class GenerateAboutApp extends StatelessWidget {
                   'Studentifier',
                   style: TextStyle(
                       color: Colors.orange,
-                      fontSize: sizeHeight * 7,
+                      fontSize: sizeHeight * 6,
                       fontWeight: FontWeight.bold),
                 ),
               ),

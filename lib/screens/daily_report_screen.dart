@@ -22,10 +22,11 @@ class _DailyReportState extends State<DailyReport> {
   late List nameSurnameList;
   late List countList;
   late List studentIdValidityList;
+  DateTime selectedDate = DateTime.now();
 
   void removeItem(String licencePlate) async {
     // debugPrint('Removing $licencePlate');
-    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final today = DateFormat('yyyy-MM-dd').format(selectedDate);
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
     String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
@@ -47,7 +48,7 @@ class _DailyReportState extends State<DailyReport> {
       }
     }
     requestBody = jsonEncode({
-      'slice': 'feb2023',
+      'slice': '${month.toLowerCase()}$year',
       'licenseplate': licencePlate,
       'dateOfArrival': today,
       'hourOfArrival': data['godzinaPrzyjazdu'],
@@ -61,7 +62,7 @@ class _DailyReportState extends State<DailyReport> {
   }
 
   Future getData() async {
-    final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final today = DateFormat('yyyy-MM-dd').format(selectedDate);
     licenseAndHourList = [];
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
@@ -128,6 +129,12 @@ class _DailyReportState extends State<DailyReport> {
       responseDecoded = jsonDecode(response.body);
       studentIdValidityList.add(responseDecoded[0]['data_waznosci']);
     }
+    final dateFormat = DateFormat('dd-MM-yyyy');
+    for (int i = 0; i < studentIdValidityList.length; i++) {
+      studentIdValidityList[i] =
+          (dateFormat.format(DateTime.parse(studentIdValidityList[i])))
+              .toString();
+    }
     // debugPrint(licenseAndHourList.toString());
     // debugPrint(studentIdList.toString());
     // debugPrint(nameSurnameList.toString());
@@ -178,7 +185,7 @@ class _DailyReportState extends State<DailyReport> {
                     Text(
                       AppLocalizations.of(context)!.daily_report,
                       style: TextStyle(
-                        fontSize: sizeHeight * 5,
+                        fontSize: sizeHeight * 4,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).textTheme.headline1?.color,
                       ),
@@ -202,8 +209,44 @@ class _DailyReportState extends State<DailyReport> {
                           color: Theme.of(context).textTheme.headline1?.color,
                           fontSize: sizeHeight * 2),
                     ),
-                    SizedBox(
-                      height: sizeHeight * 4,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                        AppLocalizations.of(context)!.selected_date,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.headline1?.color,
+                            fontSize: sizeHeight * 2,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            DateTime? newDate = await showDatePicker(
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime(2023, 02),
+                              lastDate: DateTime(
+                                DateTime.now().year,
+                                DateTime.now().month,
+                                DateTime.now().day,
+                              ),
+                            );
+                            if (newDate == null) {
+                              return;
+                            } else {
+                              setState(() {
+                                selectedDate = newDate;
+                              });
+                            }
+                          },
+                          child: Text(
+                            '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     ListView.builder(
                       shrinkWrap: true,
@@ -220,8 +263,9 @@ class _DailyReportState extends State<DailyReport> {
                                     studentId: studentIdList[index],
                                     licensePlate: licenseAndHourList[index]
                                         ['rejestracja'],
-                                    firstName:
-                                        nameSurnameList[index].keys.elementAt(0),
+                                    firstName: nameSurnameList[index]
+                                        .keys
+                                        .elementAt(0),
                                     lastName: nameSurnameList[index]
                                         .values
                                         .elementAt(0),
@@ -242,8 +286,10 @@ class _DailyReportState extends State<DailyReport> {
                                           6),
                               style: TextStyle(
                                 fontSize: sizeHeight * 3,
-                                color:
-                                    Theme.of(context).textTheme.headline1?.color,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.color,
                               ),
                             ),
                             title: Row(
@@ -309,8 +355,8 @@ class _DailyReportState extends State<DailyReport> {
                                         content: Text(
                                           'Removed index: ${studentIdList[index]}; '
                                           'Hour: ${(licenseAndHourList[index]['godzinaPrzyjazdu']).toString().substring(0, 5)}',
-                                          style:
-                                              TextStyle(fontSize: sizeHeight * 2),
+                                          style: TextStyle(
+                                              fontSize: sizeHeight * 2),
                                         ),
                                       );
                                       ScaffoldMessenger.of(context)
