@@ -95,7 +95,7 @@ class _OCRScreen extends State<OCRScreen> {
 
   Future<void> _requestCameraPermission() async {
     final status = await Permission.camera.request();
-    print(status);
+    // debugPrint('Permission status: $status');
     setState(() {
       _permissionStatus = status;
     });
@@ -139,7 +139,6 @@ class _OCRScreen extends State<OCRScreen> {
 
     for (DetectedObject detectedObject in carRelatedObjects) {
       for (Label label in detectedObject.labels) {
-        // debugPrint('${label.text} ${label.confidence}');
         if ((label.text == 'Car' && label.confidence > 0.5) ||
             (label.text == 'License plate' && label.confidence > 0.5)) {
           final textDetector = GoogleMlKit.vision
