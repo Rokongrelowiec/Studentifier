@@ -113,5 +113,13 @@
     "invalid_id": "nieważnej legitymacji",
     "home_screen_return": "Powrót na ekran początkowy",
     "parking_limit2": "osiągnięcia limitu parkingu",
-    "limit_exceeded": "Przekroczono ilość zajętych miejsc"
+    "limit_exceeded": "Przekroczono ilość zajętych miejsc",
+    "reset_password": "Zrestartuj hasło",
+    "send_code": "Wyślij kod odzyskiwania",
+    "recover_account": "Odzyskaj konto",
+    "change_to_recover_code": "Zmień, aby wprowadzić kod odzyskiwania",
+    "change_to_send_code": "Zmień, aby wysłać kod odzyskiwania",
+    "new_password": "Nowe hasło",
+    "recovery_code": "Kod odzyskiwania"
+
 }

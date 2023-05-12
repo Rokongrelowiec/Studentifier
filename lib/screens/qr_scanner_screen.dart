@@ -9,6 +9,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './added_data_screen.dart';
+import './deny_screen.dart';
 import '../widgets/app_bar_widget.dart';
 
 class QRScannerScreen extends StatelessWidget {
@@ -101,7 +102,7 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen(
-      (barcode) => setState(() {
+      (barcode) => setState(() async {
         this.barcode = barcode;
         Map mapData = json.decode(barcode.code as String);
         if (mapData.containsKey('imie') &&
@@ -109,10 +110,13 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
             mapData.containsKey('numer_indeksu') &&
             mapData.containsKey('isPrivileged')) {
           printedResult = AppLocalizations.of(context)!.done;
+          bool moveToAddedDataScreen;
+          controller.pauseCamera();
           if (mapData['isPrivileged']) {
-            sendLecturerData(mapData['isPrivileged'], widget.licensePlate);
+            moveToAddedDataScreen = await sendLecturerData(
+                mapData['isPrivileged'], widget.licensePlate);
           } else {
-            sendStudentData(
+            moveToAddedDataScreen = await sendStudentData(
                 name: mapData['imie'],
                 surname: mapData['nazwisko'],
                 studentId: mapData['numer_indeksu'],
@@ -120,19 +124,23 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
                 licensePlate: widget.licensePlate,
                 scanTime: widget.scanTime);
           }
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => AddedDataScreen(
-                name: mapData['imie'],
-                surname: mapData['nazwisko'],
-                studentId: mapData['numer_indeksu'],
-                licensePlate: widget.licensePlate,
-                scanTime: widget.scanTime,
-                isPrivileged: mapData['isPrivileged'],
+          if (moveToAddedDataScreen) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => AddedDataScreen(
+                  name: mapData['imie'],
+                  surname: mapData['nazwisko'],
+                  studentId: mapData['numer_indeksu'],
+                  licensePlate: widget.licensePlate,
+                  scanTime: widget.scanTime,
+                  isPrivileged: mapData['isPrivileged'],
+                ),
               ),
-            ),
-          );
-          controller.pauseCamera();
+            );
+          } else {
+            Navigator.of(context).pushReplacementNamed(DenyScreen.routeName,
+                arguments: AppLocalizations.of(context)!.parking_limit2);
+          }
         }
       }),
     );
@@ -160,6 +168,7 @@ sendLecturerData(bool isPrivileged, String licensePlate) async {
           'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
       headers: {'x-api-key': key},
       body: requestBody);
+  return true;
 }
 
 sendStudentData({
@@ -173,7 +182,31 @@ sendStudentData({
   List controlList = [true, true, true, true];
   String key = await rootBundle.loadString('assets/api-key.txt');
   var response;
-  var requestBody =
+
+  // Check available spaces
+  response = await http.get(
+    Uri.parse('http://130.61.192.162:8069/api/v1/parking_spots'),
+    headers: {'x-api-key': key},
+  );
+  var decodedResponse = jsonDecode(response.body);
+  int parkingLimit = decodedResponse[0]['limit'];
+  final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+  String year = (DateFormat.y().format(DateTime.now())).toString();
+  var requestBody = jsonEncode({'slice': '${month + year}', 'day': today});
+  response = await http.post(
+    Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/day'),
+    headers: {'x-api-key': key},
+    body: requestBody,
+  );
+  decodedResponse = jsonDecode(response.body);
+  int occupiedPlaces = decodedResponse.length;
+
+  if (occupiedPlaces >= parkingLimit) {
+    return false;
+  }
+
+  requestBody =
       jsonEncode({"studentId": studentId, "licenseplate": licensePlate});
   if (controlList[0]) {
     response = await http.post(
@@ -190,8 +223,8 @@ sendStudentData({
   DateTime date = DateTime.parse(scanTime);
   var day = DateFormat('yyyy-MM-dd').format(date);
   var hour = '${DateFormat.Hms().format(date)}+00';
-  String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
-  String year = (DateFormat.y().format(DateTime.now())).toString();
+  month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+  year = (DateFormat.y().format(DateTime.now())).toString();
   requestBody = jsonEncode({
     'slice': '${month + year}',
     'rejestracja': licensePlate,
@@ -234,4 +267,5 @@ sendStudentData({
       }
     }
   }
+  return true;
 }

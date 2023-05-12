@@ -10,7 +10,8 @@ import 'package:studentifier/screens/contact_admin_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './home_screen.dart';
-import '../models/admin_provider.dart';
+import './reset_password_screen.dart';
+import '../providers/admin_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   static const routeName = '/login-screen';
@@ -208,6 +209,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             sizeHeight * 5, sizeHeight, sizeHeight * 7, 0),
                         child: Container(
                           child: TextFormField(
+                            keyboardType: TextInputType.text,
                             obscureText: password,
                             style: TextStyle(
                               color:
@@ -292,9 +294,8 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             padding: EdgeInsets.only(
                                 right: sizeHeight * 6, top: sizeHeight * 3),
                             child: TextButton(
-                              onPressed: () {
-                                //TODO Forgot Password
-                              },
+                              onPressed: () => Navigator.of(context)
+                                  .pushNamed(ResetPasswordScreen.routeName),
                               child: Text(
                                 AppLocalizations.of(context)!.forgot_pass,
                                 style: TextStyle(

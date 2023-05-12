@@ -5,12 +5,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import './models/language_provider.dart';
+import './providers/language_provider.dart';
+import './providers/admin_provider.dart';
+import './providers/theme_provider.dart';
 import './screens/about_the_app_screen.dart';
 import './screens/chart_screen.dart';
 import './screens/registered_license_plates.dart';
-import './models/admin_provider.dart';
-import './models/theme_provider.dart';
 import './screens/animated_splash_screen.dart';
 import './screens/home_screen.dart';
 import './screens/login_screen.dart';
@@ -18,6 +18,7 @@ import './screens/contact_admin_screen.dart';
 import './l10n/l10n.dart';
 import './screens/parking_limit_screen.dart';
 import './screens/deny_screen.dart';
+import './screens/reset_password_screen.dart';
 
 late List<CameraDescription> cameras;
 
@@ -81,6 +82,7 @@ class MyApp extends StatelessWidget {
             ContactAdminScreen.routeName: (_) => ContactAdminScreen(),
             ParkingLimitScreen.routeName: (_) => ParkingLimitScreen(),
             DenyScreen.routeName: (_) => DenyScreen(),
+            ResetPasswordScreen.routeName: (_) => ResetPasswordScreen(),
           },
           debugShowCheckedModeBanner: false,
           supportedLocales: L10n.all,

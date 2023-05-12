@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './student_details_screen.dart';
-import '../models/admin_provider.dart';
+import '../providers/admin_provider.dart';
 
 class DailyReport extends StatefulWidget {
   DailyReport({Key? key}) : super(key: key);
@@ -213,7 +213,7 @@ class _DailyReportState extends State<DailyReport> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                        AppLocalizations.of(context)!.selected_date,
+                          AppLocalizations.of(context)!.selected_date,
                           style: TextStyle(
                             color: Theme.of(context).textTheme.headline1?.color,
                             fontSize: sizeHeight * 2,
@@ -328,6 +328,8 @@ class _DailyReportState extends State<DailyReport> {
                                       fontSize: sizeHeight * 2),
                                 ),
                                 Container(
+                                  // Running on iPhone in Android Studio requires 17
+                                  // but running it in Xcode accepts 19
                                   width: sizeHeight * 19,
                                   child: Text(
                                     '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',

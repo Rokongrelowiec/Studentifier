@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import '../models/language_provider.dart';
+import '../providers/language_provider.dart';
 import '../widgets/app_bar_widget.dart';
 
 class RegisteredLicensePlates extends StatelessWidget {
@@ -49,10 +49,9 @@ class _GenerateRegisteredLicensePlatesState
       body: body,
     );
     // debugPrint('Remove status code: ${response.statusCode}');
-    setState(() {
-      lecturersLicencePlates.removeWhere((index) =>
-          lecturersLicencePlates[index]['rejestracja'] == licencePlate);
-    });
+    lecturersLicencePlates.removeWhere((index) =>
+        lecturersLicencePlates[index]['rejestracja'] == licencePlate);
+    getData();
   }
 
   Future getData() async {
@@ -63,19 +62,19 @@ class _GenerateRegisteredLicensePlatesState
           'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/lecturers'),
       headers: {'x-api-key': apiKey},
     );
-    lecturersLicencePlates = jsonDecode(response.body)['vehicles'];
+    setState(() {
+      lecturersLicencePlates = jsonDecode(response.body)['vehicles'];
+    });
     // debugPrint('$lecturersLicencePlates');
   }
 
   void addLicensePlate() async {
     final isValidForm = formKey.currentState!.validate();
     if (isValidForm) {
-      String apiKey = await DefaultAssetBundle.of(context)
-          .loadString('assets/api-key.txt');
-      var requestBody = jsonEncode({
-        'licenseplate':
-        licensePlateController.text.toUpperCase()
-      });
+      String apiKey =
+          await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
+      var requestBody = jsonEncode(
+          {'licenseplate': licensePlateController.text.toUpperCase()});
       await http.post(
         Uri.parse(
             'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
@@ -84,7 +83,14 @@ class _GenerateRegisteredLicensePlatesState
       );
       licensePlateController.text = '';
       Navigator.of(context).pop();
+      getData();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
   }
 
   @override
@@ -141,7 +147,7 @@ class _GenerateRegisteredLicensePlatesState
                               sizeHeight * 2,
                             ),
                             border: OutlineInputBorder()),
-                            onFieldSubmitted: (_) => addLicensePlate(),
+                        onFieldSubmitted: (_) => addLicensePlate(),
                         validator: (value) {
                           if (value != null && value.length < 4) {
                             return AppLocalizations.of(context)!.too_short_val;
@@ -190,120 +196,91 @@ class _GenerateRegisteredLicensePlatesState
           )
         ],
       ),
-      body: FutureBuilder(
-          future: getData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 15),
-                child: Center(
-                    child: SizedBox(
-                        width: sizeHeight * 25,
-                        height: sizeHeight * 25,
-                        child: CircularProgressIndicator())),
-              );
-            }
-            if (snapshot.hasError) {
-              return Center(
+      body: RefreshIndicator(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        onRefresh: getData,
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: sizeHeight * 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: Text(
-                  AppLocalizations.of(context)!.fetch_failed,
+                  '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
                   style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
-                      fontSize: sizeHeight * 4,
-                      fontWeight: FontWeight.bold),
+                    fontSize: sizeHeight * 4,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).textTheme.headline1?.color,
+                  ),
                   textAlign: TextAlign.center,
                 ),
-              );
-            } else {
-              return RefreshIndicator(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                onRefresh: getData,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: sizeHeight * 2,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: Text(
-                          '${AppLocalizations.of(context)!.lecturers}: ${AppLocalizations.of(context)!.license_plates}',
-                          style: TextStyle(
-                            fontSize: sizeHeight * 4,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).textTheme.headline1?.color,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 2,
-                      ),
-                      Text(
-                        '${AppLocalizations.of(context)!.found}: ${lecturersLicencePlates.length} ${AppLocalizations.of(context)!.elements}!',
-                        style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
-                            fontSize: sizeHeight * 3),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 5,
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: lecturersLicencePlates.length,
-                        itemBuilder: (ctx, index) => Card(
-                          color: Theme.of(context).drawerTheme.backgroundColor,
-                          child: ListTile(
-                            key: ValueKey(lecturersLicencePlates[index]),
-                            title: Text(
-                              lecturersLicencePlates[index]['rejestracja'],
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .headline1
-                                      ?.color,
-                                  fontSize: sizeHeight * 3),
-                            ),
-                            trailing: IconButton(
-                              onPressed: () async {
-                                removeItem(
-                                    lecturersLicencePlates[index]['rejestracja']);
-                                final snackBar = SnackBar(
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  content: Text(
-                                    '${AppLocalizations.of(context)!.removed} ${AppLocalizations.of(context)!.license_plate}: ${lecturersLicencePlates[index]['rejestracja']}',
-                                    style: TextStyle(
-                                      fontSize: sizeHeight * 2,
-                                    ),
-                                  ),
-                                  // action: SnackBarAction(
-                                  //     label: 'Undo',
-                                  //     textColor: Colors.white,
-                                  //     onPressed: () => undoOperation()),
-                                );
-                                // ScaffoldMessenger.of(context)
-                                //     .hideCurrentSnackBar();
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              },
-                              icon: Icon(
-                                Icons.delete,
-                                color: Theme.of(context).iconTheme.color,
-                                size: sizeHeight * 4,
-                              ),
+              ),
+              SizedBox(
+                height: sizeHeight * 2,
+              ),
+              Text(
+                '${AppLocalizations.of(context)!.found}: ${lecturersLicencePlates.length} ${AppLocalizations.of(context)!.elements}!',
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.headline1?.color,
+                    fontSize: sizeHeight * 3),
+              ),
+              SizedBox(
+                height: sizeHeight * 5,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: lecturersLicencePlates.length,
+                itemBuilder: (ctx, index) => Card(
+                  color: Theme.of(context).drawerTheme.backgroundColor,
+                  child: ListTile(
+                    key: ValueKey(lecturersLicencePlates[index]),
+                    title: Text(
+                      lecturersLicencePlates[index]['rejestracja'],
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.headline1?.color,
+                          fontSize: sizeHeight * 3),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {
+                        removeItem(
+                            lecturersLicencePlates[index]['rejestracja']);
+                        final snackBar = SnackBar(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          content: Text(
+                            '${AppLocalizations.of(context)!.removed} ${AppLocalizations.of(context)!.license_plate}: ${lecturersLicencePlates[index]['rejestracja']}',
+                            style: TextStyle(
+                              fontSize: sizeHeight * 2,
                             ),
                           ),
-                        ),
+                          // action: SnackBarAction(
+                          //     label: 'Undo',
+                          //     textColor: Colors.white,
+                          //     onPressed: () => undoOperation()),
+                        );
+                        // ScaffoldMessenger.of(context)
+                        //     .hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Theme.of(context).iconTheme.color,
+                        size: sizeHeight * 4,
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              );
-            }
-          }),
+              ),
+            ],
+          ),
+        ),
+      ),
+      //   }
+      // }),
     );
   }
 }
