@@ -68,6 +68,7 @@ class _OCRScreen extends State<OCRScreen> {
               style: TextStyle(
                   color: Theme.of(context).textTheme.headline1?.color,
                   fontSize: sizeHeight * 3),
+              textAlign: TextAlign.center,
             ),
             SizedBox(
               height: sizeHeight * 2,

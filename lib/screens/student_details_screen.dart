@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../models/admin_provider.dart';
+import '../providers/admin_provider.dart';
 import './student_edit_screen.dart';
 import '../widgets/app_bar_widget.dart';
 

@@ -11,13 +11,13 @@ import 'package:studentifier/l10n/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../models/language_provider.dart';
+import '../providers/language_provider.dart';
+import '../providers/theme_provider.dart';
+import '../providers/admin_provider.dart';
 import '../screens/about_the_app_screen.dart';
 import '../screens/chart_screen.dart';
 import '../screens/registered_license_plates.dart';
-import '../models/admin_provider.dart';
 import '../screens/login_screen.dart';
-import '../models/theme_provider.dart';
 import '../screens/parking_limit_screen.dart';
 
 class SideDrawer extends StatefulWidget {

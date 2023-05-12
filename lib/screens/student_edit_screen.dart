@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../widgets/app_bar_widget.dart';
 
@@ -73,6 +74,8 @@ class StudentEditGenerate extends StatefulWidget {
 
 class _StudentEditGenerateState extends State<StudentEditGenerate> {
   final formKey = GlobalKey<FormState>();
+  var maskFormatter = new MaskTextInputFormatter(mask: '##-##-####',
+      filter: { "#": RegExp(r'[0-9]') });
 
   setFirstUpperCase(String text) {
     final res = text.substring(0, 1).toUpperCase() + text.substring(1);
@@ -417,6 +420,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                           color: Theme.of(context).textTheme.headline1?.color,
                           fontSize: sizeHeight * 2.4,
                       ),
+                      maxLength: 10,
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.credit_card_rounded,
@@ -441,7 +445,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         ),
                       ),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[0-9\-]")),
+                        maskFormatter
                       ],
                       keyboardType: TextInputType.number,
                       validator: (value) {
