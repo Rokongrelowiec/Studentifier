@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
@@ -36,7 +35,6 @@ class CameraView extends StatefulWidget {
 class _CameraViewState extends State<CameraView> {
   CameraController? _controller;
   int _cameraIndex = 0;
-  double zoomLevel = 0.0, minZoomLevel = 0.0, maxZoomLevel = 0.0;
 
   @override
   void initState() {
@@ -115,13 +113,6 @@ class _CameraViewState extends State<CameraView> {
       if (!mounted) {
         return;
       }
-      // _controller?.getMinZoomLevel().then((value) {
-      //   zoomLevel = value;
-      //   minZoomLevel = value;
-      // });
-      // _controller?.getMaxZoomLevel().then((value) {
-      //   maxZoomLevel = value;
-      // });
       _controller?.startImageStream(_processCameraImage);
       setState(() {});
     });

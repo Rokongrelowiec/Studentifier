@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import './providers/language_provider.dart';
 import './providers/admin_provider.dart';
 import './providers/theme_provider.dart';
+import './providers/avatar_provider.dart';
 import './screens/about_the_app_screen.dart';
 import './screens/chart_screen.dart';
 import './screens/registered_license_plates.dart';
@@ -53,10 +54,13 @@ Future<void> main() async {
           create: (_) => ThemeProvider()..initialize(),
         ),
         ChangeNotifierProvider(
-          create: (_) => AdminProvider()..initialize(),
+          create: (_) => AdminProvider()
         ),
         ChangeNotifierProvider(
           create: (_) => LocaleProvider()..initialize(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AvatarProvider(),
         ),
       ],
       child: const MyApp(),

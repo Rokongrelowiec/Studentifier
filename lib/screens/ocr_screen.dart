@@ -145,7 +145,6 @@ class _OCRScreen extends State<OCRScreen> {
           final textDetector = GoogleMlKit.vision
               .textRecognizer(script: TextRecognitionScript.latin);
           final recognisedText = await textDetector.processImage(inputImage);
-          setState(() {
             String licensePlateText;
             bool checked = true;
             for (TextBlock block in recognisedText.blocks) {
@@ -155,7 +154,7 @@ class _OCRScreen extends State<OCRScreen> {
                 if (!detectedObject.boundingBox.overlaps(block.boundingBox)) {
                   continue;
                 }
-                if (licensePlateText.length < 4) {
+                if (licensePlateText.length < 4 || licensePlateText.length > 8) {
                   continue;
                 }
                 for (int i = 0; i < licensePlateText.length; i++) {
@@ -175,7 +174,6 @@ class _OCRScreen extends State<OCRScreen> {
                   if (licenses[licensePlateText] > 3) {
                     allowAdding = false;
                     licenses = {};
-                    dispose();
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (ctx) =>
                             LicenseScreen(license: licensePlateText)));
@@ -183,7 +181,6 @@ class _OCRScreen extends State<OCRScreen> {
                 }
               }
             }
-          });
         }
       }
     }

@@ -37,8 +37,8 @@ class _GenerateResetPasswordScreenState
   Color iconColor = Colors.grey;
   final passwordFocusNode = FocusNode();
   final codeFocusNode = FocusNode();
-  var maskFormatter = new MaskTextInputFormatter(mask: '###-###',
-      filter: { "#": RegExp(r'[0-9]') });
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '###-###', filter: {"#": RegExp(r'[0-9]')});
 
   @override
   void initState() {
@@ -304,9 +304,7 @@ class _GenerateResetPasswordScreenState
                                   }
                                   return null;
                                 },
-                                inputFormatters: [
-                                  maskFormatter
-                                ],
+                                inputFormatters: [maskFormatter],
                                 focusNode: codeFocusNode,
                                 controller: codeController,
                                 textInputAction: TextInputAction.done,
@@ -324,10 +322,13 @@ class _GenerateResetPasswordScreenState
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(sendCode
-                                  ? AppLocalizations.of(context)!.send_code
-                                  : AppLocalizations.of(context)!
-                                      .recover_account),
+                              Text(
+                                sendCode
+                                    ? AppLocalizations.of(context)!.send_code
+                                    : AppLocalizations.of(context)!
+                                        .recover_account,
+                                style: TextStyle(fontSize: sizeHeight * 2),
+                              ),
                               Icon(
                                 sendCode
                                     ? Icons.send
@@ -362,6 +363,7 @@ class _GenerateResetPasswordScreenState
                                         .change_to_recover_code
                                     : AppLocalizations.of(context)!
                                         .change_to_send_code,
+                                style: TextStyle(fontSize: sizeHeight * 2),
                               ),
                               Icon(
                                 Icons.change_circle_outlined,
