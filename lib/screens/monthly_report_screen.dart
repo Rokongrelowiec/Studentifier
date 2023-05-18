@@ -36,7 +36,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
       body: requestBody,
     );
     var decodedResponse = jsonDecode(response
-        .body); // [{"rejestracja":"VIPER","count":4},{"rejestracja":"172TMJ","count":3},{"rejestracja":"D4N13L","count":1},{"rejestracja":"FJ75TQ","count":1},{"rejestracja":"P3RVP","count":1},{"rejestracja":"PO6543","count":1},{"rejestracja":"UTH2023","count":1},{"rejestracja":"JK75XV","count":1},{"rejestracja":"SSW1718","count":1}]
+        .body); // [{"rejestracja":"ABC","count":4},{"rejestracja":"QWERTY","count":3}]
     countList = [];
     licencePlatesList = [];
     for (int i = 0; i < decodedResponse.length; i++) {
@@ -264,7 +264,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                 ),
                               ),
                               Container(
-                                width: sizeHeight * 19,
+                                width: sizeHeight * 25,
                                 child: Text(
                                   '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
                                   style: TextStyle(
@@ -280,32 +280,6 @@ class _MonthlyReportState extends State<MonthlyReport> {
                               ),
                             ],
                           ),
-                          // trailing: isAdmin
-                          //     ? IconButton(
-                          //         onPressed: () {
-                          //           removeItem(index);
-                          //           final snackBar = SnackBar(
-                          //             backgroundColor:
-                          //                 Theme.of(context).primaryColor,
-                          //             content: Text(
-                          //               'Removed item number: ${index + 1}',
-                          //             ),
-                          //             // action: SnackBarAction(
-                          //             //     label: 'Undo',
-                          //             //     textColor: Colors.white,
-                          //             //     onPressed: () => undoOperation()),
-                          //           );
-                          //           ScaffoldMessenger.of(context)
-                          //               .hideCurrentSnackBar();
-                          //           ScaffoldMessenger.of(context)
-                          //               .showSnackBar(snackBar);
-                          //         },
-                          //         icon: Icon(
-                          //           Icons.delete,
-                          //           color: Theme.of(context).iconTheme.color,
-                          //         ),
-                          //       )
-                          //     : null,
                         ),
                       ),
                     ),

@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as Path;
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studentifier/l10n/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/language_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/admin_provider.dart';
+import '../providers/avatar_provider.dart';
 import '../screens/about_the_app_screen.dart';
 import '../screens/chart_screen.dart';
 import '../screens/registered_license_plates.dart';
@@ -30,30 +29,14 @@ class SideDrawer extends StatefulWidget {
 class _SideDrawerState extends State<SideDrawer> {
   File? image;
 
-  Future pickImage(ImageSource source) async {
-    // TODO Save image -> DB
+  Future<void> pickImage(ImageSource source) async {
     try {
       final XFile? image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-
-      final imageTemporary = File(image.path);
-      // final imagePermanent = await saveImagePermanently(image.path);
-
-      setState(() {
-        this.image = imageTemporary;
-        // this.image = imagePermanent;
-      });
-    } on PlatformException {
-      // debugPrint('Failed to pick image: $e');
-    }
-  }
-
-  Future<File> saveImagePermanently(String imagePath) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final name = Path.basename(imagePath);
-    final image = File('${directory.path}/$name');
-
-    return File(imagePath).copy(image.path);
+      if (image != null) {
+        Provider.of<AvatarProvider>(context, listen: false)
+            .saveImagePath(image.path);
+      }
+    } on PlatformException {}
   }
 
   showImageSource() {
@@ -168,6 +151,12 @@ class _SideDrawerState extends State<SideDrawer> {
   Widget build(BuildContext context) {
     final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
+    final avatarProv = Provider.of<AvatarProvider>(context);
+    final avatarImg = avatarProv.avatarImg;
+
+    if (avatarImg == null) {
+      avatarProv.loadImagePath();
+    }
 
     _title(String val) {
       switch (val) {
@@ -211,10 +200,10 @@ class _SideDrawerState extends State<SideDrawer> {
                       onTap: isAdmin ? showImageSource : null,
                       child: CircleAvatar(
                         backgroundColor: Colors.orangeAccent,
-                        child: image != null
+                        child: (avatarImg != null && isAdmin)
                             ? ClipOval(
                                 child: Image.file(
-                                  image!,
+                                  File(avatarImg),
                                   width: sizeHeight * 25,
                                   height: sizeHeight * 25,
                                   fit: BoxFit.cover,
@@ -249,7 +238,7 @@ class _SideDrawerState extends State<SideDrawer> {
                           height: sizeHeight * 2,
                         ),
                         Container(
-                          width: sizeHeight * 12,
+                          width: sizeHeight * 14,
                           child: Text(
                               isAdmin
                                   ? "admin!"

@@ -117,8 +117,8 @@
     "reset_password": "Zrestartuj hasło",
     "send_code": "Wyślij kod odzyskiwania",
     "recover_account": "Odzyskaj konto",
-    "change_to_recover_code": "Zmień, aby wprowadzić kod odzyskiwania",
-    "change_to_send_code": "Zmień, aby wysłać kod odzyskiwania",
+    "change_to_recover_code": "Zmień, aby wprowadzić\nkod odzyskiwania",
+    "change_to_send_code": "Zmień, aby wysłać\nkod odzyskiwania",
     "new_password": "Nowe hasło",
     "recovery_code": "Kod odzyskiwania"
 

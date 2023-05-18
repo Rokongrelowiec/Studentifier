@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -23,8 +22,8 @@ class ObjectDetectorPainter extends CustomPainter {
     final Paint background = Paint()..color = Color(0x99000000);
 
     for (final DetectedObject detectedObject in _objects) {
-      final ParagraphBuilder builder = ParagraphBuilder(
-        ParagraphStyle(
+      final ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+        ui.ParagraphStyle(
             textAlign: TextAlign.left,
             fontSize: 16,
             textDirection: TextDirection.ltr),
@@ -54,7 +53,7 @@ class ObjectDetectorPainter extends CustomPainter {
 
       canvas.drawParagraph(
         builder.build()
-          ..layout(ParagraphConstraints(
+          ..layout(ui.ParagraphConstraints(
             width: right - left,
           )),
         Offset(left, top),

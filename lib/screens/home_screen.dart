@@ -6,11 +6,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import './daily_report_screen.dart';
 import './monthly_report_screen.dart';
-import './orc_screen.dart';
+import './ocr_screen.dart';
 import '../widgets/app_bar_widget.dart';
 import '../widgets/side_drawer.dart';
 
-import './license_screen.dart';
+// import './license_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home-screen';

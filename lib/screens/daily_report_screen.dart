@@ -328,9 +328,7 @@ class _DailyReportState extends State<DailyReport> {
                                       fontSize: sizeHeight * 2),
                                 ),
                                 Container(
-                                  // Running on iPhone in Android Studio requires 17
-                                  // but running it in Xcode accepts 19
-                                  width: sizeHeight * 19,
+                                  width: sizeHeight * 14,
                                   child: Text(
                                     '${nameSurnameList[index].keys.elementAt(0)} ${nameSurnameList[index].values.elementAt(0)}',
                                     style: TextStyle(

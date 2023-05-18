@@ -91,7 +91,7 @@ class GenerateDenyScreen extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.call_caretaker,
                         style: TextStyle(
-                          fontSize: sizeHeight * 2.5,
+                          fontSize: sizeHeight * 2.2,
                           color: Theme.of(context).textTheme.headline1?.color,
                         ),
                       ),
@@ -118,7 +118,7 @@ class GenerateDenyScreen extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.home_screen_return,
                         style: TextStyle(
-                          fontSize: sizeHeight * 2.5,
+                          fontSize: sizeHeight * 2.2,
                         ),
                       ),
                       Icon(Icons.keyboard_return_outlined)
