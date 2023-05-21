@@ -72,7 +72,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                   child: Text(
                 AppLocalizations.of(context)!.fetch_failed,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
@@ -88,7 +88,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                           text: AppLocalizations.of(context)!.last_month_visits,
                           textStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline1?.color,
+                                  Theme.of(context).textTheme.displayLarge?.color,
                               fontSize: sizeHeight * 3),
                         ),
                         tooltipBehavior: _tooltipBehavior,
@@ -108,7 +108,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       AppLocalizations.of(context)!.data_sheet,
                       style: TextStyle(
                           fontSize: sizeHeight * 3,
-                          color: Theme.of(context).textTheme.headline1?.color),
+                          color: Theme.of(context).textTheme.displayLarge?.color),
                     ),
                     SizedBox(
                       height: sizeHeight,
@@ -129,7 +129,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               ),
                               Text(
@@ -138,7 +138,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               )
                             ],
@@ -165,7 +165,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               ),
                               Text(
@@ -174,7 +174,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               )
                             ],
@@ -201,7 +201,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               ),
                               Text(
@@ -210,7 +210,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               )
                             ],
@@ -237,7 +237,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               ),
                               Text(
@@ -246,7 +246,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               )
                             ],
@@ -273,7 +273,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               ),
                               Text(
@@ -282,7 +282,7 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                                     fontSize: sizeHeight * 2,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color),
                               ),
                             ],

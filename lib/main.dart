@@ -106,7 +106,7 @@ class MyApp extends StatelessWidget {
               indicatorColor: Colors.orangeAccent[400],
             ),
             textTheme: TextTheme(
-              headline1: TextStyle(color: Colors.black),
+              displayLarge: TextStyle(color: Colors.black)
             ),
             iconTheme: IconThemeData(color: Colors.black),
           ),
@@ -117,7 +117,7 @@ class MyApp extends StatelessWidget {
                 backgroundColor: Colors.black, indicatorColor: Colors.white30),
             drawerTheme: DrawerThemeData(backgroundColor: Colors.grey[850]),
             textTheme: TextTheme(
-              headline1: TextStyle(color: Colors.white),
+              displayLarge: TextStyle(color: Colors.white),
             ),
             iconTheme: IconThemeData(color: Colors.white),
           ),

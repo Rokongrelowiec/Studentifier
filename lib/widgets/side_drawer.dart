@@ -232,7 +232,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                 fontSize: sizeHeight * 3,
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color)),
                         SizedBox(
                           height: sizeHeight * 2,
@@ -247,7 +247,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                   fontSize: sizeHeight * 3,
                                   color: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .displayLarge
                                       ?.color,
                                   fontWeight: FontWeight.bold,
                                   overflow: TextOverflow.ellipsis)),
@@ -272,7 +272,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                     style: TextStyle(
                                         color: Theme.of(context)
                                             .textTheme
-                                            .headline1
+                                            .displayLarge
                                             ?.color,
                                         fontSize: sizeHeight * 3),
                                   ),
@@ -281,7 +281,7 @@ class _SideDrawerState extends State<SideDrawer> {
                                     style: TextStyle(
                                         color: Theme.of(context)
                                             .textTheme
-                                            .headline1
+                                            .displayLarge
                                             ?.color,
                                         fontSize: sizeHeight * 2.5),
                                   ),
@@ -332,7 +332,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   title: Text(
                     AppLocalizations.of(context)!.mode,
                     style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2),
                   ),
                   trailing: Consumer<ThemeProvider>(
@@ -398,7 +398,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   title: Text(
                     AppLocalizations.of(context)!.language,
                     style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2),
                   ),
                   trailing: Consumer<LocaleProvider>(
@@ -446,7 +446,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   title: Text(
                     AppLocalizations.of(context)!.chart,
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
+                      color: Theme.of(context).textTheme.displayLarge?.color,
                       fontSize: sizeHeight * 2,
                     ),
                   ),
@@ -470,7 +470,7 @@ class _SideDrawerState extends State<SideDrawer> {
                   title: Text(
                     AppLocalizations.of(context)!.about_the_app,
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
+                      color: Theme.of(context).textTheme.displayLarge?.color,
                       fontSize: sizeHeight * 2,
                     ),
                   ),
@@ -497,7 +497,7 @@ class _SideDrawerState extends State<SideDrawer> {
                             .registered_license_plates
                         : AppLocalizations.of(context)!.settings,
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.headline1?.color,
+                      color: Theme.of(context).textTheme.displayLarge?.color,
                       fontSize: sizeHeight * 2,
                     ),
                   ),
@@ -526,7 +526,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         title: Text(
                           AppLocalizations.of(context)!.parking_limit,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
+                            color: Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),
@@ -555,7 +555,7 @@ class _SideDrawerState extends State<SideDrawer> {
                         title: Text(
                           AppLocalizations.of(context)!.source_code,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
+                            color: Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),

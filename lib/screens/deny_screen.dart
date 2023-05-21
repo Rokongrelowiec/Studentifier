@@ -50,7 +50,7 @@ class GenerateDenyScreen extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.denied_entry,
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 5,
                   ),
                 ),
@@ -69,7 +69,7 @@ class GenerateDenyScreen extends StatelessWidget {
                   '${AppLocalizations.of(context)!.rejection_reason} '
                   '$description',
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 4,
                   ),
                   textAlign: TextAlign.center,
@@ -92,7 +92,7 @@ class GenerateDenyScreen extends StatelessWidget {
                         AppLocalizations.of(context)!.call_caretaker,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.2,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Icon(

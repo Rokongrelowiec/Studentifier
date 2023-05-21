@@ -127,7 +127,7 @@ class _GenerateResetPasswordScreenState
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline1?.color,
+                                  Theme.of(context).textTheme.displayLarge?.color,
                               fontSize: sizeHeight * 2.2),
                           decoration: InputDecoration(
                               prefixIcon: Icon(
@@ -139,7 +139,7 @@ class _GenerateResetPasswordScreenState
                               labelStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color,
                                 fontSize: sizeHeight * 2,
                               ),
@@ -186,7 +186,7 @@ class _GenerateResetPasswordScreenState
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color,
                                     fontSize: sizeHeight * 2.2),
                                 decoration: InputDecoration(
@@ -218,7 +218,7 @@ class _GenerateResetPasswordScreenState
                                     labelStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.color,
                                       fontSize: sizeHeight * 2,
                                     ),
@@ -269,7 +269,7 @@ class _GenerateResetPasswordScreenState
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color,
                                     fontSize: sizeHeight * 2.2),
                                 decoration: InputDecoration(
@@ -283,7 +283,7 @@ class _GenerateResetPasswordScreenState
                                     labelStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.color,
                                       fontSize: sizeHeight * 2,
                                     ),

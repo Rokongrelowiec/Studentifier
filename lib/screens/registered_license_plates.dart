@@ -119,7 +119,7 @@ class _GenerateRegisteredLicensePlatesState
                     title: Text(
                       addLicense,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.5),
                     ),
                     content: Form(
@@ -129,7 +129,7 @@ class _GenerateRegisteredLicensePlatesState
                         autofocus: true,
                         controller: licensePlateController,
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.5,
                         ),
                         decoration: InputDecoration(
@@ -214,7 +214,7 @@ class _GenerateRegisteredLicensePlatesState
                   style: TextStyle(
                     fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -225,7 +225,7 @@ class _GenerateRegisteredLicensePlatesState
               Text(
                 '${AppLocalizations.of(context)!.found}: ${lecturersLicencePlates.length} ${AppLocalizations.of(context)!.elements}!',
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 3),
               ),
               SizedBox(
@@ -242,7 +242,7 @@ class _GenerateRegisteredLicensePlatesState
                     title: Text(
                       lecturersLicencePlates[index]['rejestracja'],
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 3),
                     ),
                     trailing: IconButton(

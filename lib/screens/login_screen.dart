@@ -139,7 +139,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                               style: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color,
                                 fontSize: sizeHeight * 2.2,
                               ),
@@ -157,7 +157,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                   labelStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.color,
                                       fontSize: sizeHeight * 2),
                                   hintStyle: TextStyle(color: Colors.grey),
@@ -213,7 +213,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             obscureText: password,
                             style: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline1?.color,
+                                  Theme.of(context).textTheme.displayLarge?.color,
                               fontSize: sizeHeight * 2.2,
                             ),
                             decoration: InputDecoration(
@@ -248,7 +248,7 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                 labelStyle: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color,
                                     fontSize: sizeHeight * 2),
                                 hintStyle: TextStyle(color: Colors.grey),

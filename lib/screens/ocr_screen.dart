@@ -66,7 +66,7 @@ class _OCRScreen extends State<OCRScreen> {
             Text(
               AppLocalizations.of(context)!.camera_permission_req,
               style: TextStyle(
-                  color: Theme.of(context).textTheme.headline1?.color,
+                  color: Theme.of(context).textTheme.displayLarge?.color,
                   fontSize: sizeHeight * 3),
               textAlign: TextAlign.center,
             ),
@@ -84,7 +84,7 @@ class _OCRScreen extends State<OCRScreen> {
               child: Text(
                 AppLocalizations.of(context)!.request_camera,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 2),
               ),
             ),

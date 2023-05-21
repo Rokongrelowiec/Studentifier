@@ -193,7 +193,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                     child: TextFormField(
                       controller: firstNameController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2.4
                       ),
                       decoration: InputDecoration(
@@ -205,7 +205,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelText: AppLocalizations.of(context)!.first_name,
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
@@ -236,7 +236,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                     child: TextFormField(
                       controller: lastNameController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2.4
                       ),
                       decoration: InputDecoration(
@@ -248,7 +248,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelText: AppLocalizations.of(context)!.last_name,
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
@@ -281,7 +281,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                       controller: studentIdController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2.4,
                       ),
                       decoration: InputDecoration(
@@ -293,7 +293,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelText: AppLocalizations.of(context)!.index,
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
@@ -325,7 +325,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                       enabled: false,
                       controller: licensePlateController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                       fontSize: sizeHeight * 2.4,
                       ),
                       decoration: InputDecoration(
@@ -337,7 +337,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelText: AppLocalizations.of(context)!.license_plate4,
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.3
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
@@ -374,7 +374,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                       keyboardType: TextInputType.number,
                       enabled: false,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.4,
                       ),
                       decoration: InputDecoration(
@@ -386,7 +386,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelText: AppLocalizations.of(context)!.num_of_visits_month,
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
@@ -417,7 +417,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                     child: TextFormField(
                       controller: validityOfStudentIdController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.4,
                       ),
                       maxLength: 10,
@@ -430,7 +430,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelText: AppLocalizations.of(context)!.student_id_val2,
                         labelStyle: TextStyle(
                             color:
-                                Theme.of(context).textTheme.headline1?.color,
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
