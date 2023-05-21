@@ -165,14 +165,14 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                         AppLocalizations.of(context)!.first_name,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Text(
                         widget.firstName,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                     ],
@@ -191,14 +191,14 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                         AppLocalizations.of(context)!.last_name,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Text(
                         widget.lastName,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                     ],
@@ -217,14 +217,14 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                       AppLocalizations.of(context)!.index,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Text(
                         widget.studentId.toString(),
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                     ],
@@ -243,14 +243,14 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                         AppLocalizations.of(context)!.license_plate4,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Text(
                         widget.licensePlate,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                     ],
@@ -269,14 +269,14 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                         AppLocalizations.of(context)!.num_of_visits_month,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Text(
                         widget.numberOfVisits.toString(),
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                     ],
@@ -295,14 +295,14 @@ class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
                         AppLocalizations.of(context)!.student_id_val,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                       Text(
                         widget.validityOfStudentId,
                         style: TextStyle(
                           fontSize: sizeHeight * 2.5,
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                         ),
                       ),
                     ],

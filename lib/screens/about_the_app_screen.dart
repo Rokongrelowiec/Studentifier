@@ -50,7 +50,7 @@ class GenerateAboutApp extends StatelessWidget {
                  AppLocalizations.of(context)!.app_description1,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.7,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -60,7 +60,7 @@ class GenerateAboutApp extends StatelessWidget {
                     AppLocalizations.of(context)!.app_description2,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.4,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -71,7 +71,7 @@ class GenerateAboutApp extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                       fontSize: sizeHeight * 2.8,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -81,7 +81,7 @@ class GenerateAboutApp extends StatelessWidget {
                   AppLocalizations.of(context)!.app_description3,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -91,7 +91,7 @@ class GenerateAboutApp extends StatelessWidget {
                   AppLocalizations.of(context)!.app_description4,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -101,7 +101,7 @@ class GenerateAboutApp extends StatelessWidget {
                   AppLocalizations.of(context)!.app_description5,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -111,7 +111,7 @@ class GenerateAboutApp extends StatelessWidget {
                   AppLocalizations.of(context)!.app_description6,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -121,7 +121,7 @@ class GenerateAboutApp extends StatelessWidget {
                   AppLocalizations.of(context)!.app_description7,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.4,
-                      color: Theme.of(context).textTheme.headline1?.color),
+                      color: Theme.of(context).textTheme.displayLarge?.color),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -131,7 +131,7 @@ class GenerateAboutApp extends StatelessWidget {
                   AppLocalizations.of(context)!.simple_right,
                   style: TextStyle(
                       fontSize: sizeHeight * 2.6,
-                      color: Theme.of(context).textTheme.headline1?.color,
+                      color: Theme.of(context).textTheme.displayLarge?.color,
                       fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,

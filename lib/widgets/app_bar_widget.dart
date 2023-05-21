@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final AppBar appBar;
   final bool isBackIcon;
@@ -25,7 +25,7 @@ class AppBarWidget extends StatelessWidget with PreferredSizeWidget {
       title: Text(
         title,
         style: TextStyle(
-          color: Theme.of(context).textTheme.headline1?.color,
+          color: Theme.of(context).textTheme.displayLarge?.color,
           fontSize: sizeHeight * 3,
         ),
       ),

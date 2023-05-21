@@ -164,7 +164,7 @@ class _DailyReportState extends State<DailyReport> {
               child: Text(
                 AppLocalizations.of(context)!.fetch_failed,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
@@ -187,7 +187,7 @@ class _DailyReportState extends State<DailyReport> {
                       style: TextStyle(
                         fontSize: sizeHeight * 4,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                       ),
                     ),
                     SizedBox(
@@ -197,7 +197,7 @@ class _DailyReportState extends State<DailyReport> {
                       AppLocalizations.of(context)!.license_plates,
                       style: TextStyle(
                         fontSize: sizeHeight * 3,
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                       ),
                     ),
                     SizedBox(
@@ -206,7 +206,7 @@ class _DailyReportState extends State<DailyReport> {
                     Text(
                       '${AppLocalizations.of(context)!.found}: ${licenseAndHourList.length} ${AppLocalizations.of(context)!.elements}!',
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2),
                     ),
                     Row(
@@ -215,7 +215,7 @@ class _DailyReportState extends State<DailyReport> {
                         Text(
                           AppLocalizations.of(context)!.selected_date,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
+                            color: Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),
@@ -288,7 +288,7 @@ class _DailyReportState extends State<DailyReport> {
                                 fontSize: sizeHeight * 3,
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color,
                               ),
                             ),
@@ -299,7 +299,7 @@ class _DailyReportState extends State<DailyReport> {
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color,
                                     fontSize: sizeHeight * 2,
                                   ),
@@ -310,7 +310,7 @@ class _DailyReportState extends State<DailyReport> {
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color,
                                   ),
                                 ),
@@ -323,7 +323,7 @@ class _DailyReportState extends State<DailyReport> {
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.color,
                                       fontSize: sizeHeight * 2),
                                 ),
@@ -335,7 +335,7 @@ class _DailyReportState extends State<DailyReport> {
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline1
+                                          .displayLarge
                                           ?.color,
                                       fontSize: sizeHeight * 2,
                                       overflow: TextOverflow.ellipsis,

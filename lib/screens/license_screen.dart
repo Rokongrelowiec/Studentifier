@@ -134,7 +134,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                 color: Theme
                                     .of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color,
                                 fontSize: sizeHeight * 2.5),
                           ),
@@ -149,7 +149,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                 color: Theme
                                     .of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color,
                                 fontSize: sizeHeight * 2.5,
                               ),
@@ -266,7 +266,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                 color: Theme
                     .of(context)
                     .textTheme
-                    .headline1
+                    .displayLarge
                     ?.color,
               ),
               textAlign: TextAlign.center,
@@ -282,7 +282,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                 color: Theme
                     .of(context)
                     .textTheme
-                    .headline1
+                    .displayLarge
                     ?.color,
               ),
               textAlign: TextAlign.center,
@@ -296,7 +296,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                   color: Theme
                       .of(context)
                       .textTheme
-                      .headline1
+                      .displayLarge
                       ?.color,
                 ),
                 textAlign: TextAlign.center,
@@ -340,7 +340,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                   Theme
                                       .of(context)
                                       .textTheme
-                                      .headline1
+                                      .displayLarge
                                       ?.color,
                                   fontSize: sizeHeight * 3),
                             ),
@@ -350,7 +350,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                 color: Theme
                                     .of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color,
                                 fontSize: sizeHeight * 3,
                               ),
@@ -378,7 +378,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                         color: Theme
                                             .of(context)
                                             .textTheme
-                                            .headline1
+                                            .displayLarge
                                             ?.color,
                                         fontSize: sizeHeight * 2.5,
                                       ),
@@ -417,7 +417,7 @@ class _GenerateLicenseScreenState extends State<GenerateLicenseScreen> {
                                         color: Theme
                                             .of(context)
                                             .textTheme
-                                            .headline1
+                                            .displayLarge
                                             ?.color,
                                         fontSize: sizeHeight * 2.5,
                                       ),

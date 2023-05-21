@@ -114,7 +114,7 @@ class _GenerateParkingLimitScreenState
                   style: TextStyle(
                     fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -131,7 +131,7 @@ class _GenerateParkingLimitScreenState
                   AppLocalizations.of(context)!.parking_occupancy,
                   style: TextStyle(
                     fontSize: sizeHeight * 3,
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                   ),
                 ),
               ),
@@ -155,7 +155,7 @@ class _GenerateParkingLimitScreenState
                   '${AppLocalizations.of(context)!.current_limit}:'
                   ' $parkingLimit ${AppLocalizations.of(context)!.parking_spaces}',
                   style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 3,
                   ),
                   textAlign: TextAlign.center,
@@ -173,7 +173,7 @@ class _GenerateParkingLimitScreenState
                       title: Text(
                         AppLocalizations.of(context)!.change_limit,
                         style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
+                            color: Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.5),
                       ),
                       content: Form(
@@ -184,7 +184,7 @@ class _GenerateParkingLimitScreenState
                             controller: limitController,
                             style: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline1?.color,
+                                  Theme.of(context).textTheme.displayLarge?.color,
                               fontSize: sizeHeight * 2.5,
                             ),
                             decoration: InputDecoration(

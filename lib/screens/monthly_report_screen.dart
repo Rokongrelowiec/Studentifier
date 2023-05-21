@@ -105,7 +105,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
               child: Text(
                 AppLocalizations.of(context)!.fetch_failed,
                 style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1?.color,
+                    color: Theme.of(context).textTheme.displayLarge?.color,
                     fontSize: sizeHeight * 4,
                     fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
@@ -128,7 +128,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                       style: TextStyle(
                         fontSize: sizeHeight * 4,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                       ),
                     ),
                     SizedBox(
@@ -138,7 +138,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                       AppLocalizations.of(context)!.license_plates,
                       style: TextStyle(
                         fontSize: sizeHeight * 3,
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                       ),
                     ),
                     SizedBox(
@@ -147,7 +147,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                     Text(
                       '${AppLocalizations.of(context)!.found}: ${licencePlatesList.length} ${AppLocalizations.of(context)!.elements}!',
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline1?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2,
                       ),
                     ),
@@ -157,7 +157,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                         Text(
                           AppLocalizations.of(context)!.selected_date,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.headline1?.color,
+                            color: Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),
@@ -223,7 +223,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                 fontSize: sizeHeight * 3,
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline1
+                                    .displayLarge
                                     ?.color),
                           ),
                           title: Row(
@@ -233,7 +233,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .displayLarge
                                       ?.color,
                                   fontSize: sizeHeight * 2,
                                 ),
@@ -245,7 +245,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                   fontSize: sizeHeight * 2,
                                   color: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .displayLarge
                                       ?.color,
                                 ),
                               ),
@@ -258,7 +258,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
-                                      .headline1
+                                      .displayLarge
                                       ?.color,
                                   fontSize: sizeHeight * 2,
                                 ),
@@ -271,7 +271,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline1
+                                        .displayLarge
                                         ?.color,
                                     fontSize: sizeHeight * 2,
                                     overflow: TextOverflow.ellipsis,

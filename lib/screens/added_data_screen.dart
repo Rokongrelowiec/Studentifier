@@ -118,14 +118,14 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                       AppLocalizations.of(context)!.open_gate,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 4),
                     ),
                     Text(
                       AppLocalizations.of(context)!.scan_succeeded,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 3.5),
                     ),
                     // comment Text widget below -> self data validation
@@ -135,7 +135,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                         '${AppLocalizations.of(context)!.your_data}: ${widget.name} ${widget.surname} ${widget.studentId},\n'
                         '${widget.scanTime}, ${widget.licensePlate}, ${widget.isPrivileged}',
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 3,
                         ),
                         textAlign: TextAlign.center,
@@ -157,7 +157,7 @@ class _GenerateAddedDataScreenState extends State<GenerateAddedDataScreen> {
                       AppLocalizations.of(context)!.summary_icon,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline1?.color,
+                          color: Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 3),
                     ),
                   ],
