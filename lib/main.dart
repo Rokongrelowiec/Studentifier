@@ -54,7 +54,8 @@ Future<void> main() async {
           create: (_) => ThemeProvider()..initialize(),
         ),
         ChangeNotifierProvider(
-          create: (_) => AdminProvider()
+          create: (_) => AdminProvider(),
+        // create: (_) => AdminProvider()..initialize(),
         ),
         ChangeNotifierProvider(
           create: (_) => LocaleProvider()..initialize(),
@@ -106,7 +107,7 @@ class MyApp extends StatelessWidget {
               indicatorColor: Colors.orangeAccent[400],
             ),
             textTheme: TextTheme(
-              displayLarge: TextStyle(color: Colors.black)
+              displayLarge: TextStyle(color: Colors.black),
             ),
             iconTheme: IconThemeData(color: Colors.black),
           ),

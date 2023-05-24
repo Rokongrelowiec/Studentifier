@@ -1,10 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocaleProvider with ChangeNotifier {
-  String currentLang = 'en';
+  String currentLang = 'system';
+  bool isSystemLang = true;
 
   Locale? get locale {
+    if (currentLang == 'system') {
+      isSystemLang = true;
+      currentLang = Platform.localeName.split('_').first;
+    } else {
+      isSystemLang = false;
+    }
     if (currentLang == 'en') {
       return Locale('en');
     } else if (currentLang == 'pl') {
@@ -23,7 +32,7 @@ class LocaleProvider with ChangeNotifier {
 
   initialize() async {
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    currentLang = _prefs.getString('language') ?? 'en';
+    currentLang = _prefs.getString('language') ?? 'system';
     notifyListeners();
   }
 }

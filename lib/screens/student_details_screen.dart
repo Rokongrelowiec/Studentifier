@@ -75,7 +75,7 @@ class GenerateStudentDetails extends StatefulWidget {
 class _GenerateStudentDetailsState extends State<GenerateStudentDetails> {
   @override
   Widget build(BuildContext context) {
-    final bool isAdmin = Provider.of<AdminProvider>(context).isAdmin;
+    final bool isAdmin = Provider.of<AdminProvider>(context).adminPermission;
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
 
     return Scaffold(
