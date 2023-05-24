@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AvatarProvider extends ChangeNotifier {
-  String? _avatarImg;
+  String? _avatarImgPath;
 
-  String? get avatarImg => _avatarImg;
+  String? get avatarImgPath => _avatarImgPath;
 
   Future<void> saveImagePath(String imagePath) async {
     final directory = await getTemporaryDirectory();
     final file = File('${directory.path}/image.txt');
     await file.writeAsString(imagePath);
-    _avatarImg = imagePath;
+    _avatarImgPath = imagePath;
     notifyListeners();
   }
 
@@ -20,7 +20,7 @@ class AvatarProvider extends ChangeNotifier {
     final directory = await getTemporaryDirectory();
     final file = File('${directory.path}/image.txt');
     if (file.existsSync()) {
-      _avatarImg = await file.readAsString();
+      _avatarImgPath = await file.readAsString();
       notifyListeners();
     }
   }

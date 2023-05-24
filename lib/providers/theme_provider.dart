@@ -16,16 +16,13 @@ class ThemeProvider with ChangeNotifier {
 
   changeTheme(String theme) async {
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
-
     await _prefs.setString('theme', theme);
-
     currentTheme = theme;
     notifyListeners();
   }
 
   initialize() async {
     final SharedPreferences _prefs = await SharedPreferences.getInstance();
-
     currentTheme = _prefs.getString('theme') ?? 'system';
     notifyListeners();
   }

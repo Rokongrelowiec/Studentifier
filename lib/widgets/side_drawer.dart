@@ -149,13 +149,33 @@ class _SideDrawerState extends State<SideDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
+    final isAdmin = Provider.of<AdminProvider>(context).adminPermission;
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     final avatarProv = Provider.of<AvatarProvider>(context);
-    final avatarImg = avatarProv.avatarImg;
+    final avatarImgPath = avatarProv.avatarImgPath;
 
-    if (avatarImg == null) {
+    if (avatarImgPath == null) {
       avatarProv.loadImagePath();
+    }
+
+    Widget loadAvatarImg(avatarImgPath) {
+      File file = File(avatarImgPath);
+      if (file.existsSync()) {
+        return ClipOval(
+          child: Image.file(
+            File(avatarImgPath),
+            width: sizeHeight * 25,
+            height: sizeHeight * 25,
+            fit: BoxFit.cover,
+          ),
+        );
+      } else {
+        return Icon(
+          Icons.tag_faces_outlined,
+          size: sizeHeight * 8,
+          color: Colors.white,
+        );
+      }
     }
 
     _title(String val) {
@@ -200,15 +220,8 @@ class _SideDrawerState extends State<SideDrawer> {
                       onTap: isAdmin ? showImageSource : null,
                       child: CircleAvatar(
                         backgroundColor: Colors.orangeAccent,
-                        child: (avatarImg != null && isAdmin)
-                            ? ClipOval(
-                                child: Image.file(
-                                  File(avatarImg),
-                                  width: sizeHeight * 25,
-                                  height: sizeHeight * 25,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
+                        child: (avatarImgPath != null && isAdmin)
+                            ? loadAvatarImg(avatarImgPath)
                             : Icon(
                                 Icons.tag_faces_outlined,
                                 size: sizeHeight * 8,
@@ -403,31 +416,38 @@ class _SideDrawerState extends State<SideDrawer> {
                   ),
                   trailing: Consumer<LocaleProvider>(
                       builder: (context, provider, child) {
-                    var lang = provider.currentLang;
+                    var lang =
+                        provider.isSystemLang ? 'system' : provider.currentLang;
                     return DropdownButton(
-                      dropdownColor:
-                          Theme.of(context).drawerTheme.backgroundColor,
-                      value: lang,
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        size: sizeHeight * 4,
-                      ),
-                      elevation: 16,
-                      style: TextStyle(color: Colors.orange.withOpacity(0.7)),
-                      underline: Container(
-                        height: 1,
-                        color: Colors.orangeAccent,
-                      ),
-                      onChanged: (String? val) {
-                        provider.changeLang(val ?? 'en');
-                      },
-                      items: L10n.all
-                          .map((e) => DropdownMenuItem(
+                        dropdownColor:
+                            Theme.of(context).drawerTheme.backgroundColor,
+                        value: lang,
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: sizeHeight * 4,
+                        ),
+                        elevation: 16,
+                        style: TextStyle(color: Colors.orange.withOpacity(0.7)),
+                        underline: Container(
+                          height: 1,
+                          color: Colors.orangeAccent,
+                        ),
+                        onChanged: (String? val) {
+                          provider.changeLang(val ?? 'system');
+                        },
+                        items: [
+                          ...L10n.all.map((e) => DropdownMenuItem(
                                 value: e.toString(),
                                 child: _title(e.languageCode),
-                              ))
-                          .toList(),
-                    );
+                              )),
+                          DropdownMenuItem(
+                            value: 'system',
+                            child: Text(
+                              AppLocalizations.of(context)!.system,
+                              style: TextStyle(fontSize: sizeHeight * 2),
+                            ),
+                          )
+                        ]);
                   }),
                 ),
                 Padding(
@@ -526,7 +546,8 @@ class _SideDrawerState extends State<SideDrawer> {
                         title: Text(
                           AppLocalizations.of(context)!.parking_limit,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.displayLarge?.color,
+                            color:
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),
@@ -555,7 +576,8 @@ class _SideDrawerState extends State<SideDrawer> {
                         title: Text(
                           AppLocalizations.of(context)!.source_code,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.displayLarge?.color,
+                            color:
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),

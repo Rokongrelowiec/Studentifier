@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminProvider extends ChangeNotifier {
-  bool isAdmin = false;
+  bool _isAdmin = false;
 
-  get adminPermission {
-    return isAdmin;
-  }
+  get adminPermission => _isAdmin;
 
   changePermission(bool admin) async {
-    final SharedPreferences _prefs = await SharedPreferences.getInstance();
-    await _prefs.setBool('isAdmin', admin);
-    isAdmin = admin;
+    // final SharedPreferences _prefs = await SharedPreferences.getInstance();
+    // await _prefs.setBool('isAdmin', admin);
+    _isAdmin = admin;
     notifyListeners();
   }
+
+  // initialize() async {
+  //   final SharedPreferences _prefs = await SharedPreferences.getInstance();
+  //
+  //   _isAdmin = _prefs.getBool('isAdmin') ?? false;
+  //   notifyListeners();
+  // }
 }

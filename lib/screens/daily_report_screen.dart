@@ -144,7 +144,7 @@ class _DailyReportState extends State<DailyReport> {
 
   @override
   Widget build(BuildContext context) {
-    final isAdmin = Provider.of<AdminProvider>(context).isAdmin;
+    final isAdmin = Provider.of<AdminProvider>(context).adminPermission;
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
     return FutureBuilder(
         future: getData(),
