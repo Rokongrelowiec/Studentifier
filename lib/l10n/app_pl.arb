@@ -120,6 +120,10 @@
     "change_to_recover_code": "Zmień, aby wprowadzić\nkod odzyskiwania",
     "change_to_send_code": "Zmień, aby wysłać\nkod odzyskiwania",
     "new_password": "Nowe hasło",
-    "recovery_code": "Kod odzyskiwania"
-
+    "recovery_code": "Kod odzyskiwania",
+    "sent_recovery_code": "Wysłano kod odzyskiwania!",
+    "password_changed": "Zmieniono hasło!",
+    "req_failed": "Żądanie nie powiodło się!",
+    "open_mail_client": "Otwieranie klienta poczty",
+    "write_msg": "Napisz wiadomość"
 }

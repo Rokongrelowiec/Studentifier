@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
 import '../widgets/app_bar_widget.dart';
 
@@ -37,21 +39,6 @@ class _GenerateResetPasswordScreenState
   Color iconColor = Colors.grey;
   final passwordFocusNode = FocusNode();
   final codeFocusNode = FocusNode();
-  var maskFormatter = new MaskTextInputFormatter(
-      mask: '###-###', filter: {"#": RegExp(r'[0-9]')});
-
-  @override
-  void initState() {
-    super.initState();
-    // codeController.addListener(() {
-    //   final text = codeController.text;
-    //   if (text.length == 3 && !text.contains('-')) {
-    //     codeController.text = text + '-';
-    //     codeController.selection = TextSelection.fromPosition(
-    //         TextPosition(offset: codeController.text.length));
-    //   }
-    // });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +70,7 @@ class _GenerateResetPasswordScreenState
             ),
           ),
           Positioned(
-            top: sizeHeight * 25,
+            top: sizeHeight * 20,
             right: sizeHeight,
             child: Container(
               width: sizeHeight * 13,
@@ -106,28 +93,27 @@ class _GenerateResetPasswordScreenState
             child: SingleChildScrollView(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 10),
                 child: Form(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: sizeHeight),
-                        child: Icon(
-                          Icons.lock_reset_outlined,
-                          size: sizeHeight * 30,
-                          color: Theme.of(context).primaryColor,
-                        ),
+                      Icon(
+                        Icons.lock_reset_outlined,
+                        size: sizeHeight * 30,
+                        color: Theme.of(context).primaryColor,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: sizeHeight),
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.displayLarge?.color,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge
+                                  ?.color,
                               fontSize: sizeHeight * 2.2),
                           decoration: InputDecoration(
                               prefixIcon: Icon(
@@ -264,8 +250,9 @@ class _GenerateResetPasswordScreenState
                               padding:
                                   EdgeInsets.symmetric(vertical: sizeHeight),
                               child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                maxLength: 7,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 2,
+                                maxLength: 60,
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .textTheme
@@ -298,13 +285,18 @@ class _GenerateResetPasswordScreenState
                                     errorStyle:
                                         TextStyle(fontSize: sizeHeight * 2)),
                                 validator: (String? val) {
-                                  if (val == null || val.length != 7) {
+                                  if (val == null ||
+                                      45 > val.length ||
+                                      val.length > 65) {
                                     return AppLocalizations.of(context)!
                                         .invalid_value;
                                   }
                                   return null;
                                 },
-                                inputFormatters: [maskFormatter],
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(
+                                      "[A-Za-z0-9]|[@~!\$%^&*_=+}{'\.?-]")),
+                                ],
                                 focusNode: codeFocusNode,
                                 controller: codeController,
                                 textInputAction: TextInputAction.done,
@@ -318,7 +310,102 @@ class _GenerateResetPasswordScreenState
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final isValidForm =
+                                formKey.currentState!.validate();
+                            if (isValidForm) {
+                              String apiKey =
+                                  await DefaultAssetBundle.of(context)
+                                      .loadString('assets/api-key.txt');
+                              bool positiveResponse = false;
+                              if (sendCode) {
+                                var requestBody = jsonEncode(
+                                    {'email': '${emailController.text}'});
+                                var response = await http.post(
+                                  Uri.parse(
+                                      'https://api.danielrum.in/api/v1/admin/forgotten_password/initialize'),
+                                  headers: {
+                                    'x-api-key': apiKey,
+                                    'Content-Type': 'application/json'
+                                  },
+                                  body: requestBody,
+                                );
+                                if (response.statusCode == 200) {
+                                  positiveResponse = true;
+                                }
+                              } else {
+                                var bytes =
+                                    utf8.encode("email:${emailController.text}"
+                                        "|password:${passwordController.text}");
+                                Digest sha = sha512.convert(bytes);
+                                var requestBody = jsonEncode({
+                                  'email': '${emailController.text}',
+                                  'recovery_code': '${codeController.text}',
+                                  'new_auth_hash': '$sha',
+                                });
+                                var response = await http.post(
+                                  Uri.parse(
+                                      'https://api.danielrum.in/api/v1/admin/forgotten_password/validate'),
+                                  headers: {
+                                    'x-api-key': apiKey,
+                                    'Content-Type': 'application/json'
+                                  },
+                                  body: requestBody,
+                                );
+                                if (response.statusCode == 200) {
+                                  positiveResponse = true;
+                                }
+                              }
+                              String dialogMsg =
+                                  AppLocalizations.of(context)!.req_failed;
+                              IconData ic = Icons.sms_failed_outlined;
+                              if (positiveResponse) {
+                                dialogMsg = sendCode
+                                    ? AppLocalizations.of(context)!
+                                        .sent_recovery_code
+                                    : AppLocalizations.of(context)!
+                                        .password_changed;
+                                ic = Icons.cloud_done_outlined;
+                              }
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Theme.of(context)
+                                      .drawerTheme
+                                      .backgroundColor,
+                                  icon: Icon(
+                                    ic,
+                                    size: sizeHeight * 20,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(60))),
+                                  title: Text(
+                                    dialogMsg,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge
+                                          ?.color,
+                                      fontSize: sizeHeight * 3,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                              Future.delayed(Duration(seconds: 2), () {
+                                Navigator.of(context).pop();
+                                if (positiveResponse && sendCode) {
+                                    setState(() {
+                                      sendCode = false;
+                                    });
+                                } else {
+                                  Navigator.of(context).pop();
+                                }
+                              });
+                            }
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

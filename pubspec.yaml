@@ -44,7 +44,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   intl:
   confetti: ^0.7.0
-  camera: ^0.9.4
+  camera: ^0.10.5
   google_ml_kit: ^0.13.0
   crypto: ^3.0.2
   permission_handler: ^10.2.0
@@ -98,7 +98,6 @@ flutter:
     - assets/images/
     - assets/object_labeler.tflite
     - assets/api-key.txt
-    - assets/mail-service.txt
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
