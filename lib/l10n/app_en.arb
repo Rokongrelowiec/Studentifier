@@ -124,5 +124,10 @@
     "change_to_recover_code": "Change to enter recovery code",
     "change_to_send_code": "Change to send recovery code",
     "new_password": "New password",
-    "recovery_code": "Recovery code"
+    "recovery_code": "Recovery code",
+    "sent_recovery_code": "The recovery code has been sent",
+    "password_changed": "Password has been changed",
+    "req_failed": "Request has failed",
+    "open_mail_client": "Opening the email client",
+    "write_msg": "Write message"
 }

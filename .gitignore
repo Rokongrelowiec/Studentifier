@@ -45,4 +45,6 @@ app.*.map.json
 
 # Ignore api-key
 api-key.txt
-mail-service.txt
+
+# Ignore Flutter pubspec.lock
+pubspec.lock
