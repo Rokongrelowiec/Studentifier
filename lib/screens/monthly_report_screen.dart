@@ -26,17 +26,17 @@ class _MonthlyReportState extends State<MonthlyReport> {
   Future getData() async {
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    String month = (DateFormat.MMM().format(selectedDate)).toUpperCase();
-    String year = (DateFormat.y().format(DateTime.now())).toString();
-    var requestBody = jsonEncode({'scope': '${month + year}'});
-    var response = await http.post(
+    final String month = DateFormat.MMM().format(selectedDate).toLowerCase();
+    final String year = selectedDate.year.toString();
+    var response = await http.get(
       Uri.parse(
-          'http://130.61.192.162:8069/api/v1/logs/entries/month/licenseplates'),
-      headers: {'x-api-key': apiKey},
-      body: requestBody,
+          'https://api.danielrum.in/api/v1/logs/entires/$month/$year/licenseplates'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
     );
-    var decodedResponse = jsonDecode(response
-        .body); // [{"rejestracja":"ABC","count":4},{"rejestracja":"QWERTY","count":3}]
+    var decodedResponse = jsonDecode(response.body);
     countList = [];
     licencePlatesList = [];
     for (int i = 0; i < decodedResponse.length; i++) {
@@ -45,42 +45,49 @@ class _MonthlyReportState extends State<MonthlyReport> {
     }
     studentIdList = [];
     for (int i = 0; i < licencePlatesList.length; i++) {
-      requestBody = jsonEncode({"licenseplate": licencePlatesList[i]});
-      response = await http.post(
+      response = await http.get(
         Uri.parse(
-            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/checkone'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+            'https://api.danielrum.in/api/v1/vehicles/licenseplates/${licencePlatesList[i]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
       decodedResponse = jsonDecode(response.body);
-      studentIdList.add(decodedResponse[0]['numer_albumu']);
+      studentIdList.add(decodedResponse['numer_albumu']);
     }
     nameSurnameList = [];
     for (int i = 0; i < studentIdList.length; i++) {
-      requestBody = jsonEncode({'numer_albumu': studentIdList[i]});
-      response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/students/bystudentId'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+      response = await http.get(
+        Uri.parse(
+            'https://api.danielrum.in/api/v1/students/${studentIdList[i]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
-      String name = jsonDecode(response.body)[0]['imie'],
-          surname = jsonDecode(response.body)[0]['nazwisko'];
+      String name = jsonDecode(response.body)['imie'],
+          surname = jsonDecode(response.body)['nazwisko'];
       nameSurnameList.add({name: surname});
     }
     studentIdValidityList = [];
     for (int i = 0; i < studentIdList.length; i++) {
-      requestBody = jsonEncode({'numer_albumu': studentIdList[i]});
-      response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/students/active/checkone'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+      response = await http.get(
+        Uri.parse(
+            'https://api.danielrum.in/api/v1/students/active/${studentIdList[i]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
       decodedResponse = jsonDecode(response.body);
-      studentIdValidityList.add(decodedResponse[0]['data_waznosci']);
+      studentIdValidityList.add(decodedResponse['data_waznosci']);
     }
     final dateFormat = DateFormat('dd-MM-yyyy');
     for (int i = 0; i < studentIdValidityList.length; i++) {
-      studentIdValidityList[i] = (dateFormat.format(DateTime.parse(studentIdValidityList[i]))).toString();
+      studentIdValidityList[i] =
+          (dateFormat.format(DateTime.parse(studentIdValidityList[i])))
+              .toString();
     }
   }
 
@@ -157,7 +164,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
                         Text(
                           AppLocalizations.of(context)!.selected_date,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.displayLarge?.color,
+                            color:
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),

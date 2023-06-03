@@ -11,12 +11,12 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../widgets/app_bar_widget.dart';
 
 class StudentEdit extends StatelessWidget {
-  String firstName;
-  String lastName;
-  int studentId;
-  String licensePlate;
-  int numberOfVisits;
-  String validityOfStudentId;
+  final String firstName;
+  final String lastName;
+  final int studentId;
+  final String licensePlate;
+  final int numberOfVisits;
+  final String validityOfStudentId;
 
   StudentEdit(
       {required this.firstName,
@@ -51,12 +51,12 @@ class StudentEdit extends StatelessWidget {
 }
 
 class StudentEditGenerate extends StatefulWidget {
-  String firstName;
-  String lastName;
-  int studentId;
-  String licensePlate;
-  int numberOfVisits;
-  String validityOfStudentId;
+  final String firstName;
+  final String lastName;
+  final int studentId;
+  final String licensePlate;
+  final int numberOfVisits;
+  final String validityOfStudentId;
 
   StudentEditGenerate(
       {required this.firstName,
@@ -74,8 +74,8 @@ class StudentEditGenerate extends StatefulWidget {
 
 class _StudentEditGenerateState extends State<StudentEditGenerate> {
   final formKey = GlobalKey<FormState>();
-  var maskFormatter = new MaskTextInputFormatter(mask: '##-##-####',
-      filter: { "#": RegExp(r'[0-9]') });
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '##-##-####', filter: {"#": RegExp(r'[0-9]')});
 
   setFirstUpperCase(String text) {
     final res = text.substring(0, 1).toUpperCase() + text.substring(1);
@@ -113,10 +113,10 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
     final sizeHeight = MediaQuery.of(context).size.height * 0.01;
 
     final regExp = RegExp(r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|'
-    r'30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:'
-    r'29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579]'
-    r'[26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])'
-    r'(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
+        r'30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:'
+        r'29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579]'
+        r'[26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])'
+        r'(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$');
 
     return Scaffold(
       appBar: AppBarWidget(
@@ -129,29 +129,37 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
             padding: EdgeInsets.only(right: sizeHeight),
             child: IconButton(
               onPressed: () async {
-                var date = DateFormat('dd-MM-yyyy').parse(validityOfStudentIdController.text);
-                var formattedDate = DateFormat('yyyy-MM-dd').format(date);
+                var date = DateFormat('dd-MM-yyyy')
+                    .parse(validityOfStudentIdController.text);
+
+                var formattedDate = '${DateFormat.d().format(date)}'
+                    ' ${DateFormat.MMM().format(date).toLowerCase()}'
+                    ' ${DateFormat.y().format(date)}';
+
                 final isValidForm = formKey.currentState!.validate();
                 if (isValidForm) {
                   String apiKey = await DefaultAssetBundle.of(context)
                       .loadString('assets/api-key.txt');
                   var requestBody = jsonEncode({
-                    'numer_albumu': studentIdController.text,
                     'imie': setFirstUpperCase(firstNameController.text),
                     'nazwisko': setFirstUpperCase(lastNameController.text),
                     'data_waznosci': formattedDate,
                   });
-                  await http.post(
+                  await http.put(
                     Uri.parse(
-                        'http://130.61.192.162:8069/api/v1/students/update/bystudentId'),
-                    headers: {'x-api-key': apiKey},
+                        'https://api.danielrum.in/api/v1/students/update/${studentIdController.text}'),
+                    headers: {
+                      'x-api-key': apiKey,
+                      'Content-Type': 'application/json',
+                    },
                     body: requestBody,
                   );
                   Navigator.of(context).pop({
                     'firstName': setFirstUpperCase(firstNameController.text),
                     'lastName': setFirstUpperCase(lastNameController.text),
                     'studentId': studentIdController.text,
-                    'licensePlate': setAllUpperCase(licensePlateController.text),
+                    'licensePlate':
+                        setAllUpperCase(licensePlateController.text),
                     'numberOfVisits': numberOfVisitsController.text,
                     'validityOfStudentId': validityOfStudentIdController.text,
                   });
@@ -193,9 +201,9 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                     child: TextFormField(
                       controller: firstNameController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
-                        fontSize: sizeHeight * 2.4
-                      ),
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
+                          fontSize: sizeHeight * 2.4),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.person,
@@ -204,12 +212,13 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         ),
                         labelText: AppLocalizations.of(context)!.first_name,
                         labelStyle: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge?.color,
-                            fontSize: sizeHeight * 2.3,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
+                          fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight * 2),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: sizeHeight * 2),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -236,9 +245,9 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                     child: TextFormField(
                       controller: lastNameController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
-                        fontSize: sizeHeight * 2.4
-                      ),
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
+                          fontSize: sizeHeight * 2.4),
                       decoration: InputDecoration(
                         icon: Icon(
                           Icons.person_outlined,
@@ -247,12 +256,13 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         ),
                         labelText: AppLocalizations.of(context)!.last_name,
                         labelStyle: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge?.color,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -281,7 +291,7 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                       controller: studentIdController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
                         fontSize: sizeHeight * 2.4,
                       ),
                       decoration: InputDecoration(
@@ -292,12 +302,13 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         ),
                         labelText: AppLocalizations.of(context)!.index,
                         labelStyle: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge?.color,
-                            fontSize: sizeHeight * 2.3,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
+                          fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -325,8 +336,8 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                       enabled: false,
                       controller: licensePlateController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
-                      fontSize: sizeHeight * 2.4,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
+                        fontSize: sizeHeight * 2.4,
                       ),
                       decoration: InputDecoration(
                         icon: Icon(
@@ -338,10 +349,10 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                         labelStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.displayLarge?.color,
-                            fontSize: sizeHeight * 2.3
-                        ),
+                            fontSize: sizeHeight * 2.3),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -374,8 +385,8 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                       keyboardType: TextInputType.number,
                       enabled: false,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
-                          fontSize: sizeHeight * 2.4,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
+                        fontSize: sizeHeight * 2.4,
                       ),
                       decoration: InputDecoration(
                         icon: Icon(
@@ -383,14 +394,16 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: AppLocalizations.of(context)!.num_of_visits_month,
+                        labelText:
+                            AppLocalizations.of(context)!.num_of_visits_month,
                         labelStyle: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge?.color,
-                            fontSize: sizeHeight * 2.3,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
+                          fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -417,8 +430,8 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                     child: TextFormField(
                       controller: validityOfStudentIdController,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
-                          fontSize: sizeHeight * 2.4,
+                        color: Theme.of(context).textTheme.displayLarge?.color,
+                        fontSize: sizeHeight * 2.4,
                       ),
                       maxLength: 10,
                       decoration: InputDecoration(
@@ -427,14 +440,16 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                           size: sizeHeight * 5,
                           color: Colors.grey,
                         ),
-                        labelText: AppLocalizations.of(context)!.student_id_val2,
+                        labelText:
+                            AppLocalizations.of(context)!.student_id_val2,
                         labelStyle: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge?.color,
-                            fontSize: sizeHeight * 2.3,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
+                          fontSize: sizeHeight * 2.3,
                         ),
                         hintStyle: TextStyle(color: Colors.grey),
-                        contentPadding: EdgeInsets.symmetric(vertical: sizeHeight),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: sizeHeight),
                         enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFFE0E0E0), width: 2),
@@ -444,16 +459,15 @@ class _StudentEditGenerateState extends State<StudentEditGenerate> {
                               BorderSide(color: Color(0xFFDD9246), width: 1),
                         ),
                       ),
-                      inputFormatters: [
-                        maskFormatter
-                      ],
+                      inputFormatters: [maskFormatter],
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.length != 10) {
                           return AppLocalizations.of(context)!.enter_dd_mm_yyyy;
                         }
                         if (!regExp.hasMatch(value)) {
-                          return AppLocalizations.of(context)!.enter_correct_date;
+                          return AppLocalizations.of(context)!
+                              .enter_correct_date;
                         }
                         return null;
                       },

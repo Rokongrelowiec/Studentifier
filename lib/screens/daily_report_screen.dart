@@ -25,109 +25,113 @@ class _DailyReportState extends State<DailyReport> {
   DateTime selectedDate = DateTime.now();
 
   void removeItem(String licencePlate) async {
-    // debugPrint('Removing $licencePlate');
-    final today = DateFormat('yyyy-MM-dd').format(selectedDate);
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
-    String year = (DateFormat.y().format(DateTime.now())).toString();
-    dynamic requestBody =
-        jsonEncode({'slice': '${month + year}', 'day': today});
-    var response = await http.post(
-      Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/day'),
-      headers: {'x-api-key': apiKey},
-      body: requestBody,
+    final String day = selectedDate.day.toString();
+    final String month = DateFormat.MMM().format(selectedDate).toLowerCase();
+    final String year = DateFormat.y().format(selectedDate);
+    var response = await http.get(
+      Uri.parse(
+          'https://api.danielrum.in/api/v1/logs/entries/$day/$month/$year'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
     );
     var data;
     var decodedResponse = jsonDecode(response.body);
     for (int i = 0; i < decodedResponse.length; i++) {
-      // debugPrint(decodedResponse[i]['rejestracja'].toString());
       if (decodedResponse[i]['rejestracja'] == licencePlate) {
         data = decodedResponse[i];
         break;
       }
     }
-    requestBody = jsonEncode({
-      'slice': '${month.toLowerCase()}$year',
-      'licenseplate': licencePlate,
-      'dateOfArrival': today,
-      'hourOfArrival': data['godzinaPrzyjazdu'],
+    String dateOfArrival = DateFormat('yyyy-MM-dd').format(selectedDate);
+    var requestBody = jsonEncode({
+      'license_plate': data['rejestracja'],
+      "date_of_arrival": dateOfArrival,
+      "hour_of_arrival": data['godzinaPrzyjazdu']
     });
-    // debugPrint(requestBody.toString());
     await http.post(
-      Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/delete'),
-      headers: {'x-api-key': apiKey},
+      Uri.parse('https://api.danielrum.in/api/v1/logs/entries/delete'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
       body: requestBody,
     );
   }
 
   Future getData() async {
-    final today = DateFormat('yyyy-MM-dd').format(selectedDate);
     licenseAndHourList = [];
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
-    String year = (DateFormat.y().format(DateTime.now())).toString();
-    dynamic requestBody =
-        jsonEncode({'slice': '${month + year}', 'day': today});
-    var response = await http.post(
-      Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/day'),
-      headers: {'x-api-key': apiKey},
-      body: requestBody,
+    final String today = selectedDate.day.toString();
+    final String month = DateFormat.MMM().format(selectedDate).toLowerCase();
+    final String year = selectedDate.year.toString();
+    var response = await http.get(
+      Uri.parse(
+          'https://api.danielrum.in/api/v1/logs/entries/$today/$month/$year'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
     );
     licenseAndHourList = jsonDecode(response.body);
     studentIdList = [];
     var responseDecoded;
     for (int i = 0; i < licenseAndHourList.length; i++) {
-      requestBody =
-          jsonEncode({'licenseplate': licenseAndHourList[i]['rejestracja']});
-      response = await http.post(
+      response = await http.get(
         Uri.parse(
-            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/checkone'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+            'https://api.danielrum.in/api/v1/vehicles/licenseplates/${licenseAndHourList[i]["rejestracja"]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
-      responseDecoded = jsonDecode(response.body)[0]['numer_albumu'];
+      responseDecoded = jsonDecode(response.body)['numer_albumu'];
       studentIdList.add(responseDecoded);
     }
     nameSurnameList = [];
 
     for (int i = 0; i < studentIdList.length; i++) {
-      requestBody = jsonEncode({'numer_albumu': studentIdList[i]});
-      response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/students/bystudentId'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+      response = await http.get(
+        Uri.parse(
+            'https://api.danielrum.in/api/v1/students/${studentIdList[i]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
-      String name = jsonDecode(response.body)[0]['imie'],
-          surname = jsonDecode(response.body)[0]['nazwisko'];
+      String name = jsonDecode(response.body)['imie'],
+          surname = jsonDecode(response.body)['nazwisko'];
       nameSurnameList.add({name: surname});
     }
     countList = [];
     for (int i = 0; i < licenseAndHourList.length; i++) {
-      requestBody = jsonEncode({
-        'scope': '${month + year}',
-        'licenseplate': licenseAndHourList[i]['rejestracja']
-      });
-      response = await http.post(
+      response = await http.get(
         Uri.parse(
-            'http://130.61.192.162:8069/api/v1/logs/entries/month/licenseplates/checkone'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+            'https://api.danielrum.in/api/v1/logs/entires/$month/$year/licenseplates/${licenseAndHourList[i]["rejestracja"]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
       responseDecoded = jsonDecode(response.body);
       countList.add(responseDecoded[0]['count']);
     }
     studentIdValidityList = [];
     for (int i = 0; i < studentIdList.length; i++) {
-      requestBody = jsonEncode({'numer_albumu': studentIdList[i]});
-      response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/students/active/checkone'),
-        headers: {'x-api-key': apiKey},
-        body: requestBody,
+      response = await http.get(
+        Uri.parse(
+            'https://api.danielrum.in/api/v1/students/active/${studentIdList[i]}'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
       );
       responseDecoded = jsonDecode(response.body);
-      studentIdValidityList.add(responseDecoded[0]['data_waznosci']);
+      studentIdValidityList.add(responseDecoded['data_waznosci']);
     }
     final dateFormat = DateFormat('dd-MM-yyyy');
     for (int i = 0; i < studentIdValidityList.length; i++) {
@@ -206,7 +210,8 @@ class _DailyReportState extends State<DailyReport> {
                     Text(
                       '${AppLocalizations.of(context)!.found}: ${licenseAndHourList.length} ${AppLocalizations.of(context)!.elements}!',
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2),
                     ),
                     Row(
@@ -215,7 +220,8 @@ class _DailyReportState extends State<DailyReport> {
                         Text(
                           AppLocalizations.of(context)!.selected_date,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.displayLarge?.color,
+                            color:
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2,
                           ),
                         ),
