@@ -41,17 +41,29 @@ class _GenerateRegisteredLicensePlatesState
   void removeItem(String licencePlate) async {
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    var body = jsonEncode({"licenseplate": licencePlate});
+    var body = jsonEncode({
+      "license_plate": licencePlate,
+      'student_id': '-1',
+      'is_lecturer': 'true',
+    });
     await http.post(
       Uri.parse(
-          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/delete'),
-      headers: {'x-api-key': apiKey},
+          'https://api.danielrum.in/api/v1/vehicles/licenseplates/delete'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
       body: body,
     );
-    // debugPrint('Remove status code: ${response.statusCode}');
-    lecturersLicencePlates.removeWhere((index) =>
-        lecturersLicencePlates[index]['rejestracja'] == licencePlate);
-    getData();
+
+    late int idx;
+    for (int i=0; i<lecturersLicencePlates.length; i++) {
+        if (lecturersLicencePlates[i]['rejestracja'] == licencePlate) {
+          idx = i;
+        }
+    }
+    lecturersLicencePlates.removeAt(idx);
+    setState(() {});
   }
 
   Future getData() async {
@@ -59,13 +71,15 @@ class _GenerateRegisteredLicensePlatesState
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
     var response = await http.get(
       Uri.parse(
-          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/lecturers'),
-      headers: {'x-api-key': apiKey},
+          'https://api.danielrum.in/api/v1/vehicles/licenseplates/lecturers'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
     );
     setState(() {
       lecturersLicencePlates = jsonDecode(response.body)['vehicles'];
     });
-    // debugPrint('$lecturersLicencePlates');
   }
 
   void addLicensePlate() async {
@@ -73,12 +87,18 @@ class _GenerateRegisteredLicensePlatesState
     if (isValidForm) {
       String apiKey =
           await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-      var requestBody = jsonEncode(
-          {'licenseplate': licensePlateController.text.toUpperCase()});
+      var requestBody = jsonEncode({
+        'license_plate': licensePlateController.text.toUpperCase(),
+        'student_id': '-1',
+        'is_lecturer': 'true',
+      });
       await http.post(
         Uri.parse(
-            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
-        headers: {'x-api-key': apiKey},
+            'https://api.danielrum.in/api/v1/vehicles/licenseplates/add/lecturer'),
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
         body: requestBody,
       );
       licensePlateController.text = '';
@@ -119,7 +139,8 @@ class _GenerateRegisteredLicensePlatesState
                     title: Text(
                       addLicense,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.5),
                     ),
                     content: Form(
@@ -129,7 +150,8 @@ class _GenerateRegisteredLicensePlatesState
                         autofocus: true,
                         controller: licensePlateController,
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 2.5,
                         ),
                         decoration: InputDecoration(
@@ -242,7 +264,8 @@ class _GenerateRegisteredLicensePlatesState
                     title: Text(
                       lecturersLicencePlates[index]['rejestracja'],
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.displayLarge?.color,
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color,
                           fontSize: sizeHeight * 3),
                     ),
                     trailing: IconButton(

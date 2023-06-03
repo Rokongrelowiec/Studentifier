@@ -61,10 +61,11 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Padding(
                 padding: const EdgeInsets.only(top: 15),
-                child: Center(child: SizedBox(
-                  height: sizeHeight * 25,
-                    width: sizeHeight * 25,
-                    child: CircularProgressIndicator())),
+                child: Center(
+                    child: SizedBox(
+                        height: sizeHeight * 25,
+                        width: sizeHeight * 25,
+                        child: CircularProgressIndicator())),
               );
             }
             if (snapshot.hasError) {
@@ -87,8 +88,10 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                         title: ChartTitle(
                           text: AppLocalizations.of(context)!.last_month_visits,
                           textStyle: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.displayLarge?.color,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge
+                                  ?.color,
                               fontSize: sizeHeight * 3),
                         ),
                         tooltipBehavior: _tooltipBehavior,
@@ -108,7 +111,8 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
                       AppLocalizations.of(context)!.data_sheet,
                       style: TextStyle(
                           fontSize: sizeHeight * 3,
-                          color: Theme.of(context).textTheme.displayLarge?.color),
+                          color:
+                              Theme.of(context).textTheme.displayLarge?.color),
                     ),
                     SizedBox(
                       height: sizeHeight,
@@ -300,29 +304,32 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
 
   getChartData() async {
     String key = await rootBundle.loadString('assets/api-key.txt');
-    String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+    String month = (DateFormat.MMM().format(DateTime.now())).toLowerCase();
     String year = (DateFormat.y().format(DateTime.now())).toString();
-    var requestBody = jsonEncode({"period": "${month + year}"});
-    var response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month'),
-        headers: {'x-api-key': '$key'},
-        body: requestBody);
+    var response = await http.get(
+      Uri.parse('https://api.danielrum.in/api/v1/logs/entries/$month/$year'),
+      headers: {
+        'x-api-key': '$key',
+        'Content-Type': 'application/json',
+      },
+    );
     var decodedResponse = jsonDecode(response.body);
     int endDate = DateTime.now().day;
     var startDate = DateFormat('dd').format(
         DateTime.now().subtract(Duration(days: DateTime.now().day - 1)));
-    // debugPrint(decodedResponse.toString());
     String formattedDay;
     String formattedMonth;
     for (int i = int.parse(startDate); i <= endDate; i++) {
       try {
-        if (int.parse(decodedResponse[i - 1]['dataPrzyjazdu'].substring(8)) != i) {
+        if (int.parse(decodedResponse[i - 1]['dataPrzyjazdu'].substring(8)) !=
+            i) {
           formattedDay = i.toString().length == 1 ? '0$i' : i.toString();
           formattedMonth = DateTime.now().month.toString().length == 1
               ? '0${DateTime.now().month}'
               : DateTime.now().month.toString();
           decodedResponse.insert(i - 1, {
-            'dataPrzyjazdu': '${DateTime.now().year}-$formattedMonth-$formattedDay',
+            'dataPrzyjazdu':
+                '${DateTime.now().year}-$formattedMonth-$formattedDay',
             'count': 0
           });
         }
@@ -331,11 +338,13 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
         formattedMonth = DateTime.now().month.toString().length == 1
             ? '0${DateTime.now().month}'
             : DateTime.now().month.toString();
-        decodedResponse.add({'dataPrzyjazdu': '${DateTime.now().year}-$formattedMonth-$formattedDay',
-          'count': 0});
+        decodedResponse.add({
+          'dataPrzyjazdu':
+              '${DateTime.now().year}-$formattedMonth-$formattedDay',
+          'count': 0
+        });
       }
     }
-    // debugPrint(decodedResponse.toString());
     visitsCounter = 0; // control set
     minVisitsNum = decodedResponse[0]['count'];
     minVisitsDay = "${decodedResponse[0]['dataPrzyjazdu'].substring(8)}"
@@ -363,22 +372,22 @@ class _GenerateChartScreenState extends State<GenerateChartScreen> {
             "${decodedResponse[index]['dataPrzyjazdu'].substring(8)}-${decodedResponse[index]['dataPrzyjazdu'].substring(5, 7)}",
             decodedResponse[index]['count']));
 
-    requestBody = jsonEncode({"period": "${month + year}"});
-    response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/month/top'),
-        headers: {'x-api-key': '$key'},
-        body: requestBody);
+    response = await http.get(
+      Uri.parse('https://api.danielrum.in/api/v1/logs/entries/$month/$year/top'),
+      headers: {
+        'x-api-key': '$key',
+        'Content-Type': 'application/json',
+      },
+    );
     decodedResponse = jsonDecode(response.body);
     mostVisitsLicensePlate = decodedResponse[0]['rejestracja'];
 
-    requestBody = jsonEncode({"licenseplate": "$mostVisitsLicensePlate"});
-    response = await http.post(
+    response = await http.get(
         Uri.parse(
-            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/checkone'),
-        headers: {'x-api-key': '$key'},
-        body: requestBody);
+            'https://api.danielrum.in/api/v1/vehicles/licenseplates/$mostVisitsLicensePlate'),
+        headers: {'x-api-key': '$key', 'Content-Type': 'application/json'},);
     decodedResponse = jsonDecode(response.body);
-    mostVisitsStudentId = decodedResponse[0]['numer_albumu'];
+    mostVisitsStudentId = decodedResponse['numer_albumu'];
     return chartData;
   }
 }

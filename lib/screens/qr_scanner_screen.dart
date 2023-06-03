@@ -102,8 +102,7 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen(
-      (barcode) => setState(() async {
-        this.barcode = barcode;
+      (barcode) async { setState(() => this.barcode = barcode);
         Map mapData = json.decode(barcode.code as String);
         if (mapData.containsKey('imie') &&
             mapData.containsKey('nazwisko') &&
@@ -142,7 +141,7 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
                 arguments: AppLocalizations.of(context)!.parking_limit2);
           }
         }
-      }),
+      }
     );
   }
 
@@ -162,11 +161,18 @@ class _GenerateQRScannerScreenState extends State<GenerateQRScannerScreen> {
 
 sendLecturerData(bool isPrivileged, String licensePlate) async {
   String key = await rootBundle.loadString('assets/api-key.txt');
-  var requestBody = jsonEncode({"licenseplate": licensePlate});
+  var requestBody = jsonEncode({
+    "license_plate": licensePlate,
+    "student_id": "-1",
+    "is_lecturer": "true",
+  });
   await http.post(
       Uri.parse(
-          'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/lecturer'),
-      headers: {'x-api-key': key},
+          'https://api.danielrum.in/api/v1/vehicles/licenseplates/add/lecturer'),
+      headers: {
+        'x-api-key': key,
+        'Content-Type': 'application/json',
+      },
       body: requestBody);
   return true;
 }
@@ -179,25 +185,30 @@ sendStudentData({
   required String scanTime,
   required String licensePlate,
 }) async {
-  List controlList = [true, true, true, true];
+  List controlList = [true, true, true];
   String key = await rootBundle.loadString('assets/api-key.txt');
   var response;
 
-  // Check available spaces
   response = await http.get(
-    Uri.parse('http://130.61.192.162:8069/api/v1/parking_spots'),
-    headers: {'x-api-key': key},
+    Uri.parse('https://api.danielrum.in/api/v1/parking_spots'),
+    headers: {
+      'x-api-key': key,
+      'Content-Type': 'application/json',
+    },
   );
   var decodedResponse = jsonDecode(response.body);
-  int parkingLimit = decodedResponse[0]['limit'];
-  final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  String month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
-  String year = (DateFormat.y().format(DateTime.now())).toString();
-  var requestBody = jsonEncode({'slice': '${month + year}', 'day': today});
-  response = await http.post(
-    Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/day'),
-    headers: {'x-api-key': key},
-    body: requestBody,
+  int parkingLimit = decodedResponse['limit'];
+
+  String today = DateTime.now().day.toString();
+  String month = DateFormat.MMM().format(DateTime.now()).toLowerCase();
+  String year = DateTime.now().year.toString();
+  response = await http.get(
+    Uri.parse(
+        'https://api.danielrum.in/api/v1/logs/entries/$today/$month/$year'),
+    headers: {
+      'x-api-key': key,
+      'Content-Type': 'application/json',
+    },
   );
   decodedResponse = jsonDecode(response.body);
   int occupiedPlaces = decodedResponse.length;
@@ -206,15 +217,20 @@ sendStudentData({
     return false;
   }
 
-  requestBody =
-      jsonEncode({"studentId": studentId, "licenseplate": licensePlate});
+  var requestBody = jsonEncode({
+    "license_plate": licensePlate,
+    "student_id": studentId,
+    "is_lecturer": "false",
+  });
   if (controlList[0]) {
     response = await http.post(
         Uri.parse(
-            'http://130.61.192.162:8069/api/v1/vehicles/licenseplates/add/student'),
-        headers: {'x-api-key': key},
+            'https://api.danielrum.in/api/v1/vehicles/licenseplates/add/student'),
+        headers: {
+          'x-api-key': key,
+          'Content-Type': 'application/json',
+        },
         body: requestBody);
-    // debugPrint('First: ${response.statusCode}');
     if (response.statusCode == 200) {
       controlList[0] = false;
     }
@@ -223,48 +239,34 @@ sendStudentData({
   DateTime date = DateTime.parse(scanTime);
   var day = DateFormat('yyyy-MM-dd').format(date);
   var hour = '${DateFormat.Hms().format(date)}+00';
-  month = (DateFormat.MMM().format(DateTime.now())).toUpperCase();
-  year = (DateFormat.y().format(DateTime.now())).toString();
   requestBody = jsonEncode({
-    'slice': '${month + year}',
-    'rejestracja': licensePlate,
-    'godzinaPrzyjazdu': hour,
-    'dzien': day
+    'license_plate': licensePlate,
+    'date_of_arrival': day,
+    'hour_of_arrival': hour,
   });
   if (controlList[1]) {
     response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/logs/log/entry'),
-        headers: {'x-api-key': key},
+        Uri.parse('https://api.danielrum.in/api/v1/logs/log/entry'),
+        headers: {
+          'x-api-key': key,
+          'Content-Type': 'application/json',
+        },
         body: requestBody);
-    // debugPrint('Second ${response.statusCode}');
     if (response.statusCode == 200) {
       controlList[1] = false;
     }
   }
 
-  requestBody = jsonEncode({'numer_albumu': studentId});
   if (controlList[2]) {
-    response = await http.post(
-        Uri.parse('http://130.61.192.162:8069/api/v1/students/bystudentId'),
-        headers: {'x-api-key': key},
-        body: requestBody);
-    // debugPrint('Third ${response.statusCode}');
+    response = await http.get(
+      Uri.parse('https://api.danielrum.in/api/v1/students/$studentId'),
+      headers: {
+        'x-api-key': key,
+        'Content-Type': 'application/json',
+      },
+    );
     if (response.statusCode == 200) {
       controlList[2] = false;
-    }
-  }
-  if (jsonDecode(response.body).isEmpty) {
-    requestBody = jsonEncode(
-        {'numer_albumu': studentId, 'imie': name, 'nazwisko': surname});
-    if (controlList[3]) {
-      response = await http.post(
-          Uri.parse('http://130.61.192.162:8069/api/v1/students/add'),
-          headers: {'x-api-key': key},
-          body: requestBody);
-      // debugPrint('Fourth ${response.statusCode}');
-      if (response.statusCode == 200) {
-        controlList[3] = false;
-      }
     }
   }
   return true;

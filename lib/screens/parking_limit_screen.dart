@@ -44,29 +44,27 @@ class _GenerateParkingLimitScreenState
     final String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
     var response = await http.get(
-      Uri.parse('http://130.61.192.162:8069/api/v1/parking_spots'),
-      headers: {'x-api-key': apiKey},
+      Uri.parse('https://api.danielrum.in/api/v1/parking_spots'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
     );
     var decodedResponse = jsonDecode(response.body);
-    parkingLimit = decodedResponse[0]['limit'];
+    parkingLimit = decodedResponse['limit'];
 
-    final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    final String month =
-        (DateFormat.MMM().format(DateTime.now())).toUpperCase();
+    final String today = DateTime.now().day.toString();
+    final month = DateFormat.LLL().format(DateTime.now()).toLowerCase();
     final String year = (DateFormat.y().format(DateTime.now())).toString();
-    dynamic requestBody =
-        jsonEncode({'slice': '${month + year}', 'day': today});
-    response = await http.post(
-      Uri.parse('http://130.61.192.162:8069/api/v1/logs/entries/day'),
-      headers: {'x-api-key': apiKey},
-      body: requestBody,
+
+    response = await http.get(
+      Uri.parse(
+          'https://api.danielrum.in/api/v1/logs/entries/$today/$month/$year'),
+      headers: {'x-api-key': apiKey, 'Content-Type': 'application/json'},
     );
     decodedResponse = jsonDecode(response.body);
-    // debugPrint(decodedResponse.toString());
     occupiedPlaces = decodedResponse.length;
-    // debugPrint(occupiedPlaces.toString());
     percents = occupiedPlaces / parkingLimit;
-    // debugPrint(percents.toString());
     limitController.text = parkingLimit.toString();
     setState(() {});
   }
@@ -74,11 +72,13 @@ class _GenerateParkingLimitScreenState
   setCarParkingLimit() async {
     final String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
-    var requestBody = jsonEncode({'limit': limitController.text});
     await http.post(
-      Uri.parse('http://130.61.192.162:8069/api/v1/parking_spots/set'),
-      headers: {'x-api-key': apiKey},
-      body: requestBody,
+      Uri.parse(
+          'https://api.danielrum.in/api/v1/parking_spots/${limitController.text}'),
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json',
+      },
     );
     await getData();
   }
@@ -173,7 +173,8 @@ class _GenerateParkingLimitScreenState
                       title: Text(
                         AppLocalizations.of(context)!.change_limit,
                         style: TextStyle(
-                            color: Theme.of(context).textTheme.displayLarge?.color,
+                            color:
+                                Theme.of(context).textTheme.displayLarge?.color,
                             fontSize: sizeHeight * 2.5),
                       ),
                       content: Form(
@@ -183,8 +184,10 @@ class _GenerateParkingLimitScreenState
                             autofocus: true,
                             controller: limitController,
                             style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.displayLarge?.color,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge
+                                  ?.color,
                               fontSize: sizeHeight * 2.5,
                             ),
                             decoration: InputDecoration(

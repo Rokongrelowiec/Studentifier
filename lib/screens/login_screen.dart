@@ -212,8 +212,10 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                             keyboardType: TextInputType.text,
                             obscureText: password,
                             style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.displayLarge?.color,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .displayLarge
+                                  ?.color,
                               fontSize: sizeHeight * 2.2,
                             ),
                             decoration: InputDecoration(
@@ -329,15 +331,17 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                       .encode("email:$email|password:$pass");
                                   Digest sha = sha512.convert(bytes);
                                   var requestBody =
-                                      jsonEncode({"hash": sha.toString()});
+                                      jsonEncode({"password_hash": sha.toString()});
                                   String key = await rootBundle
                                       .loadString('assets/api-key.txt');
                                   var response = await http.post(
                                       Uri.parse(
-                                          'http://130.61.192.162:8069/api/v1/admin/login'),
-                                      headers: {'x-api-key': key},
+                                          'https://api.danielrum.in/api/v1/admin/login'),
+                                      headers: {
+                                        'x-api-key': key,
+                                        'Content-Type': 'application/json',
+                                      },
                                       body: requestBody);
-                                  // debugPrint('First: ${response.statusCode}');
                                   if (response.statusCode == 200) {
                                     Provider.of<AdminProvider>(context,
                                             listen: false)
@@ -346,7 +350,6 @@ class _GenerateLoginScreenState extends State<GenerateLoginScreen> {
                                         .pushNamedAndRemoveUntil(
                                             HomeScreen.routeName,
                                             (route) => false);
-                                    // debugPrint('Logged!');
                                   } else {
                                     setState(() {
                                       invalidRequest = true;
