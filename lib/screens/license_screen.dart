@@ -15,7 +15,7 @@ import './deny_screen.dart';
 import '../widgets/app_bar_widget.dart';
 
 class LicenseScreen extends StatefulWidget {
-  String license;
+  final String license;
 
   LicenseScreen({Key? key, required this.license}) : super(key: key);
 

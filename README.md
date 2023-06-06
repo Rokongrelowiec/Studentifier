@@ -48,6 +48,6 @@ Api-key is needed to run the app. To get Api-key -> create issue under the proje
 3. Add Flutter and Dart extensions in your IDE
 4. Download project
 5. Add api-key.txt to the assets folder
-5. Open project
-6. Type `flutter pub get` in project path to get dependencies
-6. Run project on your device
+6. Open project
+7. Type `flutter pub get` in project path to get dependencies
+8. Run project on your device
