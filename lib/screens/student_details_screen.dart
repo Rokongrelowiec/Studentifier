@@ -11,12 +11,12 @@ import '../widgets/app_bar_widget.dart';
 class StudentDetails extends StatelessWidget {
   static const routeName = '/student-details';
 
-  String firstName;
-  String lastName;
-  int studentId;
-  String licensePlate;
-  int numberOfVisits;
-  String validityOfStudentId;
+  final String firstName;
+  final String lastName;
+  final int studentId;
+  final String licensePlate;
+  final int numberOfVisits;
+  final String validityOfStudentId;
 
   StudentDetails({
     Key? key,

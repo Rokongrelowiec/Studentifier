@@ -366,7 +366,6 @@ class _SideDrawerState extends State<SideDrawer> {
                       ),
                       onChanged: (String? value) {
                         provider.changeTheme(value ?? 'system');
-                        // Navigator.of(context).pop();
                       },
                       items: [
                         DropdownMenuItem(

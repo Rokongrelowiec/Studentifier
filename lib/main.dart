@@ -55,7 +55,6 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => AdminProvider(),
-        // create: (_) => AdminProvider()..initialize(),
         ),
         ChangeNotifierProvider(
           create: (_) => LocaleProvider()..initialize(),

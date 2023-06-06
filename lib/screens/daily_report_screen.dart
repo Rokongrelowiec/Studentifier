@@ -24,7 +24,7 @@ class _DailyReportState extends State<DailyReport> {
   late List studentIdValidityList;
   DateTime selectedDate = DateTime.now();
 
-  void removeItem(String licencePlate) async {
+  void removeItem(String licencePlate, String arrivalHour) async {
     String apiKey =
         await DefaultAssetBundle.of(context).loadString('assets/api-key.txt');
     final String day = selectedDate.day.toString();
@@ -41,7 +41,8 @@ class _DailyReportState extends State<DailyReport> {
     var data;
     var decodedResponse = jsonDecode(response.body);
     for (int i = 0; i < decodedResponse.length; i++) {
-      if (decodedResponse[i]['rejestracja'] == licencePlate) {
+      if (decodedResponse[i]['rejestracja'] == licencePlate &&
+          decodedResponse[i]['godzinaPrzyjazdu'] == arrivalHour) {
         data = decodedResponse[i];
         break;
       }
@@ -60,6 +61,7 @@ class _DailyReportState extends State<DailyReport> {
       },
       body: requestBody,
     );
+    setState(() {});
   }
 
   Future getData() async {
@@ -281,6 +283,7 @@ class _DailyReportState extends State<DailyReport> {
                                   ),
                                 ),
                               );
+                              setState(() {});
                             },
                             leading: Text(
                               licenseAndHourList[index]['godzinaPrzyjazdu']
@@ -353,8 +356,11 @@ class _DailyReportState extends State<DailyReport> {
                             trailing: isAdmin
                                 ? IconButton(
                                     onPressed: () {
-                                      removeItem(licenseAndHourList[index]
-                                          ['rejestracja']);
+                                      removeItem(
+                                          licenseAndHourList[index]
+                                              ['rejestracja'],
+                                          licenseAndHourList[index]
+                                              ['godzinaPrzyjazdu']);
                                       final snackBar = SnackBar(
                                         backgroundColor:
                                             Theme.of(context).primaryColor,
