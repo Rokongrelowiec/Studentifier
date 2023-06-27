@@ -20,7 +20,7 @@ The application scanning process is shown in the diagram below.
 ---
 ## Screenshots
 
-  <img src="https://github.com/Rokongrelowiec/studentifier_readme/blob/main/RPReplay_Final1682954362_AdobeExpress.gif" width=360 height=780/>
+  <img src="https://github.com/Rokongrelowiec/studentifier_readme/blob/main/license_plate_scan.gif" width=360 height=780/>
 <p float="left">
   <img src="https://github.com/Rokongrelowiec/studentifier_readme/blob/main/IMG_5798.PNG" width=360 height=780 />
   <img src="https://github.com/Rokongrelowiec/studentifier_readme/blob/main/IMG_5799.PNG" width=360 height=780 />
