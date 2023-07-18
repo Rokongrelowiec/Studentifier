@@ -38,7 +38,8 @@ The application scanning process is shown in the diagram below.
 ## Run project
 
 **Important:**
-Api-key is needed to run the app. To get Api-key -> create issue under the project in which leave your contact details (E.g. email address).
+Api-key is needed to run the app. To get Api-key -> create issue under the project in which leave your contact details (E.g. email address). 
+If you get Api-key, paste it into api-key.txt as the first line of the file.
 
 
 1. Download Flutter: https://docs.flutter.dev/get-started/install
